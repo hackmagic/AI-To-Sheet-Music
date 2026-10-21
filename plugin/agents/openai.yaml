@@ -1,0 +1,4 @@
+interface:
+  display_name: "音频转弹唱谱"
+  short_description: "本地扒谱：音频 → 可自弹自唱的吉他弹唱谱（五线谱+逐字歌词+和弦+指法图+TAB）"
+  default_prompt: "使用 $audio-to-chord-sheet 把我提供的歌曲音频做成可自弹自唱的吉他弹唱谱，自动定调与变调夹，交付网页乐谱、MusicXML 和 MIDI，并说明需要人工核对的段落。"

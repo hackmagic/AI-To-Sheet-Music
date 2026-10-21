@@ -1,0 +1,18 @@
+# ---- core (必要) ----
+numpy>=1.26
+scipy>=1.13
+librosa>=0.10.2
+soundfile>=0.12
+fastapi>=0.110
+uvicorn[standard]>=0.27
+python-multipart>=0.0.9
+pydantic>=2.0
+requests>=2.31
+PyYAML>=6.0
+jsonschema>=4.20
+
+# ---- heavy / optional：缺失时自动降级 ----
+# torch, torchaudio 已单独安装（CUDA 版）：
+#   .venv/Scripts/python -m pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
+demucs
+openai-whisper

@@ -1,0 +1,67 @@
+{
+  "schema": "aitsm.score/v1",
+  "meta": {
+    "title": "示例：下一站 · 弹唱谱",
+    "artist": "Demo",
+    "source": { "file": "samples/demo.flac", "original_name": "demo.flac", "duration_sec": 34.3, "audio_url": "" },
+    "tempo": 84,
+    "tempo_source": "beat-track",
+    "time_signature": [4, 4],
+    "key": { "detected": "C major", "sounding": "C", "mode": "major", "play": "C", "num_sharps_flats": 0, "confidence": 0.86 },
+    "capo": 0,
+    "guitar": { "strings": 6, "tuning": [40, 45, 50, 55, 59, 64], "tuning_name": "standard" },
+    "difficulty": "elementary",
+    "style": "pop",
+    "generator": { "version": "0.1.0", "created_at": "2026-10-20T00:00:00+08:00", "engines": { "chords": "numpy-template", "melody": "pyin", "lyrics": "manual-demo" } },
+    "warnings": [
+      { "level": "info", "code": "demo", "message": "示例数据，用于前端开发与回归测试" }
+    ]
+  },
+  "sections": [
+    { "id": "s1", "label": "前奏", "kind": "intro", "start_bar": 1, "end_bar": 2, "start_sec": 0.0, "end_sec": 5.714, "repeat_of": null, "pattern_id": "ballad8", "energy": 0.25 },
+    { "id": "s2", "label": "主歌", "kind": "verse", "start_bar": 3, "end_bar": 8, "start_sec": 5.714, "end_sec": 22.857, "repeat_of": null, "pattern_id": "pop8", "energy": 0.45 },
+    { "id": "s3", "label": "副歌", "kind": "chorus", "start_bar": 9, "end_bar": 12, "start_sec": 22.857, "end_sec": 34.286, "repeat_of": null, "pattern_id": "pop8", "energy": 0.8 }
+  ],
+  "bars": [
+    { "index": 1, "section": "s1", "start_sec": 0.0, "end_sec": 2.857, "chords": [{ "beat": 0, "dur": 4, "symbol": "C", "voicing_id": "C_open" }], "vocal": [], "guitar": { "pattern_id": "ballad8" } },
+    { "index": 2, "section": "s1", "start_sec": 2.857, "end_sec": 5.714, "chords": [{ "beat": 0, "dur": 4, "symbol": "G", "voicing_id": "G_open" }], "vocal": [], "guitar": { "pattern_id": "ballad8" } },
+    { "index": 3, "section": "s2", "start_sec": 5.714, "end_sec": 8.571, "chords": [{ "beat": 0, "dur": 2, "symbol": "C", "voicing_id": "C_open" }, { "beat": 2, "dur": 2, "symbol": "G/B", "voicing_id": "G_over_B" }], "vocal": [{ "beat": 0, "dur": 1, "midi": 60, "lyric": "一" }, { "beat": 1, "dur": 1, "midi": 62, "lyric": "个" }, { "beat": 2, "dur": 1, "midi": 64, "lyric": "人" }, { "beat": 3, "dur": 1, "midi": 67, "lyric": "走" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 4, "section": "s2", "start_sec": 8.571, "end_sec": 11.428, "chords": [{ "beat": 0, "dur": 2, "symbol": "Am", "voicing_id": "Am_open" }, { "beat": 2, "dur": 2, "symbol": "F", "voicing_id": "F_barre" }], "vocal": [{ "beat": 0, "dur": 1, "midi": 64, "lyric": "在" }, { "beat": 1, "dur": 1, "midi": 62, "lyric": "街" }, { "beat": 2, "dur": 2, "midi": 60, "lyric": "头", "tie": "start" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 5, "section": "s2", "start_sec": 11.428, "end_sec": 14.285, "chords": [{ "beat": 0, "dur": 2, "symbol": "C", "voicing_id": "C_open" }, { "beat": 2, "dur": 2, "symbol": "G", "voicing_id": "G_open" }], "vocal": [{ "beat": 0, "dur": 1, "midi": 69, "lyric": "看" }, { "beat": 1, "dur": 1, "midi": 67, "lyric": "不" }, { "beat": 2, "dur": 1, "midi": 64, "lyric": "见" }, { "beat": 3, "dur": 1, "midi": 62, "lyric": "你" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 6, "section": "s2", "start_sec": 14.285, "end_sec": 17.142, "chords": [{ "beat": 0, "dur": 2, "symbol": "Am", "voicing_id": "Am_open" }, { "beat": 2, "dur": 2, "symbol": "Em", "voicing_id": "Em_open" }], "vocal": [{ "beat": 0, "dur": 2, "midi": 60, "lyric": "的" }, { "beat": 2, "dur": 1, "midi": 62, "lyric": "身" }, { "beat": 3, "dur": 1, "midi": 64, "lyric": "影" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 7, "section": "s2", "start_sec": 17.142, "end_sec": 20.0, "chords": [{ "beat": 0, "dur": 2, "symbol": "F", "voicing_id": "F_barre" }, { "beat": 2, "dur": 2, "symbol": "G", "voicing_id": "G_open" }], "vocal": [{ "beat": 0, "dur": 1, "midi": 67, "lyric": "风" }, { "beat": 1, "dur": 1, "midi": 69, "lyric": "吹" }, { "beat": 2, "dur": 1, "midi": 72, "lyric": "过" }, { "beat": 3, "dur": 1, "midi": 69, "lyric": "这" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 8, "section": "s2", "start_sec": 20.0, "end_sec": 22.857, "chords": [{ "beat": 0, "dur": 4, "symbol": "G", "voicing_id": "G_open" }], "vocal": [{ "beat": 0, "dur": 3, "midi": 67, "lyric": "街" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 9, "section": "s3", "start_sec": 22.857, "end_sec": 25.714, "chords": [{ "beat": 0, "dur": 2, "symbol": "F", "voicing_id": "F_barre" }, { "beat": 2, "dur": 2, "symbol": "G", "voicing_id": "G_open" }], "vocal": [{ "beat": 0, "dur": 1, "midi": 76, "lyric": "我" }, { "beat": 1, "dur": 1, "midi": 74, "lyric": "想" }, { "beat": 2, "dur": 2, "midi": 72, "lyric": "要" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 10, "section": "s3", "start_sec": 25.714, "end_sec": 28.571, "chords": [{ "beat": 0, "dur": 2, "symbol": "Em", "voicing_id": "Em_open" }, { "beat": 2, "dur": 2, "symbol": "Am", "voicing_id": "Am_open" }], "vocal": [{ "beat": 0, "dur": 1, "midi": 69, "lyric": "回" }, { "beat": 1, "dur": 1, "midi": 72, "lyric": "到" }, { "beat": 2, "dur": 2, "midi": 74, "lyric": "从", "lyric_extend": true }, { "beat": 2.5, "dur": 1.5, "midi": 74, "lyric": "前", "tie": "stop" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 11, "section": "s3", "start_sec": 28.571, "end_sec": 31.428, "chords": [{ "beat": 0, "dur": 2, "symbol": "F", "voicing_id": "F_barre" }, { "beat": 2, "dur": 2, "symbol": "G", "voicing_id": "G_open" }], "vocal": [{ "beat": 0, "dur": 1, "midi": 76, "lyric": "那" }, { "beat": 1, "dur": 1, "midi": 79, "lyric": "个" }, { "beat": 2, "dur": 1, "midi": 76, "lyric": "夏" }, { "beat": 3, "dur": 1, "midi": 74, "lyric": "天" }], "guitar": { "pattern_id": "pop8" } },
+    { "index": 12, "section": "s3", "start_sec": 31.428, "end_sec": 34.286, "chords": [{ "beat": 0, "dur": 4, "symbol": "C", "voicing_id": "C_open" }], "vocal": [{ "beat": 0, "dur": 4, "midi": 72, "lyric": "天" }], "guitar": { "pattern_id": "pop8" } }
+  ],
+  "voicings": {
+    "C_open": { "symbol": "C", "frets": [-1, 3, 2, 0, 1, 0], "fingers": [null, 3, 2, null, 1, null], "base_fret": 0, "barres": [], "difficulty": 1, "label": "C 开放" },
+    "G_open": { "symbol": "G", "frets": [3, 2, 0, 0, 0, 3], "fingers": [3, 2, null, null, null, 4], "base_fret": 0, "barres": [], "difficulty": 1, "label": "G 开放" },
+    "G_over_B": { "symbol": "G/B", "frets": [-1, 2, 0, 0, 0, 3], "fingers": [null, 2, null, null, null, 4], "base_fret": 0, "barres": [], "difficulty": 2, "label": "G/B 转位" },
+    "Am_open": { "symbol": "Am", "frets": [-1, 0, 2, 2, 1, 0], "fingers": [null, null, 2, 3, 1, null], "base_fret": 0, "barres": [], "difficulty": 1, "label": "Am 开放" },
+    "Em_open": { "symbol": "Em", "frets": [0, 2, 2, 0, 0, 0], "fingers": [null, 2, 3, null, null, null], "base_fret": 0, "barres": [], "difficulty": 1, "label": "Em 开放" },
+    "F_barre": { "symbol": "F", "frets": [1, 3, 3, 2, 1, 1], "fingers": [1, 3, 4, 2, 1, 1], "base_fret": 1, "barres": [{ "fret": 1, "from": 0, "to": 5 }], "difficulty": 3, "label": "F 大横按" }
+  },
+  "strum_patterns": {
+    "pop8": { "id": "pop8", "name": "民谣八分", "beats_per_bar": 4, "subdivision": "eighth", "display": "↓ ↓↑ ↑↓↑", "events": [
+      { "beat": 0, "dur": 0.5, "stroke": "down", "accent": true }, { "beat": 0.5, "dur": 0.5, "stroke": "up" },
+      { "beat": 1, "dur": 0.5, "stroke": "down" }, { "beat": 1.5, "dur": 0.5, "stroke": "up" },
+      { "beat": 2, "dur": 0.5, "stroke": "down", "accent": true }, { "beat": 2.5, "dur": 0.5, "stroke": "up" },
+      { "beat": 3, "dur": 0.5, "stroke": "down" }, { "beat": 3.5, "dur": 0.5, "stroke": "up" } ] },
+    "ballad8": { "id": "ballad8", "name": "分解八分", "beats_per_bar": 4, "subdivision": "eighth", "display": "T 3 2 3 1 3 2 3", "events": [
+      { "beat": 0, "dur": 0.5, "stroke": "bass", "strings": [6] }, { "beat": 0.5, "dur": 0.5, "stroke": "pluck", "strings": [4] },
+      { "beat": 1, "dur": 0.5, "stroke": "pluck", "strings": [3] }, { "beat": 1.5, "dur": 0.5, "stroke": "pluck", "strings": [4] },
+      { "beat": 2, "dur": 0.5, "stroke": "pluck", "strings": [2] }, { "beat": 2.5, "dur": 0.5, "stroke": "pluck", "strings": [4] },
+      { "beat": 3, "dur": 0.5, "stroke": "pluck", "strings": [3] }, { "beat": 3.5, "dur": 0.5, "stroke": "pluck", "strings": [4] } ] }
+  },
+  "quality": {
+    "overall": 0.62,
+    "stages": { "beats": 0.9, "key": 0.86, "chords": 0.55, "lyrics": 0.4, "melody": 0.5 },
+    "warnings": [
+      { "level": "warn", "code": "chords.low_confidence", "message": "第 5-8 小节和弦置信度低于 0.6，建议人工确认", "stage": "chords", "target": "5-8" },
+      { "level": "warn", "code": "lyrics.unverified", "message": "歌词为示例数据，请校对", "stage": "lyrics" }
+    ]
+  }
+}

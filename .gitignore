@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+pip-*/
+pip-build-*/
+pip-install-*/
+pip-unpack-*/
+*.egg-info/
+
+# Runtime artifacts
+work/
+.cache/
+web/voicings.json.tmp
+
+# 测试/探针遗留（应在源头用 tmp_path 清理，这里兜底）
+aitsm-probe-*/
+aitsm-melody-*/
+pytest-of-*/
+.playwright-cli/
+tests/output/
+*.png.tmp
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

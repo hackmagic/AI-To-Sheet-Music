@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>弹唱谱 · AI 扒谱工作台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' x='4' font-size='28'%3E%E2%99%A9%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app" id="app" data-state="empty">
+
+    <!-- ───────────────────────── toolbar ───────────────────────── -->
+    <header class="toolbar">
+      <div class="toolbar__brand">
+        <div class="wordmark" title="AI-To-Sheet-Music">
+          <span class="wordmark__glyph" aria-hidden="true">♩</span>
+          <span class="wordmark__text">弹唱谱</span>
+        </div>
+        <div class="doc-chip">
+          <div class="doc-chip__title" id="tb-title">未加载乐谱</div>
+          <div class="doc-chip__sub" id="tb-sub">上传音频或加载示例</div>
+        </div>
+      </div>
+
+      <div class="toolbar__controls" id="tb-controls">
+        <div class="ctl ctl--stepper" role="group" aria-label="移调">
+          <button class="stepper__btn" data-act="trans-down" title="降半音 (↓)" aria-label="降半音">
+            <span aria-hidden="true">♭</span>
+          </button>
+          <span class="stepper__value" id="transpose-label" title="相对原调的移调量">原调</span>
+          <button class="stepper__btn" data-act="trans-up" title="升半音 (↑)" aria-label="升半音">
+            <span aria-hidden="true">♯</span>
+          </button>
+          <button class="stepper__reset" data-act="trans-reset" title="回到原调" aria-label="回到原调">↺</button>
+        </div>
+
+        <label class="ctl ctl--select" title="变调夹品数：只改变显示调与指法，不改变发声音高">
+          <span class="ctl__label">Capo</span>
+          <select id="capo-select" aria-label="变调夹品数"></select>
+        </label>
+
+        <div class="ctl ctl--toggles" role="group" aria-label="显示选项">
+          <button class="toggle" data-toggle="diagrams" aria-pressed="true" title="显示/隐藏和弦指法图">指法图</button>
+          <button class="toggle" data-toggle="tab" aria-pressed="true" title="显示/隐藏六线 TAB">TAB</button>
+          <button class="toggle" data-toggle="lyrics" aria-pressed="true" title="显示/隐藏歌词">歌词</button>
+          <button class="toggle" data-toggle="metronome" aria-pressed="false" title="播放时开启节拍器">节拍器</button>
+          <button class="toggle toggle--edit" id="btn-editor" data-toggle="editor" aria-pressed="false"
+                  title="编辑模式：点击和弦/歌词/小节号即可修改">编辑</button>
+        </div>
+      </div>
+
+      <div class="toolbar__actions">
+        <button class="btn btn--ghost" data-act="upload" title="上传音频文件 (mp3/wav/flac/m4a/mp4)">
+          <span class="btn__icon" aria-hidden="true">↑</span>上传
+        </button>
+        <div class="menu" id="export-menu">
+          <button class="btn btn--ghost" data-act="export" aria-haspopup="menu" aria-expanded="false" title="导出谱面文件">
+            导出<span class="btn__caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="menu__list" role="menu" hidden>
+            <button role="menuitem" data-export="json">JSON 谱面数据</button>
+            <button role="menuitem" data-export="json-clean">JSON（干净版，含手工修正）</button>
+            <button role="menuitem" data-export="musicxml">MusicXML（MuseScore）</button>
+            <button role="menuitem" data-export="midi">MIDI</button>
+            <button role="menuitem" data-export="print">打印 / 另存 PDF</button>
+          </div>
+        </div>
+        <button class="btn btn--ink" data-act="print" title="打印 (Ctrl/⌘ + P)">
+          <span class="btn__icon" aria-hidden="true">⎙</span>打印
+        </button>
+      </div>
+    </header>
+
+    <!-- ───────────────────────── workspace ───────────────────────── -->
+    <main class="workspace">
+      <section class="paper-pane">
+        <article class="paper" id="paper" aria-label="乐谱">
+          <header class="paper__head" id="paper-head">
+            <div class="paper__headline">
+              <h1 class="paper__title" id="score-title">还没有乐谱</h1>
+              <p class="paper__artist" id="score-artist"></p>
+            </div>
+            <ul class="factline" id="factline" aria-label="谱面信息"></ul>
+          </header>
+
+          <div class="paper__body">
+            <div class="score" id="score" role="region" aria-label="乐谱谱面"></div>
+
+            <div class="empty" id="empty-state">
+              <p class="empty__kicker">第一步</p>
+              <h2 class="empty__title">上传一首歌，得到可以直接照着弹的谱</h2>
+              <p class="empty__text">
+                支持 mp3 / wav / flac / m4a / ogg 与 mp4 等视频。AI 会分出人声与伴奏，
+                识别和弦、节奏、段落与歌词，生成逐字对齐的弹唱谱。
+              </p>
+              <div class="empty__actions">
+                <button class="btn btn--ink" data-act="upload">选择音频文件</button>
+                <button class="btn btn--ghost" data-act="demo">加载示例谱</button>
+              </div>
+              <p class="empty__hint">也可以把文件拖到页面上任意位置</p>
+            </div>
+          </div>
+
+          <footer class="paper__foot">
+            <span id="paper-foot-meta"></span>
+          </footer>
+        </article>
+      </section>
+
+      <aside class="rail" id="rail" aria-label="质量与结构面板">
+        <!-- 编辑痕迹徽标：0 处时隐藏，由 main.js 的 updateEditBadge() 控制 -->
+        <div class="rail__edit-badge" id="edit-badge" hidden>已手工修正 0 处</div>
+        <div class="rail__empty" id="rail-empty">
+          <p class="rail__hint">载入乐谱后，这里显示识别质量、置信度与告警。</p>
+        </div>
+        <div class="rail__content" id="rail-content" hidden></div>
+      </aside>
+    </main>
+
+    <!-- ───────────────────────── playbar ───────────────────────── -->
+    <div class="playbar" id="playbar" hidden>
+      <div class="playbar__inner">
+        <button class="play" id="btn-play" data-act="play" title="播放 / 暂停（空格）" aria-label="播放">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="play__icon-play" d="M8 5v14l11-7z"/><g class="play__icon-pause"><rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="14" y="5" width="3.5" height="14" rx="1"/></g></svg>
+        </button>
+        <button class="btn btn--icon" data-act="stop" title="停止" aria-label="停止">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1.5"/></svg>
+        </button>
+
+        <div class="playbar__pos">
+          <span class="playbar__bar" id="pos-bar">第 1 小节</span>
+          <span class="playbar__time" id="pos-time">0:00 / 0:34</span>
+        </div>
+
+        <div class="playbar__progress" title="点击跳转到小节">
+          <div class="playbar__progress-track" id="progress-track">
+            <div class="playbar__progress-fill" id="progress-fill"></div>
+            <div class="playbar__progress-marks" id="progress-marks"></div>
+          </div>
+        </div>
+
+        <button class="toggle toggle--line" data-act="loop" aria-pressed="false" title="循环当前段落">循环段落</button>
+
+        <label class="playbar__speed" title="播放速度">
+          <span>速度</span>
+          <input type="range" id="speed-range" min="50" max="120" step="5" value="100" aria-label="播放速度百分比" />
+          <output id="speed-value">100%</output>
+        </label>
+
+        <span class="playbar__source" id="play-source" hidden>原曲</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────── upload dialog ───────────────────────── -->
+  <div class="modal" id="upload-modal" hidden>
+    <div class="modal__backdrop" data-act="close-upload"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="upload-title">
+      <header class="modal__head">
+        <div>
+          <h2 class="modal__title" id="upload-title">上传音频</h2>
+          <p class="modal__sub">全本地分析，音频不会离开这台机器。</p>
+        </div>
+        <button class="btn btn--icon" data-act="close-upload" title="关闭" aria-label="关闭">✕</button>
+      </header>
+
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="选择或拖入音频文件">
+        <div class="dropzone__glyph" aria-hidden="true">♪</div>
+        <p class="dropzone__main">把音频拖到这里，或<u>点击选择文件</u></p>
+        <p class="dropzone__sub">mp3 · wav · flac · m4a · ogg · aac · mp4 / mov / mkv（≤100MB，≤10 分钟）</p>
+        <input type="file" id="file-input" accept="audio/*,video/*,.mp3,.wav,.flac,.m4a,.ogg,.aac,.mp4,.mov,.mkv,.webm" hidden />
+      </div>
+
+      <div class="upload-opts">
+        <label class="ctl ctl--select" title="生成谱面时使用的可弹奏调">
+          <span class="ctl__label">目标调</span>
+          <select id="opt-key" aria-label="目标调">
+            <option value="auto" selected>自动（推荐）</option>
+            <option>C</option><option>G</option><option>D</option><option>A</option>
+            <option>E</option><option>F</option><option>B♭</option>
+          </select>
+        </label>
+        <label class="ctl ctl--select" title="变调夹品数">
+          <span class="ctl__label">Capo</span>
+          <select id="opt-capo" aria-label="变调夹品数">
+            <option value="auto" selected>自动</option>
+            <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+          </select>
+        </label>
+        <label class="ctl ctl--select" title="编配难度">
+          <span class="ctl__label">难度</span>
+          <select id="opt-difficulty" aria-label="编配难度">
+            <option value="beginner">入门</option>
+            <option value="elementary" selected>基础</option>
+            <option value="intermediate">进阶</option>
+            <option value="advanced">高阶</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="upload-progress" id="upload-progress" hidden>
+        <ol class="stages" id="stages">
+          <li data-stage="queued"><span>排队</span></li>
+          <li data-stage="ingesting"><span>解码音频</span></li>
+          <li data-stage="separating"><span>分离人声</span></li>
+          <li data-stage="analyzing"><span>节拍 / 调性 / 和弦</span></li>
+          <li data-stage="transcribing"><span>歌词 / 旋律</span></li>
+          <li data-stage="arranging"><span>编配谱面</span></li>
+        </ol>
+        <div class="upload-progress__meter"><div id="upload-meter"></div></div>
+        <p class="upload-progress__msg" id="upload-msg">准备中…</p>
+      </div>
+
+      <footer class="modal__foot">
+        <button class="btn btn--ghost" data-act="demo">加载示例谱</button>
+        <button class="btn btn--ink" data-act="close-upload">关闭</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <div class="print-root" id="print-root" aria-hidden="true"></div>
+  <audio id="audio" preload="metadata"></audio>
+
+  <script src="vendor/vexflow.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

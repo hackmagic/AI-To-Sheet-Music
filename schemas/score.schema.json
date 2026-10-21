@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aitsm.local/schemas/score.schema.json",
+  "title": "AI-To-Sheet-Music 弹唱谱 score.json",
+  "description": "aitsm.score/v1：自弹自唱吉他弹唱谱。所有谱面时间以四分音符拍为单位，小节内相对；音高为 MIDI 号且为记谱音高（capo 已扣除）。",
+  "type": "object",
+  "required": ["schema", "meta", "sections", "bars"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "aitsm.score/v1" },
+    "meta": {
+      "type": "object",
+      "required": ["title", "tempo", "time_signature", "key", "capo", "guitar"],
+      "additionalProperties": true,
+      "properties": {
+        "title": { "type": "string" },
+        "artist": { "type": "string" },
+        "source": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "file": { "type": "string" },
+            "original_name": { "type": "string" },
+            "duration_sec": { "type": "number" },
+            "sha256": { "type": "string" },
+            "audio_url": { "type": "string", "description": "原曲播放音源，浏览器同步播放用" }
+          }
+        },
+        "tempo": { "type": "number", "minimum": 20, "maximum": 320 },
+        "tempo_source": { "enum": ["beat-track", "user", "arranger", "default"] },
+        "time_signature": { "$ref": "#/$defs/timeSignature" },
+        "key": {
+          "type": "object",
+          "required": ["detected", "sounding", "play"],
+          "additionalProperties": true,
+          "properties": {
+            "detected": { "type": "string", "description": "原曲检测调，如 \"F# major\"" },
+            "sounding": { "type": "string", "description": "实际发声音名调，如 \"F#\"" },
+            "mode": { "enum": ["major", "minor"] },
+            "play": { "type": "string", "description": "记谱所用调（capo 之后的可弹奏调），如 \"C\"" },
+            "num_sharps_flats": { "type": "integer", "minimum": -7, "maximum": 7, "description": "记谱调号升降数，正为升" },
+            "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "capo": { "type": "integer", "minimum": 0, "maximum": 12 },
+        "guitar": {
+          "type": "object",
+          "required": ["tuning", "strings"],
+          "additionalProperties": true,
+          "properties": {
+            "strings": { "const": 6 },
+            "tuning": {
+              "type": "array",
+              "description": "低到高空弦 MIDI 音高",
+              "items": { "type": "integer", "minimum": 24, "maximum": 72 },
+              "minItems": 6, "maxItems": 6
+            },
+            "tuning_name": { "type": "string", "default": "standard" }
+          }
+        },
+        "difficulty": { "enum": ["beginner", "elementary", "intermediate", "advanced"] },
+        "style": { "type": "string", "description": "pop / folk / rock / bossa ..." },
+        "generator": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "version": { "type": "string" },
+            "created_at": { "type": "string" },
+            "engines": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "warnings": { "type": "array", "items": { "$ref": "#/$defs/warning" } }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "kind", "start_bar", "end_bar"],
+        "additionalProperties": true,
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string", "description": "中文显示名，如前奏/主歌/副歌" },
+          "kind": { "enum": ["intro", "verse", "prechorus", "chorus", "bridge", "interlude", "solo", "outro", "other"] },
+          "start_bar": { "type": "integer", "minimum": 1 },
+          "end_bar": { "type": "integer", "minimum": 1 },
+          "start_sec": { "type": "number" },
+          "end_sec": { "type": "number" },
+          "repeat_of": { "type": ["string", "null"], "description": "重复段落 id；仅作提示，不省略小节数据" },
+          "pattern_id": { "type": ["string", "null"], "description": "该段推荐节奏型 id" },
+          "energy": { "type": "number", "minimum": 0, "maximum": 1 },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "bars": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["index"],
+        "additionalProperties": true,
+        "properties": {
+          "index": { "type": "integer", "minimum": 1 },
+          "section": { "type": "string" },
+          "start_sec": { "type": "number" },
+          "end_sec": { "type": "number" },
+          "time_signature": { "$ref": "#/$defs/timeSignature" },
+          "tempo": { "type": "number" },
+          "pickup": { "type": "boolean", "description": "弱起小节，实际拍数不足" },
+          "chords": { "type": "array", "items": { "$ref": "#/$defs/chordEvent" } },
+          "vocal": { "type": "array", "items": { "$ref": "#/$defs/vocalNote" } },
+          "guitar": { "$ref": "#/$defs/guitarBar" },
+          "new_system": { "type": "boolean" },
+          "new_page": { "type": "boolean" },
+          "markers": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "voicings": {
+      "type": "object",
+      "description": "id -> 指法。前端与导出器共用；同一 score 内可直接内联。",
+      "additionalProperties": { "$ref": "#/$defs/voicing" }
+    },
+    "strum_patterns": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/strumPattern" }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "overall": { "type": "number", "minimum": 0, "maximum": 1 },
+        "stages": { "type": "object", "additionalProperties": true },
+        "warnings": { "type": "array", "items": { "$ref": "#/$defs/warning" } }
+      }
+    }
+  },
+  "$defs": {
+    "timeSignature": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1, "maximum": 16 },
+      "minItems": 2, "maxItems": 2
+    },
+    "duration": {
+      "oneOf": [
+        { "type": "number", "minimum": 0 },
+        { "type": "string", "pattern": "^[0-9]+/[0-9]+$" }
+      ],
+      "description": "时值，单位四分音符拍；分数字符串表示三连音等精确值"
+    },
+    "warning": {
+      "type": "object",
+      "required": ["level", "message"],
+      "additionalProperties": true,
+      "properties": {
+        "level": { "enum": ["info", "warn", "error"] },
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "stage": { "type": "string" },
+        "target": { "type": "string", "description": "小节号/段落 id/音符索引等定位" }
+      }
+    },
+    "chordEvent": {
+      "type": "object",
+      "required": ["beat", "symbol"],
+      "additionalProperties": true,
+      "properties": {
+        "beat": { "type": "number", "minimum": 0 },
+        "dur": { "$ref": "#/$defs/duration" },
+        "symbol": { "type": "string", "description": "记谱调下的和弦符号，如 C、Am7、G/B" },
+        "concert": { "type": "string", "description": "发声音高下的和弦符号（有 capo 时不同）" },
+        "voicing_id": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "start_sec": { "type": "number" }
+      }
+    },
+    "vocalNote": {
+      "type": "object",
+      "required": ["beat", "midi"],
+      "additionalProperties": true,
+      "properties": {
+        "beat": { "type": "number", "minimum": 0 },
+        "dur": { "$ref": "#/$defs/duration" },
+        "midi": { "type": ["integer", "null"], "minimum": 12, "maximum": 108, "description": "null 表示休止/无确定音高" },
+        "lyric": { "type": ["string", "null"], "description": "该音对应的一个汉字/音节；一字多音时后续音为 null 并用 tie 表示" },
+        "lyric_extend": { "type": "boolean", "description": "多字一音时用连字符连接" },
+        "tie": { "enum": ["start", "stop", "continue"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "start_sec": { "type": "number" },
+        "rest": { "type": "boolean" }
+      }
+    },
+    "guitarBar": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "pattern_id": { "type": ["string", "null"] },
+        "hits": {
+          "type": "array",
+          "description": "扫弦/分解的和弦击发；每个 hit 引用 voicing_id 或直接给弦品",
+          "items": {
+            "type": "object",
+            "required": ["beat"],
+            "additionalProperties": true,
+            "properties": {
+              "beat": { "type": "number", "minimum": 0 },
+              "dur": { "$ref": "#/$defs/duration" },
+              "voicing_id": { "type": "string" },
+              "strings": {
+                "type": "array",
+                "description": "[[弦号, 品位], ...] 弦号 1=最高音弦；品位 0=空弦，null=闷弦",
+                "items": { "type": "array", "items": { "type": ["integer", "null"] }, "minItems": 2, "maxItems": 2 }
+              },
+              "stroke": { "enum": ["down", "up", "mute", "pluck", "bass"] },
+              "accent": { "type": "boolean" }
+            }
+          }
+        },
+        "riff": {
+          "type": "array",
+          "description": "单音 riff / 前奏间奏吉他动机",
+          "items": {
+            "type": "object",
+            "required": ["beat", "midi"],
+            "additionalProperties": true,
+            "properties": {
+              "beat": { "type": "number", "minimum": 0 },
+              "dur": { "$ref": "#/$defs/duration" },
+              "midi": { "type": "integer", "minimum": 12, "maximum": 108 },
+              "tab": {
+                "type": "array",
+                "description": "[弦号, 品位]",
+                "items": { "type": ["integer", "null"] },
+                "minItems": 2, "maxItems": 2
+              }
+            }
+          }
+        }
+      }
+    },
+    "voicing": {
+      "type": "object",
+      "required": ["symbol", "frets"],
+      "additionalProperties": true,
+      "properties": {
+        "symbol": { "type": "string" },
+        "frets": {
+          "type": "array",
+          "description": "低到高 6 弦；-1 不弹，0 空弦，n 品；null 表示闷弦",
+          "items": { "type": ["integer", "null"] },
+          "minItems": 6, "maxItems": 6
+        },
+        "fingers": {
+          "type": "array",
+          "items": { "type": ["integer", "null"] },
+          "minItems": 6, "maxItems": 6
+        },
+        "base_fret": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "barres": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["fret", "from", "to"],
+            "properties": {
+              "fret": { "type": "integer" },
+              "from": { "type": "integer" },
+              "to": { "type": "integer" }
+            }
+          }
+        },
+        "difficulty": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "label": { "type": "string", "description": "如 \"C (开放)\" / \"G 大三和弦横按\"" }
+      }
+    },
+    "strumPattern": {
+      "type": "object",
+      "required": ["id", "beats_per_bar", "events"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "description": "如 \"民谣八分\" / \"分解 5323\"" },
+        "beats_per_bar": { "type": "integer", "minimum": 1 },
+        "subdivision": { "enum": ["quarter", "eighth", "sixteenth", "triplet"] },
+        "display": { "type": "string", "description": "文字示意，如 \"↓ ↓↑ ↑↓↑\"" },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["beat", "stroke"],
+            "additionalProperties": true,
+            "properties": {
+              "beat": { "type": "number", "minimum": 0 },
+              "dur": { "$ref": "#/$defs/duration" },
+              "stroke": { "enum": ["down", "up", "mute", "pluck", "bass"] },
+              "strings": { "type": "array", "items": { "type": "integer" } },
+              "accent": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

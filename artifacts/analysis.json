@@ -1,0 +1,7267 @@
+{
+  "schema": "aitsm.analysis/v1",
+  "created_at": "2026-10-21T07:49:31+0800",
+  "source": {
+    "original_name": "小林未郁、HOYO-MiX - 下一站 Beyond This Station.flac",
+    "sha256": "9b99e9b943aa948b4cfc24a483760f05b07a6c28f7b8acce503a22958beda224",
+    "path": "K:\\workspaces\\hackmagic\\hackmagic-music\\assets\\小林未郁、HOYO-MiX\\小林未郁、HOYO-MiX - 下一站 Beyond This Station.flac",
+    "size_bytes": 29096112,
+    "source_duration": 229.032245,
+    "start_seconds": 0.0
+  },
+  "audio": {
+    "analysis_wav": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\analysis.wav",
+    "playback_audio": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\playback.mp3",
+    "mix_wav": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\mix_44k.wav",
+    "duration": 229.0322,
+    "sample_rate": 22050,
+    "channels": 1,
+    "playback_codec": "libmp3lame",
+    "probe": {
+      "container": "flac",
+      "codec": "flac",
+      "sample_rate": 44100,
+      "channels": 2,
+      "bit_rate": 1016314,
+      "has_video": false
+    }
+  },
+  "stems": {
+    "engine": "demucs",
+    "model": "htdemucs",
+    "device": "cpu",
+    "cached": false,
+    "vocals": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\vocals.wav",
+    "drums": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\drums.wav",
+    "bass": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\bass.wav",
+    "other": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\other.wav",
+    "hq_stems": {
+      "vocals": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems_hq\\vocals.wav",
+      "drums": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems_hq\\drums.wav",
+      "bass": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems_hq\\bass.wav",
+      "other": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems_hq\\other.wav"
+    }
+  },
+  "beats": {
+    "bpm": 92.47,
+    "bpm_display": 92.28,
+    "confidence": 0.792,
+    "beats": [
+      0.6734,
+      1.3235,
+      1.9737,
+      2.6239,
+      3.274,
+      3.9242,
+      4.5743,
+      5.2245,
+      5.8514,
+      6.5016,
+      7.1517,
+      7.8019,
+      8.4521,
+      9.079,
+      9.7292,
+      10.3329,
+      11.0063,
+      11.6564,
+      12.3066,
+      12.9567,
+      13.6069,
+      14.2571,
+      14.9072,
+      15.5341,
+      16.1611,
+      16.8112,
+      17.4614,
+      18.1116,
+      18.7617,
+      19.4119,
+      20.0388,
+      20.6658,
+      21.3159,
+      21.9661,
+      22.6162,
+      23.2664,
+      23.9166,
+      24.5435,
+      25.1937,
+      25.8438,
+      26.494,
+      27.1441,
+      27.7943,
+      28.4212,
+      29.0946,
+      29.7912,
+      30.511,
+      31.2076,
+      31.9274,
+      32.6008,
+      33.251,
+      33.9011,
+      34.5513,
+      35.2015,
+      35.8516,
+      36.4785,
+      37.1287,
+      37.7556,
+      38.4058,
+      39.056,
+      39.7061,
+      40.3563,
+      41.0064,
+      41.6566,
+      42.3068,
+      42.9569,
+      43.6071,
+      44.234,
+      44.8842,
+      45.5111,
+      46.1613,
+      46.8114,
+      47.4616,
+      48.1117,
+      48.7387,
+      49.3888,
+      50.039,
+      50.6892,
+      51.3161,
+      51.9663,
+      52.5468,
+      53.1273,
+      53.731,
+      54.3811,
+      54.9616,
+      55.5189,
+      56.1691,
+      56.796,
+      57.4462,
+      58.0963,
+      58.7465,
+      59.3734,
+      60.0236,
+      60.6737,
+      61.3239,
+      61.9741,
+      62.6242,
+      63.2744,
+      64.0406,
+      64.714,
+      65.5035,
+      66.1537,
+      66.8038,
+      67.454,
+      68.1041,
+      68.7311,
+      69.3812,
+      70.0314,
+      70.6815,
+      71.3317,
+      71.9586,
+      72.6088,
+      73.259,
+      73.9091,
+      74.5593,
+      75.2094,
+      75.8364,
+      76.4865,
+      77.1367,
+      77.7868,
+      78.4138,
+      79.0639,
+      79.7141,
+      80.3643,
+      81.0144,
+      81.6414,
+      82.3147,
+      83.0346,
+      83.7312,
+      84.4278,
+      85.1244,
+      85.8442,
+      86.4943,
+      87.1445,
+      87.7714,
+      88.4216,
+      89.0717,
+      89.6987,
+      90.3488,
+      90.999,
+      91.6492,
+      92.2993,
+      92.9495,
+      93.6693,
+      94.3891,
+      95.0625,
+      95.7823,
+      96.4789,
+      97.1291,
+      97.756,
+      98.4062,
+      99.0563,
+      99.7065,
+      100.3566,
+      101.0068,
+      101.6337,
+      102.2839,
+      102.9341,
+      103.5842,
+      104.2112,
+      104.8613,
+      105.5115,
+      106.1616,
+      106.8118,
+      107.4852,
+      108.1353,
+      108.7623,
+      109.3892,
+      110.0161,
+      110.6663,
+      111.3165,
+      111.9666,
+      112.6168,
+      113.2437,
+      113.8939,
+      114.544,
+      115.1942,
+      115.8444,
+      116.4945,
+      117.1447,
+      117.7716,
+      118.4218,
+      119.0719,
+      119.6989,
+      120.349,
+      120.9992,
+      121.6493,
+      122.2995,
+      122.9264,
+      123.5766,
+      124.2268,
+      124.8769,
+      125.5271,
+      126.154,
+      126.8042,
+      127.4543,
+      128.1045,
+      128.7546,
+      129.3816,
+      130.0317,
+      130.8212,
+      131.4946,
+      132.2144,
+      132.9342,
+      133.5844,
+      134.2346,
+      134.8847,
+      135.5117,
+      136.1618,
+      136.812,
+      137.4621,
+      138.1123,
+      138.7392,
+      139.3894,
+      140.0395,
+      140.6897,
+      141.3166,
+      141.9668,
+      142.617,
+      143.2671,
+      143.9173,
+      144.5442,
+      145.1944,
+      145.8445,
+      146.4715,
+      147.1216,
+      147.795,
+      148.422,
+      149.0721,
+      149.7223,
+      150.3492,
+      150.9994,
+      151.6495,
+      152.2765,
+      152.9266,
+      153.5768,
+      154.2269,
+      154.9003,
+      155.5273,
+      156.1542,
+      156.8044,
+      157.4545,
+      158.1047,
+      158.7548,
+      159.3818,
+      160.0319,
+      160.6821,
+      161.3322,
+      161.9824,
+      162.6093,
+      163.2595,
+      163.9097,
+      164.5598,
+      165.1868,
+      165.8137,
+      166.3942,
+      166.9747,
+      167.5552,
+      168.1357,
+      168.7626,
+      169.3896,
+      170.0397,
+      170.6667,
+      171.3168,
+      171.967,
+      172.5939,
+      173.2441,
+      173.8942,
+      174.5444,
+      175.1946,
+      175.8215,
+      176.4949,
+      177.1218,
+      177.772,
+      178.4221,
+      179.0723,
+      179.6992,
+      180.3494,
+      180.9995,
+      181.6497,
+      182.2999,
+      182.95,
+      183.6002,
+      184.2271,
+      184.8773,
+      185.5042,
+      186.1544,
+      186.8045,
+      187.4779,
+      188.1281,
+      188.755,
+      189.382,
+      190.0321,
+      190.6823,
+      191.3324,
+      191.9594,
+      192.6095,
+      193.2597,
+      193.8866,
+      194.5368,
+      195.1869,
+      195.8371,
+      196.4873,
+      197.1374,
+      197.7876,
+      198.4377,
+      199.0647,
+      199.7148,
+      200.365,
+      201.0151,
+      201.6421,
+      202.2922,
+      202.9424,
+      203.5693,
+      204.2195,
+      204.8697,
+      205.5198,
+      206.17,
+      206.8201,
+      207.4703,
+      208.0972,
+      208.7474,
+      209.3976,
+      210.0245,
+      210.6746,
+      211.3248,
+      211.9517,
+      212.6019,
+      213.2521,
+      213.9022,
+      214.5524,
+      215.2025,
+      215.8295,
+      216.4796,
+      217.1298,
+      217.78,
+      218.4069,
+      219.0571,
+      219.7072,
+      220.3574,
+      221.0075,
+      221.6577,
+      222.3078,
+      222.958,
+      223.6082,
+      224.3048,
+      225.0014,
+      225.6747,
+      226.3249
+    ],
+    "downbeats": [
+      2.6239,
+      5.2245,
+      7.8019,
+      10.3329,
+      12.9567,
+      15.5341,
+      18.1116,
+      20.6658,
+      23.2664,
+      25.8438,
+      28.4212,
+      31.2076,
+      33.9011,
+      36.4785,
+      39.056,
+      41.6566,
+      44.234,
+      46.8114,
+      49.3888,
+      51.9663,
+      54.3811,
+      56.796,
+      59.3734,
+      61.9741,
+      64.714,
+      67.454,
+      70.0314,
+      72.6088,
+      75.2094,
+      77.7868,
+      80.3643,
+      83.0346,
+      85.8442,
+      88.4216,
+      90.999,
+      93.6693,
+      96.4789,
+      99.0563,
+      101.6337,
+      104.2112,
+      106.8118,
+      109.3892,
+      111.9666,
+      114.544,
+      117.1447,
+      119.6989,
+      122.2995,
+      124.8769,
+      127.4543,
+      130.0317,
+      132.9342,
+      135.5117,
+      138.1123,
+      140.6897,
+      143.2671,
+      145.8445,
+      148.422,
+      150.9994,
+      153.5768,
+      156.1542,
+      158.7548,
+      161.3322,
+      163.9097,
+      166.3942,
+      168.7626,
+      171.3168,
+      173.8942,
+      176.4949,
+      179.0723,
+      181.6497,
+      184.2271,
+      186.8045,
+      189.382,
+      191.9594,
+      194.5368,
+      197.1374,
+      199.7148,
+      202.2922,
+      204.8697,
+      207.4703,
+      210.0245,
+      212.6019,
+      215.2025,
+      217.78,
+      220.3574,
+      222.958,
+      225.6747
+    ],
+    "beats_per_bar": 4,
+    "time_signature": "4/4",
+    "beat_strength": [
+      0.497,
+      0.0,
+      0.0,
+      0.0,
+      0.2781,
+      0.0,
+      0.0,
+      0.0,
+      0.4198,
+      0.0,
+      0.0,
+      0.035,
+      0.057,
+      0.0,
+      0.1995,
+      0.5799,
+      0.1626,
+      0.0159,
+      0.0611,
+      0.0164,
+      0.0813,
+      0.0,
+      0.0351,
+      0.0,
+      0.4364,
+      0.034,
+      0.0207,
+      0.0699,
+      0.0225,
+      0.0,
+      0.1753,
+      0.399,
+      0.1593,
+      0.2047,
+      0.2868,
+      0.4139,
+      0.0838,
+      0.2012,
+      0.2341,
+      0.3538,
+      0.2234,
+      0.2687,
+      0.3193,
+      0.2888,
+      0.1035,
+      0.0219,
+      0.1112,
+      0.0665,
+      0.0963,
+      0.2654,
+      0.2193,
+      0.299,
+      0.2577,
+      0.3192,
+      0.3117,
+      0.2753,
+      0.1678,
+      0.2817,
+      0.3451,
+      0.3362,
+      0.0554,
+      0.4203,
+      0.2218,
+      0.0895,
+      0.1004,
+      0.0862,
+      0.1621,
+      0.0902,
+      0.0232,
+      0.0992,
+      0.8788,
+      0.2054,
+      0.1301,
+      0.0046,
+      0.7349,
+      0.149,
+      0.1516,
+      0.4332,
+      1.0,
+      0.3203,
+      0.0243,
+      0.217,
+      0.6728,
+      0.4705,
+      0.028,
+      0.3661,
+      0.4796,
+      0.4436,
+      0.1731,
+      0.3966,
+      0.7248,
+      0.4097,
+      0.2,
+      0.5795,
+      0.989,
+      0.6176,
+      0.2186,
+      0.4379,
+      0.5203,
+      0.3415,
+      0.4022,
+      0.4628,
+      0.4223,
+      0.6413,
+      0.4901,
+      0.7456,
+      0.5979,
+      0.4336,
+      0.4875,
+      0.4581,
+      0.3073,
+      0.6173,
+      0.6727,
+      0.6189,
+      0.5657,
+      0.2362,
+      0.0916,
+      0.4242,
+      0.379,
+      0.3619,
+      0.377,
+      0.3711,
+      0.2572,
+      0.2275,
+      0.2906,
+      0.4413,
+      0.3436,
+      0.0435,
+      0.3008,
+      0.0164,
+      0.0353,
+      0.3725,
+      0.2641,
+      0.0838,
+      0.2572,
+      0.0907,
+      0.2611,
+      0.0429,
+      0.2315,
+      0.2516,
+      0.3363,
+      0.0638,
+      0.2397,
+      0.0252,
+      0.1413,
+      0.1683,
+      0.1306,
+      0.1556,
+      0.3023,
+      0.2824,
+      0.2076,
+      0.2232,
+      0.3584,
+      0.2825,
+      0.3269,
+      0.2157,
+      0.2802,
+      0.2862,
+      0.3466,
+      0.1353,
+      0.2029,
+      0.2582,
+      0.0491,
+      0.0018,
+      0.0411,
+      0.1204,
+      0.2101,
+      0.4887,
+      0.1186,
+      0.7108,
+      0.7413,
+      0.8165,
+      0.6138,
+      0.5228,
+      0.5975,
+      0.6727,
+      0.3435,
+      0.6149,
+      0.4085,
+      0.2692,
+      0.4399,
+      0.5999,
+      0.4482,
+      0.6327,
+      0.5246,
+      0.4957,
+      0.6098,
+      0.5522,
+      0.7797,
+      0.5925,
+      0.4418,
+      0.3886,
+      0.3581,
+      0.3069,
+      0.268,
+      0.2624,
+      0.0443,
+      0.0395,
+      0.3836,
+      0.4525,
+      0.3527,
+      0.2222,
+      0.0677,
+      0.2424,
+      0.2344,
+      0.2438,
+      0.1715,
+      0.2219,
+      0.2602,
+      0.3293,
+      0.0708,
+      0.0883,
+      0.141,
+      0.2282,
+      0.2202,
+      0.1186,
+      0.0686,
+      0.0839,
+      0.2347,
+      0.0458,
+      0.0871,
+      0.1342,
+      0.0441,
+      0.0534,
+      0.0,
+      0.0715,
+      0.3466,
+      0.6697,
+      0.3032,
+      0.1337,
+      0.247,
+      0.0982,
+      0.2391,
+      0.0896,
+      0.3116,
+      0.2986,
+      0.2879,
+      0.1573,
+      0.2656,
+      0.0392,
+      0.2088,
+      0.1264,
+      0.1652,
+      0.1243,
+      0.2897,
+      0.083,
+      0.1575,
+      0.0771,
+      0.1462,
+      0.1014,
+      0.4097,
+      0.2593,
+      0.2864,
+      0.2086,
+      0.2366,
+      0.0106,
+      0.3127,
+      0.0,
+      0.1721,
+      0.1259,
+      0.3844,
+      0.2905,
+      0.3413,
+      0.2878,
+      0.4217,
+      0.3126,
+      0.2195,
+      0.2521,
+      0.0,
+      0.1291,
+      0.3543,
+      0.3108,
+      0.1225,
+      0.3782,
+      0.3343,
+      0.3556,
+      0.2617,
+      0.3737,
+      0.1578,
+      0.1717,
+      0.0392,
+      0.0652,
+      0.0805,
+      0.0594,
+      0.1138,
+      0.0777,
+      0.1303,
+      0.0593,
+      0.1709,
+      0.0978,
+      0.1978,
+      0.1584,
+      0.0901,
+      0.1267,
+      0.1377,
+      0.1426,
+      0.0838,
+      0.0774,
+      0.1372,
+      0.1161,
+      0.0559,
+      0.0244,
+      0.1553,
+      0.0434,
+      0.0393,
+      0.1433,
+      0.1534,
+      0.0851,
+      0.1297,
+      0.2589,
+      0.2675,
+      0.1396,
+      0.2046,
+      0.212,
+      0.1173,
+      0.2619,
+      0.1872,
+      0.2217,
+      0.2191,
+      0.2037,
+      0.1922,
+      0.2151,
+      0.1907,
+      0.2113,
+      0.1399,
+      0.2624,
+      0.1442,
+      0.1344,
+      0.2154,
+      0.3628,
+      0.2546,
+      0.2226,
+      0.2954,
+      0.4119,
+      0.0574,
+      0.1792,
+      0.2344,
+      0.2144,
+      0.2376,
+      0.1941,
+      0.017,
+      0.0595,
+      0.0115,
+      0.0235,
+      0.2749,
+      0.0432,
+      0.1169,
+      0.1904,
+      0.0
+    ],
+    "first_downbeat_sec": 2.6239,
+    "pickup_beats": 3,
+    "raw_bpm": 92.29,
+    "beat_grid": {
+      "fitted_bpm": 92.47,
+      "max_residual": 0.4737,
+      "snapped": false
+    },
+    "normalization": null,
+    "meter_candidates": [
+      {
+        "beats_per_bar": 4,
+        "phase": 3,
+        "score": 0.189261,
+        "raw_score": 0.139261
+      },
+      {
+        "beats_per_bar": 3,
+        "phase": 2,
+        "score": 0.073646,
+        "raw_score": 0.031146
+      },
+      {
+        "beats_per_bar": 2,
+        "phase": 1,
+        "score": 0.06557,
+        "raw_score": 0.04307
+      }
+    ],
+    "hop_length": 512,
+    "sample_rate": 22050,
+    "warnings": []
+  },
+  "key": {
+    "tonic": "D",
+    "mode": "major",
+    "confidence": 0.843,
+    "score": 0.9792,
+    "num_sharps_flats": 2,
+    "relative_major_swap": false,
+    "tonic_pc": 2,
+    "name": "D 大调",
+    "display_name": "D",
+    "prefer_flat": false,
+    "alternatives": [
+      {
+        "tonic": "B",
+        "tonic_pc": 11,
+        "mode": "minor",
+        "score": 0.9528,
+        "delta": 0.0264
+      },
+      {
+        "tonic": "G",
+        "tonic_pc": 7,
+        "mode": "major",
+        "score": 0.8277,
+        "delta": 0.1515
+      },
+      {
+        "tonic": "F#",
+        "tonic_pc": 6,
+        "mode": "minor",
+        "score": 0.8141,
+        "delta": 0.1651
+      },
+      {
+        "tonic": "E",
+        "tonic_pc": 4,
+        "mode": "minor",
+        "score": 0.7858,
+        "delta": 0.1933
+      }
+    ],
+    "warnings": []
+  },
+  "chords": [
+    {
+      "start": 0.0,
+      "end": 2.6239,
+      "symbol": "G",
+      "confidence": 0.534,
+      "slot_confidence": 0.473,
+      "score": 0.35877616515981536,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 2.6239,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "maj7",
+      "bars": 1.01,
+      "bar_aligned": false
+    },
+    {
+      "start": 2.6239,
+      "end": 5.2243,
+      "symbol": "D",
+      "confidence": 0.559,
+      "slot_confidence": 0.49875,
+      "score": 0.370258075484621,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "6",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 5.2243,
+      "end": 7.8247,
+      "symbol": "Asus2",
+      "confidence": 0.717,
+      "slot_confidence": 0.6574,
+      "score": 0.5093443721369382,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "sus2",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 7.8247,
+      "end": 11.7253,
+      "symbol": "Bm",
+      "confidence": 0.567,
+      "slot_confidence": 0.47690000000000005,
+      "score": 0.3298299942858018,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 3.9006,
+      "slot_count": 3,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 11.7253,
+      "end": 18.2263,
+      "symbol": "D",
+      "confidence": 0.634,
+      "slot_confidence": 0.48398,
+      "score": 0.45648874273229756,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 6.501,
+      "slot_count": 5,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 2.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 18.2263,
+      "end": 20.8267,
+      "symbol": "A",
+      "confidence": 0.564,
+      "slot_confidence": 0.50405,
+      "score": 0.30123347141886436,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 20.8267,
+      "end": 29.9281,
+      "symbol": "D",
+      "confidence": 0.687,
+      "slot_confidence": 0.5072,
+      "score": 0.2541630497244518,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 9.1014,
+      "slot_count": 7,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 3.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 29.9281,
+      "end": 33.8287,
+      "symbol": "Bm",
+      "confidence": 0.58,
+      "slot_confidence": 0.4900666666666667,
+      "score": 0.19382467530198197,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 3.9006,
+      "slot_count": 3,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 33.8287,
+      "end": 36.4291,
+      "symbol": "G",
+      "confidence": 0.541,
+      "slot_confidence": 0.48135,
+      "score": 0.2446702966593582,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "maj7",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 36.4291,
+      "end": 39.0295,
+      "symbol": "Bm",
+      "confidence": 0.545,
+      "slot_confidence": 0.4854,
+      "score": 0.21449343441728633,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 39.0295,
+      "end": 41.6299,
+      "symbol": "D",
+      "confidence": 0.53,
+      "slot_confidence": 0.4699,
+      "score": 0.1776067986804353,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 41.6299,
+      "end": 44.2303,
+      "symbol": "F#m",
+      "confidence": 0.612,
+      "slot_confidence": 0.5519499999999999,
+      "score": 0.21451206671022313,
+      "root_pc": 6,
+      "bass_pc": 6,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 44.2303,
+      "end": 46.8307,
+      "symbol": "Bm",
+      "confidence": 0.542,
+      "slot_confidence": 0.48195,
+      "score": 0.19491109707486157,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 46.8307,
+      "end": 52.0315,
+      "symbol": "D",
+      "confidence": 0.595,
+      "slot_confidence": 0.474875,
+      "score": 0.22531340072214262,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 5.2008,
+      "slot_count": 4,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "6",
+      "bars": 2.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 52.0315,
+      "end": 62.4331,
+      "symbol": "Bm",
+      "confidence": 0.66,
+      "slot_confidence": 0.48042500000000005,
+      "score": 0.19554889454092295,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 10.4016,
+      "slot_count": 8,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 4.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 62.4331,
+      "end": 65.0335,
+      "symbol": "A",
+      "confidence": 0.563,
+      "slot_confidence": 0.5031,
+      "score": 0.18293058250338284,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "6",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 65.0335,
+      "end": 71.5345,
+      "symbol": "G",
+      "confidence": 0.662,
+      "slot_confidence": 0.51194,
+      "score": 0.23276208498830153,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 6.501,
+      "slot_count": 5,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "maj7",
+      "bars": 2.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 71.5345,
+      "end": 75.4351,
+      "symbol": "Bm",
+      "confidence": 0.645,
+      "slot_confidence": 0.5555,
+      "score": 0.26971564644182383,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 3.9006,
+      "slot_count": 3,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 75.4351,
+      "end": 81.9361,
+      "symbol": "G",
+      "confidence": 0.613,
+      "slot_confidence": 0.46265999999999996,
+      "score": 0.22929434944277666,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 6.501,
+      "slot_count": 5,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "6",
+      "bars": 2.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 81.9361,
+      "end": 85.8367,
+      "symbol": "D",
+      "confidence": 0.565,
+      "slot_confidence": 0.4753,
+      "score": 0.25251282626976435,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 3.9006,
+      "slot_count": 3,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 85.8367,
+      "end": 87.1369,
+      "symbol": "G",
+      "confidence": 0.564,
+      "slot_confidence": 0.5338,
+      "score": 0.2899902771129758,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 0.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 87.1369,
+      "end": 88.4371,
+      "symbol": "A",
+      "confidence": 0.585,
+      "slot_confidence": 0.5555,
+      "score": 0.2488518540212244,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
+      "bars": 0.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 88.4371,
+      "end": 91.0375,
+      "symbol": "Bm",
+      "confidence": 0.542,
+      "slot_confidence": 0.48214999999999997,
+      "score": 0.3053818853159764,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 91.0375,
+      "end": 92.3377,
+      "symbol": "G",
+      "confidence": 0.501,
+      "slot_confidence": 0.4708,
+      "score": 0.2727464618571473,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 0.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 92.3377,
+      "end": 94.9381,
+      "symbol": "D",
+      "confidence": 0.569,
+      "slot_confidence": 0.50915,
+      "score": 0.24515965289539116,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 94.9381,
+      "end": 98.8387,
+      "symbol": "Bm",
+      "confidence": 0.632,
+      "slot_confidence": 0.5417,
+      "score": 0.24108394502423391,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 3.9006,
+      "slot_count": 3,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 98.8387,
+      "end": 101.4391,
+      "symbol": "G",
+      "confidence": 0.579,
+      "slot_confidence": 0.51915,
+      "score": 0.2874483028603481,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "maj7",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 101.4391,
+      "end": 104.0395,
+      "symbol": "Bm",
+      "confidence": 0.554,
+      "slot_confidence": 0.49445000000000006,
+      "score": 0.25325955635933495,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 104.0395,
+      "end": 115.7413,
+      "symbol": "D",
+      "confidence": 0.652,
+      "slot_confidence": 0.47161111111111115,
+      "score": 0.16907890017176253,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 11.7018,
+      "slot_count": 9,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 4.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 115.7413,
+      "end": 117.0415,
+      "symbol": "A",
+      "confidence": 0.514,
+      "slot_confidence": 0.4845,
+      "score": 0.21175213088700445,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
+      "bars": 0.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 117.0415,
+      "end": 119.6419,
+      "symbol": "Bm",
+      "confidence": 0.576,
+      "slot_confidence": 0.51615,
+      "score": 0.2615012518081535,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 119.6419,
+      "end": 122.2423,
+      "symbol": "G",
+      "confidence": 0.543,
+      "slot_confidence": 0.4828,
+      "score": 0.2775475238232583,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 122.2423,
+      "end": 124.8427,
+      "symbol": "D",
+      "confidence": 0.522,
+      "slot_confidence": 0.4616,
+      "score": 0.2908006732664233,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "maj7",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 124.8427,
+      "end": 127.4431,
+      "symbol": "A",
+      "confidence": 0.557,
+      "slot_confidence": 0.49735,
+      "score": 0.27078775594233884,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 127.4431,
+      "end": 128.7433,
+      "symbol": "G",
+      "confidence": 0.499,
+      "slot_confidence": 0.4689,
+      "score": 0.2220454957204991,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
+      "bars": 0.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 128.7433,
+      "end": 130.0435,
+      "symbol": "D",
+      "confidence": 0.492,
+      "slot_confidence": 0.4619,
+      "score": 0.19328582408555772,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "6",
+      "bars": 0.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 130.0435,
+      "end": 131.3437,
+      "symbol": "Bm",
+      "confidence": 0.535,
+      "slot_confidence": 0.5055,
+      "score": 0.2600372741663499,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 0.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 131.3437,
+      "end": 133.9441,
+      "symbol": "C#m7b5",
+      "confidence": 0.608,
+      "slot_confidence": 0.5480499999999999,
+      "score": 0.22228579616487126,
+      "root_pc": 1,
+      "bass_pc": 1,
+      "quality": "m7b5",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 133.9441,
+      "end": 140.4451,
+      "symbol": "D",
+      "confidence": 0.643,
+      "slot_confidence": 0.4925400000000001,
+      "score": 0.17939559027313018,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 6.501,
+      "slot_count": 5,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 2.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 140.4451,
+      "end": 143.0455,
+      "symbol": "A",
+      "confidence": 0.53,
+      "slot_confidence": 0.47,
+      "score": 0.24297550540343224,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 143.0455,
+      "end": 145.6459,
+      "symbol": "D",
+      "confidence": 0.548,
+      "slot_confidence": 0.48845000000000005,
+      "score": 0.2659843147457795,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 145.6459,
+      "end": 148.2463,
+      "symbol": "F#m",
+      "confidence": 0.523,
+      "slot_confidence": 0.46299999999999997,
+      "score": 0.24583417394711554,
+      "root_pc": 6,
+      "bass_pc": 6,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 148.2463,
+      "end": 150.8467,
+      "symbol": "G",
+      "confidence": 0.556,
+      "slot_confidence": 0.49585,
+      "score": 0.29271694844887536,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "maj7",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 150.8467,
+      "end": 153.4471,
+      "symbol": "Bm",
+      "confidence": 0.54,
+      "slot_confidence": 0.4802,
+      "score": 0.28682740008747065,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 153.4471,
+      "end": 156.0475,
+      "symbol": "G",
+      "confidence": 0.555,
+      "slot_confidence": 0.4948,
+      "score": 0.28784641536532796,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 156.0475,
+      "end": 158.6479,
+      "symbol": "Bm",
+      "confidence": 0.542,
+      "slot_confidence": 0.4817,
+      "score": 0.26142309283184434,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 158.6479,
+      "end": 161.2483,
+      "symbol": "G",
+      "confidence": 0.538,
+      "slot_confidence": 0.4783,
+      "score": 0.2551403324835048,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 161.2483,
+      "end": 163.8487,
+      "symbol": "Bm",
+      "confidence": 0.544,
+      "slot_confidence": 0.48445000000000005,
+      "score": 0.266386623386592,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 163.8487,
+      "end": 166.4491,
+      "symbol": "G",
+      "confidence": 0.534,
+      "slot_confidence": 0.47425,
+      "score": 0.24857483242751865,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
+      "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 166.4491,
+      "end": 184.6519,
+      "symbol": "D",
+      "confidence": 0.664,
+      "slot_confidence": 0.4840571428571429,
+      "score": 0.22197453424935612,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 18.2028,
+      "slot_count": 14,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 7.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 184.6519,
+      "end": 187.2523,
+      "symbol": "Bm",
+      "confidence": 0.528,
+      "slot_confidence": 0.4683,
+      "score": 0.2778663132479143,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "m7",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 187.2523,
+      "end": 188.5525,
+      "symbol": "G",
+      "confidence": 0.539,
+      "slot_confidence": 0.5091,
+      "score": 0.2609354255975886,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 0.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 188.5525,
+      "end": 222.3577,
+      "symbol": "D",
+      "confidence": 0.672,
+      "slot_confidence": 0.4920153846153846,
+      "score": 0.25822321727849884,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 33.8052,
+      "slot_count": 26,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "6",
+      "bars": 13.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 222.3577,
+      "end": 227.5585,
+      "symbol": "Bm",
+      "confidence": 0.668,
+      "slot_confidence": 0.5479499999999999,
+      "score": 0.3640647332306893,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 5.2008,
+      "slot_count": 4,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 2.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 227.5585,
+      "end": 229.0322,
+      "symbol": "C#m7b5",
+      "confidence": 0.526,
+      "slot_confidence": 0.49205,
+      "score": 0.23072717351138322,
+      "root_pc": 1,
+      "bass_pc": 1,
+      "quality": "m7b5",
+      "duration": 1.4737,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 0.57,
+      "bar_aligned": false
+    }
+  ],
+  "sections": [
+    {
+      "start": 0.0,
+      "end": 23.2664,
+      "kind": "intro",
+      "label": "前奏 1",
+      "energy": 0.12,
+      "repeat_of": null,
+      "confidence": 0.8
+    },
+    {
+      "start": 23.2664,
+      "end": 36.4785,
+      "kind": "interlude",
+      "label": "间奏 1",
+      "energy": 0.921,
+      "repeat_of": null,
+      "confidence": 0.744
+    },
+    {
+      "start": 36.4785,
+      "end": 46.8114,
+      "kind": "verse",
+      "label": "主歌 1",
+      "energy": 0.548,
+      "repeat_of": null,
+      "confidence": 0.77
+    },
+    {
+      "start": 46.8114,
+      "end": 64.714,
+      "kind": "verse",
+      "label": "主歌 2",
+      "energy": 0.289,
+      "repeat_of": null,
+      "confidence": 0.722
+    },
+    {
+      "start": 64.714,
+      "end": 77.7868,
+      "kind": "chorus",
+      "label": "副歌 1",
+      "energy": 1.0,
+      "repeat_of": null,
+      "confidence": 0.711
+    },
+    {
+      "start": 77.7868,
+      "end": 88.4216,
+      "kind": "chorus",
+      "label": "副歌 2",
+      "energy": 0.982,
+      "repeat_of": null,
+      "confidence": 0.64
+    },
+    {
+      "start": 88.4216,
+      "end": 99.0563,
+      "kind": "chorus",
+      "label": "副歌 3",
+      "energy": 0.945,
+      "repeat_of": null,
+      "confidence": 0.642
+    },
+    {
+      "start": 99.0563,
+      "end": 140.6897,
+      "kind": "bridge",
+      "label": "桥段 1",
+      "energy": 0.915,
+      "repeat_of": null,
+      "confidence": 0.586
+    },
+    {
+      "start": 140.6897,
+      "end": 173.8942,
+      "kind": "chorus",
+      "label": "副歌 4",
+      "energy": 0.952,
+      "repeat_of": "副歌 3",
+      "confidence": 0.646
+    },
+    {
+      "start": 173.8942,
+      "end": 184.2271,
+      "kind": "chorus",
+      "label": "副歌 5",
+      "energy": 0.925,
+      "repeat_of": null,
+      "confidence": 0.724
+    },
+    {
+      "start": 184.2271,
+      "end": 197.1374,
+      "kind": "verse",
+      "label": "主歌 3",
+      "energy": 0.401,
+      "repeat_of": null,
+      "confidence": 0.8
+    },
+    {
+      "start": 197.1374,
+      "end": 229.0322,
+      "kind": "verse",
+      "label": "主歌 4",
+      "energy": 0.828,
+      "repeat_of": null,
+      "confidence": 0.635
+    }
+  ],
+  "lyrics": [
+    {
+      "start": 30.0,
+      "end": 32.0,
+      "text": "Let's get it up!",
+      "words": [
+        {
+          "start": 30.0,
+          "end": 31.1,
+          "text": "Let's",
+          "space_before": true
+        },
+        {
+          "start": 31.1,
+          "end": 31.28,
+          "text": "get",
+          "space_before": true
+        },
+        {
+          "start": 31.28,
+          "end": 31.56,
+          "text": "it",
+          "space_before": true
+        },
+        {
+          "start": 31.56,
+          "end": 32.0,
+          "text": "up",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.307,
+      "interjection": false
+    },
+    {
+      "start": 45.52,
+      "end": 50.0,
+      "text": "What's stretching so far along?",
+      "words": [
+        {
+          "start": 45.52,
+          "end": 46.92,
+          "text": "What's",
+          "space_before": true
+        },
+        {
+          "start": 46.92,
+          "end": 47.26,
+          "text": "stret",
+          "space_before": true
+        },
+        {
+          "start": 47.26,
+          "end": 47.6,
+          "text": "ching",
+          "space_before": false
+        },
+        {
+          "start": 47.6,
+          "end": 48.54,
+          "text": "so",
+          "space_before": true
+        },
+        {
+          "start": 48.54,
+          "end": 49.38,
+          "text": "far",
+          "space_before": true
+        },
+        {
+          "start": 49.38,
+          "end": 49.73,
+          "text": "al",
+          "space_before": true
+        },
+        {
+          "start": 49.73,
+          "end": 50.0,
+          "text": "ong",
+          "space_before": false
+        }
+      ],
+      "confidence": 0.307,
+      "interjection": false
+    },
+    {
+      "start": 50.08,
+      "end": 61.08,
+      "text": "Oh, the rays of our mutual bond",
+      "words": [
+        {
+          "start": 50.08,
+          "end": 51.34,
+          "text": "Oh",
+          "space_before": true
+        },
+        {
+          "start": 51.34,
+          "end": 54.84,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 54.84,
+          "end": 56.74,
+          "text": "rays",
+          "space_before": true
+        },
+        {
+          "start": 56.74,
+          "end": 57.62,
+          "text": "of",
+          "space_before": true
+        },
+        {
+          "start": 57.62,
+          "end": 58.72,
+          "text": "our",
+          "space_before": true
+        },
+        {
+          "start": 58.72,
+          "end": 59.16,
+          "text": "mut",
+          "space_before": true
+        },
+        {
+          "start": 59.16,
+          "end": 59.6,
+          "text": "ual",
+          "space_before": false
+        },
+        {
+          "start": 59.6,
+          "end": 61.08,
+          "text": "bond",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.304,
+      "interjection": false
+    },
+    {
+      "start": 62.3,
+      "end": 63.28,
+      "text": "Whoa",
+      "words": [
+        {
+          "start": 62.3,
+          "end": 63.28,
+          "text": "Whoa",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.304,
+      "interjection": true
+    },
+    {
+      "start": 64.94,
+      "end": 73.06,
+      "text": "we drive through the quiet land to carry us Across the sky, can't see when they're away, far away",
+      "words": [
+        {
+          "start": 64.94,
+          "end": 65.22,
+          "text": "we",
+          "space_before": true
+        },
+        {
+          "start": 65.22,
+          "end": 65.78,
+          "text": "drive",
+          "space_before": true
+        },
+        {
+          "start": 65.78,
+          "end": 66.32,
+          "text": "through",
+          "space_before": true
+        },
+        {
+          "start": 66.32,
+          "end": 66.64,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 66.64,
+          "end": 66.98,
+          "text": "quiet",
+          "space_before": true
+        },
+        {
+          "start": 66.98,
+          "end": 67.4,
+          "text": "land",
+          "space_before": true
+        },
+        {
+          "start": 67.4,
+          "end": 67.76,
+          "text": "to",
+          "space_before": true
+        },
+        {
+          "start": 67.76,
+          "end": 68.07,
+          "text": "car",
+          "space_before": true
+        },
+        {
+          "start": 68.07,
+          "end": 68.38,
+          "text": "ry",
+          "space_before": false
+        },
+        {
+          "start": 68.38,
+          "end": 68.8,
+          "text": "us",
+          "space_before": true
+        },
+        {
+          "start": 68.8,
+          "end": 69.07,
+          "text": "Ac",
+          "space_before": true
+        },
+        {
+          "start": 69.07,
+          "end": 69.34,
+          "text": "ross",
+          "space_before": false
+        },
+        {
+          "start": 69.34,
+          "end": 69.68,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 69.68,
+          "end": 69.9,
+          "text": "sky",
+          "space_before": true
+        },
+        {
+          "start": 70.0,
+          "end": 70.3,
+          "text": "can't",
+          "space_before": true
+        },
+        {
+          "start": 70.3,
+          "end": 70.6,
+          "text": "see",
+          "space_before": true
+        },
+        {
+          "start": 70.6,
+          "end": 71.14,
+          "text": "when",
+          "space_before": true
+        },
+        {
+          "start": 71.14,
+          "end": 71.58,
+          "text": "they're",
+          "space_before": true
+        },
+        {
+          "start": 71.58,
+          "end": 71.78,
+          "text": "aw",
+          "space_before": true
+        },
+        {
+          "start": 71.78,
+          "end": 71.98,
+          "text": "ay",
+          "space_before": false
+        },
+        {
+          "start": 72.24,
+          "end": 72.42,
+          "text": "far",
+          "space_before": true
+        },
+        {
+          "start": 72.42,
+          "end": 72.74,
+          "text": "aw",
+          "space_before": true
+        },
+        {
+          "start": 72.74,
+          "end": 73.06,
+          "text": "ay",
+          "space_before": false
+        }
+      ],
+      "confidence": 0.304,
+      "interjection": false
+    },
+    {
+      "start": 73.06,
+      "end": 75.58,
+      "text": "Look at why I don't believe the way",
+      "words": [
+        {
+          "start": 73.06,
+          "end": 73.62,
+          "text": "Look",
+          "space_before": true
+        },
+        {
+          "start": 73.62,
+          "end": 73.98,
+          "text": "at",
+          "space_before": true
+        },
+        {
+          "start": 73.98,
+          "end": 74.24,
+          "text": "why",
+          "space_before": true
+        },
+        {
+          "start": 74.24,
+          "end": 74.58,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 74.58,
+          "end": 74.66,
+          "text": "don't",
+          "space_before": true
+        },
+        {
+          "start": 74.66,
+          "end": 74.84,
+          "text": "bel",
+          "space_before": true
+        },
+        {
+          "start": 74.84,
+          "end": 75.02,
+          "text": "ieve",
+          "space_before": false
+        },
+        {
+          "start": 75.02,
+          "end": 75.32,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 75.32,
+          "end": 75.58,
+          "text": "way",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.537,
+      "interjection": false
+    },
+    {
+      "start": 76.7,
+      "end": 86.84,
+      "text": "I stand in promise with",
+      "words": [
+        {
+          "start": 76.7,
+          "end": 77.54,
+          "text": "Oh",
+          "space_before": true
+        },
+        {
+          "start": 77.54,
+          "end": 78.38,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 78.38,
+          "end": 78.42,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 78.42,
+          "end": 80.6,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 80.6,
+          "end": 80.78,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 80.78,
+          "end": 80.98,
+          "text": "Oh",
+          "space_before": true
+        },
+        {
+          "start": 80.98,
+          "end": 82.8,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 82.8,
+          "end": 83.5,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 83.5,
+          "end": 84.36,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 84.36,
+          "end": 84.58,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 84.58,
+          "end": 85.1,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 85.1,
+          "end": 85.62,
+          "text": "stand",
+          "space_before": true
+        },
+        {
+          "start": 85.62,
+          "end": 85.96,
+          "text": "in",
+          "space_before": true
+        },
+        {
+          "start": 85.96,
+          "end": 86.19,
+          "text": "prom",
+          "space_before": true
+        },
+        {
+          "start": 86.19,
+          "end": 86.42,
+          "text": "ise",
+          "space_before": false
+        },
+        {
+          "start": 86.42,
+          "end": 86.84,
+          "text": "with",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.537,
+      "interjection": false
+    },
+    {
+      "start": 86.84,
+      "end": 94.98,
+      "text": "my heart and shame No as we're caught in vain to say my name",
+      "words": [
+        {
+          "start": 86.84,
+          "end": 87.34,
+          "text": "my",
+          "space_before": true
+        },
+        {
+          "start": 87.34,
+          "end": 87.8,
+          "text": "heart",
+          "space_before": true
+        },
+        {
+          "start": 87.8,
+          "end": 88.22,
+          "text": "and",
+          "space_before": true
+        },
+        {
+          "start": 88.22,
+          "end": 89.62,
+          "text": "shame",
+          "space_before": true
+        },
+        {
+          "start": 89.62,
+          "end": 90.38,
+          "text": "No",
+          "space_before": true
+        },
+        {
+          "start": 90.38,
+          "end": 90.74,
+          "text": "as",
+          "space_before": true
+        },
+        {
+          "start": 90.74,
+          "end": 91.32,
+          "text": "we're",
+          "space_before": true
+        },
+        {
+          "start": 91.32,
+          "end": 91.42,
+          "text": "caught",
+          "space_before": true
+        },
+        {
+          "start": 91.42,
+          "end": 91.76,
+          "text": "in",
+          "space_before": true
+        },
+        {
+          "start": 91.76,
+          "end": 91.98,
+          "text": "vain",
+          "space_before": true
+        },
+        {
+          "start": 91.98,
+          "end": 92.46,
+          "text": "to",
+          "space_before": true
+        },
+        {
+          "start": 92.46,
+          "end": 92.8,
+          "text": "say",
+          "space_before": true
+        },
+        {
+          "start": 92.8,
+          "end": 93.5,
+          "text": "my",
+          "space_before": true
+        },
+        {
+          "start": 93.5,
+          "end": 94.98,
+          "text": "name",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.537,
+      "interjection": false
+    },
+    {
+      "start": 106.82,
+      "end": 113.2,
+      "text": "Just let the safe options come",
+      "words": [
+        {
+          "start": 106.82,
+          "end": 108.22,
+          "text": "Just",
+          "space_before": true
+        },
+        {
+          "start": 108.22,
+          "end": 109.06,
+          "text": "let",
+          "space_before": true
+        },
+        {
+          "start": 109.06,
+          "end": 109.58,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 109.58,
+          "end": 110.44,
+          "text": "safe",
+          "space_before": true
+        },
+        {
+          "start": 110.44,
+          "end": 110.82,
+          "text": "op",
+          "space_before": true
+        },
+        {
+          "start": 110.82,
+          "end": 111.2,
+          "text": "tions",
+          "space_before": false
+        },
+        {
+          "start": 111.2,
+          "end": 113.2,
+          "text": "come",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.322,
+      "interjection": false
+    },
+    {
+      "start": 115.1,
+      "end": 122.96,
+      "text": "Oh, no real issues as fate's outcome",
+      "words": [
+        {
+          "start": 115.1,
+          "end": 116.5,
+          "text": "Oh",
+          "space_before": true
+        },
+        {
+          "start": 116.74,
+          "end": 117.02,
+          "text": "no",
+          "space_before": true
+        },
+        {
+          "start": 117.02,
+          "end": 118.72,
+          "text": "real",
+          "space_before": true
+        },
+        {
+          "start": 118.72,
+          "end": 119.27,
+          "text": "is",
+          "space_before": true
+        },
+        {
+          "start": 119.27,
+          "end": 119.82,
+          "text": "sues",
+          "space_before": false
+        },
+        {
+          "start": 119.82,
+          "end": 120.8,
+          "text": "as",
+          "space_before": true
+        },
+        {
+          "start": 120.8,
+          "end": 121.28,
+          "text": "fat",
+          "space_before": true
+        },
+        {
+          "start": 121.28,
+          "end": 121.76,
+          "text": "e's",
+          "space_before": false
+        },
+        {
+          "start": 121.76,
+          "end": 122.36,
+          "text": "out",
+          "space_before": true
+        },
+        {
+          "start": 122.36,
+          "end": 122.96,
+          "text": "come",
+          "space_before": false
+        }
+      ],
+      "confidence": 0.322,
+      "interjection": false
+    },
+    {
+      "start": 124.92,
+      "end": 134.54,
+      "text": "Oh, what we'll do when we're done To set the soul's billet above my soul And we're gone, in your mind, we won't leave",
+      "words": [
+        {
+          "start": 124.92,
+          "end": 126.32,
+          "text": "Oh",
+          "space_before": true
+        },
+        {
+          "start": 126.72,
+          "end": 127.18,
+          "text": "what",
+          "space_before": true
+        },
+        {
+          "start": 127.18,
+          "end": 127.9,
+          "text": "we'll",
+          "space_before": true
+        },
+        {
+          "start": 127.9,
+          "end": 128.24,
+          "text": "do",
+          "space_before": true
+        },
+        {
+          "start": 128.24,
+          "end": 128.6,
+          "text": "when",
+          "space_before": true
+        },
+        {
+          "start": 128.6,
+          "end": 128.92,
+          "text": "we're",
+          "space_before": true
+        },
+        {
+          "start": 128.92,
+          "end": 129.28,
+          "text": "done",
+          "space_before": true
+        },
+        {
+          "start": 129.28,
+          "end": 129.5,
+          "text": "To",
+          "space_before": true
+        },
+        {
+          "start": 129.5,
+          "end": 129.98,
+          "text": "set",
+          "space_before": true
+        },
+        {
+          "start": 129.98,
+          "end": 130.42,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 130.42,
+          "end": 130.84,
+          "text": "soul's",
+          "space_before": true
+        },
+        {
+          "start": 130.84,
+          "end": 131.11,
+          "text": "bil",
+          "space_before": true
+        },
+        {
+          "start": 131.11,
+          "end": 131.38,
+          "text": "let",
+          "space_before": false
+        },
+        {
+          "start": 131.38,
+          "end": 131.59,
+          "text": "ab",
+          "space_before": true
+        },
+        {
+          "start": 131.59,
+          "end": 131.8,
+          "text": "ove",
+          "space_before": false
+        },
+        {
+          "start": 131.8,
+          "end": 132.2,
+          "text": "my",
+          "space_before": true
+        },
+        {
+          "start": 132.2,
+          "end": 132.52,
+          "text": "soul",
+          "space_before": true
+        },
+        {
+          "start": 132.52,
+          "end": 132.82,
+          "text": "And",
+          "space_before": true
+        },
+        {
+          "start": 132.82,
+          "end": 133.18,
+          "text": "we're",
+          "space_before": true
+        },
+        {
+          "start": 133.18,
+          "end": 133.24,
+          "text": "gone",
+          "space_before": true
+        },
+        {
+          "start": 133.44,
+          "end": 133.48,
+          "text": "in",
+          "space_before": true
+        },
+        {
+          "start": 133.48,
+          "end": 133.76,
+          "text": "your",
+          "space_before": true
+        },
+        {
+          "start": 133.76,
+          "end": 133.86,
+          "text": "mind",
+          "space_before": true
+        },
+        {
+          "start": 133.98,
+          "end": 134.1,
+          "text": "we",
+          "space_before": true
+        },
+        {
+          "start": 134.1,
+          "end": 134.38,
+          "text": "won't",
+          "space_before": true
+        },
+        {
+          "start": 134.38,
+          "end": 134.54,
+          "text": "leave",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.322,
+      "interjection": false
+    },
+    {
+      "start": 134.54,
+      "end": 138.0,
+      "text": "I'm behind, I'm a waste, I'll be quiet Let's play me now",
+      "words": [
+        {
+          "start": 134.54,
+          "end": 134.78,
+          "text": "I'm",
+          "space_before": true
+        },
+        {
+          "start": 134.78,
+          "end": 134.94,
+          "text": "beh",
+          "space_before": true
+        },
+        {
+          "start": 134.94,
+          "end": 135.1,
+          "text": "ind",
+          "space_before": false
+        },
+        {
+          "start": 135.42,
+          "end": 135.52,
+          "text": "I'm",
+          "space_before": true
+        },
+        {
+          "start": 135.52,
+          "end": 135.64,
+          "text": "a",
+          "space_before": true
+        },
+        {
+          "start": 135.64,
+          "end": 135.88,
+          "text": "waste",
+          "space_before": true
+        },
+        {
+          "start": 135.96,
+          "end": 136.1,
+          "text": "I'll",
+          "space_before": true
+        },
+        {
+          "start": 136.1,
+          "end": 136.3,
+          "text": "be",
+          "space_before": true
+        },
+        {
+          "start": 136.3,
+          "end": 136.4,
+          "text": "quiet",
+          "space_before": true
+        },
+        {
+          "start": 136.4,
+          "end": 136.9,
+          "text": "Let's",
+          "space_before": true
+        },
+        {
+          "start": 136.9,
+          "end": 137.02,
+          "text": "play",
+          "space_before": true
+        },
+        {
+          "start": 137.02,
+          "end": 137.22,
+          "text": "me",
+          "space_before": true
+        },
+        {
+          "start": 137.22,
+          "end": 138.0,
+          "text": "now",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.356,
+      "interjection": false
+    },
+    {
+      "start": 146.92,
+      "end": 157.2,
+      "text": "I stand in promise with my heart and chain No as we go in vain to say my name",
+      "words": [
+        {
+          "start": 146.92,
+          "end": 147.56,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 147.56,
+          "end": 148.2,
+          "text": "stand",
+          "space_before": true
+        },
+        {
+          "start": 148.2,
+          "end": 148.52,
+          "text": "in",
+          "space_before": true
+        },
+        {
+          "start": 148.52,
+          "end": 148.76,
+          "text": "prom",
+          "space_before": true
+        },
+        {
+          "start": 148.76,
+          "end": 149.0,
+          "text": "ise",
+          "space_before": false
+        },
+        {
+          "start": 149.0,
+          "end": 149.44,
+          "text": "with",
+          "space_before": true
+        },
+        {
+          "start": 149.44,
+          "end": 149.96,
+          "text": "my",
+          "space_before": true
+        },
+        {
+          "start": 149.96,
+          "end": 150.34,
+          "text": "heart",
+          "space_before": true
+        },
+        {
+          "start": 150.34,
+          "end": 150.8,
+          "text": "and",
+          "space_before": true
+        },
+        {
+          "start": 150.8,
+          "end": 152.18,
+          "text": "chain",
+          "space_before": true
+        },
+        {
+          "start": 152.18,
+          "end": 153.0,
+          "text": "No",
+          "space_before": true
+        },
+        {
+          "start": 153.0,
+          "end": 153.36,
+          "text": "as",
+          "space_before": true
+        },
+        {
+          "start": 153.36,
+          "end": 153.72,
+          "text": "we",
+          "space_before": true
+        },
+        {
+          "start": 153.72,
+          "end": 154.0,
+          "text": "go",
+          "space_before": true
+        },
+        {
+          "start": 154.0,
+          "end": 154.38,
+          "text": "in",
+          "space_before": true
+        },
+        {
+          "start": 154.38,
+          "end": 154.5,
+          "text": "vain",
+          "space_before": true
+        },
+        {
+          "start": 154.5,
+          "end": 155.02,
+          "text": "to",
+          "space_before": true
+        },
+        {
+          "start": 155.02,
+          "end": 155.36,
+          "text": "say",
+          "space_before": true
+        },
+        {
+          "start": 155.36,
+          "end": 156.0,
+          "text": "my",
+          "space_before": true
+        },
+        {
+          "start": 156.0,
+          "end": 157.2,
+          "text": "name",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.356,
+      "interjection": false
+    },
+    {
+      "start": 157.2,
+      "end": 162.34,
+      "text": "I storm the silence with her hands away",
+      "words": [
+        {
+          "start": 157.2,
+          "end": 157.98,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 157.98,
+          "end": 158.36,
+          "text": "storm",
+          "space_before": true
+        },
+        {
+          "start": 158.36,
+          "end": 158.84,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 158.84,
+          "end": 159.07,
+          "text": "sil",
+          "space_before": true
+        },
+        {
+          "start": 159.07,
+          "end": 159.3,
+          "text": "ence",
+          "space_before": false
+        },
+        {
+          "start": 159.3,
+          "end": 159.86,
+          "text": "with",
+          "space_before": true
+        },
+        {
+          "start": 159.86,
+          "end": 160.28,
+          "text": "her",
+          "space_before": true
+        },
+        {
+          "start": 160.28,
+          "end": 160.74,
+          "text": "hands",
+          "space_before": true
+        },
+        {
+          "start": 160.74,
+          "end": 161.54,
+          "text": "aw",
+          "space_before": true
+        },
+        {
+          "start": 161.54,
+          "end": 162.34,
+          "text": "ay",
+          "space_before": false
+        }
+      ],
+      "confidence": 0.356,
+      "interjection": false
+    },
+    {
+      "start": 162.34,
+      "end": 168.52,
+      "text": "I save the life from every past regret",
+      "words": [
+        {
+          "start": 162.34,
+          "end": 163.34,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 163.34,
+          "end": 163.56,
+          "text": "save",
+          "space_before": true
+        },
+        {
+          "start": 163.56,
+          "end": 163.98,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 163.98,
+          "end": 164.16,
+          "text": "life",
+          "space_before": true
+        },
+        {
+          "start": 164.16,
+          "end": 164.68,
+          "text": "from",
+          "space_before": true
+        },
+        {
+          "start": 164.68,
+          "end": 164.887,
+          "text": "ev",
+          "space_before": true
+        },
+        {
+          "start": 164.887,
+          "end": 165.093,
+          "text": "er",
+          "space_before": false
+        },
+        {
+          "start": 165.093,
+          "end": 165.3,
+          "text": "y",
+          "space_before": false
+        },
+        {
+          "start": 165.3,
+          "end": 165.84,
+          "text": "past",
+          "space_before": true
+        },
+        {
+          "start": 165.84,
+          "end": 167.18,
+          "text": "reg",
+          "space_before": true
+        },
+        {
+          "start": 167.18,
+          "end": 168.52,
+          "text": "ret",
+          "space_before": false
+        }
+      ],
+      "confidence": 0.535,
+      "interjection": false
+    },
+    {
+      "start": 180.2,
+      "end": 190.66,
+      "text": "So I won't turn away, I won't let go I count the heavens through the fading wires",
+      "words": [
+        {
+          "start": 180.2,
+          "end": 181.2,
+          "text": "So",
+          "space_before": true
+        },
+        {
+          "start": 181.2,
+          "end": 181.76,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 181.76,
+          "end": 182.2,
+          "text": "won't",
+          "space_before": true
+        },
+        {
+          "start": 182.2,
+          "end": 182.48,
+          "text": "turn",
+          "space_before": true
+        },
+        {
+          "start": 182.48,
+          "end": 182.72,
+          "text": "aw",
+          "space_before": true
+        },
+        {
+          "start": 182.72,
+          "end": 182.96,
+          "text": "ay",
+          "space_before": false
+        },
+        {
+          "start": 182.96,
+          "end": 183.46,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 183.46,
+          "end": 184.0,
+          "text": "won't",
+          "space_before": true
+        },
+        {
+          "start": 184.0,
+          "end": 184.46,
+          "text": "let",
+          "space_before": true
+        },
+        {
+          "start": 184.46,
+          "end": 185.58,
+          "text": "go",
+          "space_before": true
+        },
+        {
+          "start": 185.58,
+          "end": 186.5,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 186.5,
+          "end": 186.74,
+          "text": "count",
+          "space_before": true
+        },
+        {
+          "start": 186.74,
+          "end": 187.26,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 187.26,
+          "end": 187.48,
+          "text": "heav",
+          "space_before": true
+        },
+        {
+          "start": 187.48,
+          "end": 187.7,
+          "text": "ens",
+          "space_before": false
+        },
+        {
+          "start": 187.7,
+          "end": 188.22,
+          "text": "through",
+          "space_before": true
+        },
+        {
+          "start": 188.22,
+          "end": 188.6,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 188.6,
+          "end": 188.96,
+          "text": "fad",
+          "space_before": true
+        },
+        {
+          "start": 188.96,
+          "end": 189.32,
+          "text": "ing",
+          "space_before": false
+        },
+        {
+          "start": 189.32,
+          "end": 189.99,
+          "text": "wir",
+          "space_before": true
+        },
+        {
+          "start": 189.99,
+          "end": 190.66,
+          "text": "es",
+          "space_before": false
+        }
+      ],
+      "confidence": 0.462,
+      "interjection": false
+    },
+    {
+      "start": 190.66,
+      "end": 201.52,
+      "text": "I strike the fire until the stars align Until the silence from the ancient time",
+      "words": [
+        {
+          "start": 190.66,
+          "end": 191.58,
+          "text": "I",
+          "space_before": true
+        },
+        {
+          "start": 191.58,
+          "end": 191.92,
+          "text": "strike",
+          "space_before": true
+        },
+        {
+          "start": 191.92,
+          "end": 192.42,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 192.42,
+          "end": 192.76,
+          "text": "fire",
+          "space_before": true
+        },
+        {
+          "start": 192.76,
+          "end": 193.0,
+          "text": "un",
+          "space_before": true
+        },
+        {
+          "start": 193.0,
+          "end": 193.24,
+          "text": "til",
+          "space_before": false
+        },
+        {
+          "start": 193.24,
+          "end": 193.7,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 193.7,
+          "end": 194.2,
+          "text": "stars",
+          "space_before": true
+        },
+        {
+          "start": 194.2,
+          "end": 195.01,
+          "text": "al",
+          "space_before": true
+        },
+        {
+          "start": 195.01,
+          "end": 195.82,
+          "text": "ign",
+          "space_before": false
+        },
+        {
+          "start": 195.82,
+          "end": 196.43,
+          "text": "Un",
+          "space_before": true
+        },
+        {
+          "start": 196.43,
+          "end": 197.04,
+          "text": "til",
+          "space_before": false
+        },
+        {
+          "start": 197.04,
+          "end": 197.58,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 197.58,
+          "end": 197.79,
+          "text": "sil",
+          "space_before": true
+        },
+        {
+          "start": 197.79,
+          "end": 198.0,
+          "text": "ence",
+          "space_before": false
+        },
+        {
+          "start": 198.0,
+          "end": 198.52,
+          "text": "from",
+          "space_before": true
+        },
+        {
+          "start": 198.52,
+          "end": 199.12,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 199.12,
+          "end": 199.41,
+          "text": "an",
+          "space_before": true
+        },
+        {
+          "start": 199.41,
+          "end": 199.7,
+          "text": "cient",
+          "space_before": false
+        },
+        {
+          "start": 199.7,
+          "end": 201.52,
+          "text": "time",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.462,
+      "interjection": false
+    },
+    {
+      "start": 211.66,
+      "end": 221.5,
+      "text": "Together we will stop the cosmos We will shop the cosmos, Tuck into the cosmos, hey!",
+      "words": [
+        {
+          "start": 211.66,
+          "end": 212.007,
+          "text": "Tog",
+          "space_before": true
+        },
+        {
+          "start": 212.007,
+          "end": 212.353,
+          "text": "et",
+          "space_before": false
+        },
+        {
+          "start": 212.353,
+          "end": 212.7,
+          "text": "her",
+          "space_before": false
+        },
+        {
+          "start": 212.7,
+          "end": 213.44,
+          "text": "we",
+          "space_before": true
+        },
+        {
+          "start": 213.44,
+          "end": 213.68,
+          "text": "will",
+          "space_before": true
+        },
+        {
+          "start": 213.68,
+          "end": 213.86,
+          "text": "stop",
+          "space_before": true
+        },
+        {
+          "start": 213.86,
+          "end": 214.4,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 214.4,
+          "end": 214.58,
+          "text": "cos",
+          "space_before": true
+        },
+        {
+          "start": 214.66,
+          "end": 214.68,
+          "text": "mos",
+          "space_before": false
+        },
+        {
+          "start": 214.92,
+          "end": 215.9,
+          "text": "We",
+          "space_before": true
+        },
+        {
+          "start": 215.9,
+          "end": 216.3,
+          "text": "will",
+          "space_before": true
+        },
+        {
+          "start": 216.3,
+          "end": 216.46,
+          "text": "shop",
+          "space_before": true
+        },
+        {
+          "start": 216.46,
+          "end": 216.88,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 216.88,
+          "end": 217.33,
+          "text": "cos",
+          "space_before": true
+        },
+        {
+          "start": 217.33,
+          "end": 217.78,
+          "text": "mos",
+          "space_before": false
+        },
+        {
+          "start": 217.78,
+          "end": 218.52,
+          "text": "Tuck",
+          "space_before": true
+        },
+        {
+          "start": 218.52,
+          "end": 218.8,
+          "text": "in",
+          "space_before": true
+        },
+        {
+          "start": 218.8,
+          "end": 219.08,
+          "text": "to",
+          "space_before": false
+        },
+        {
+          "start": 219.08,
+          "end": 219.42,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 219.42,
+          "end": 219.9,
+          "text": "cos",
+          "space_before": true
+        },
+        {
+          "start": 219.9,
+          "end": 220.38,
+          "text": "mos",
+          "space_before": false
+        },
+        {
+          "start": 220.58,
+          "end": 221.5,
+          "text": "hey",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.343,
+      "interjection": false
+    }
+  ],
+  "melody": {
+    "notes": [
+      {
+        "start": 9.729,
+        "end": 10.333,
+        "midi": 57,
+        "confidence": 0.727,
+        "onset": 9.88,
+        "start_raw": 9.88,
+        "end_raw": 10.217,
+        "lyric": null
+      },
+      {
+        "start": 10.333,
+        "end": 10.423,
+        "midi": 66,
+        "confidence": 0.766,
+        "onset": 10.298,
+        "start_raw": 10.298,
+        "end_raw": 10.484,
+        "lyric": null
+      },
+      {
+        "start": 10.67,
+        "end": 11.006,
+        "midi": 64,
+        "confidence": 0.74,
+        "onset": 10.507,
+        "start_raw": 10.507,
+        "end_raw": 10.948,
+        "lyric": null
+      },
+      {
+        "start": 11.006,
+        "end": 12.957,
+        "midi": 62,
+        "confidence": 0.83,
+        "onset": 11.006,
+        "start_raw": 11.006,
+        "end_raw": 13.073,
+        "lyric": null
+      },
+      {
+        "start": 13.282,
+        "end": 13.372,
+        "midi": 66,
+        "confidence": 0.724,
+        "onset": 13.224,
+        "start_raw": 13.224,
+        "end_raw": 13.363,
+        "lyric": null
+      },
+      {
+        "start": 13.375,
+        "end": 15.848,
+        "midi": 69,
+        "confidence": 0.835,
+        "onset": 13.375,
+        "start_raw": 13.375,
+        "end_raw": 15.871,
+        "lyric": null
+      },
+      {
+        "start": 16.161,
+        "end": 18.112,
+        "midi": 62,
+        "confidence": 0.799,
+        "onset": 16.173,
+        "start_raw": 16.173,
+        "end_raw": 18.228,
+        "lyric": null
+      },
+      {
+        "start": 18.437,
+        "end": 18.527,
+        "midi": 66,
+        "confidence": 0.727,
+        "onset": 18.379,
+        "start_raw": 18.379,
+        "end_raw": 18.564,
+        "lyric": null
+      },
+      {
+        "start": 18.576,
+        "end": 20.039,
+        "midi": 64,
+        "confidence": 0.766,
+        "onset": 18.576,
+        "start_raw": 18.576,
+        "end_raw": 20.097,
+        "lyric": null
+      },
+      {
+        "start": 20.352,
+        "end": 20.666,
+        "midi": 57,
+        "confidence": 0.733,
+        "onset": 20.248,
+        "start_raw": 20.248,
+        "end_raw": 20.55,
+        "lyric": null
+      },
+      {
+        "start": 20.666,
+        "end": 20.756,
+        "midi": 66,
+        "confidence": 0.817,
+        "onset": 20.643,
+        "start_raw": 20.643,
+        "end_raw": 20.805,
+        "lyric": null
+      },
+      {
+        "start": 20.991,
+        "end": 21.316,
+        "midi": 62,
+        "confidence": 0.823,
+        "onset": 20.991,
+        "start_raw": 20.991,
+        "end_raw": 21.235,
+        "lyric": null
+      },
+      {
+        "start": 21.316,
+        "end": 21.641,
+        "midi": 62,
+        "confidence": 0.81,
+        "onset": 21.397,
+        "start_raw": 21.397,
+        "end_raw": 21.699,
+        "lyric": null
+      },
+      {
+        "start": 21.966,
+        "end": 23.266,
+        "midi": 62,
+        "confidence": 0.846,
+        "onset": 21.815,
+        "start_raw": 21.815,
+        "end_raw": 23.417,
+        "lyric": null
+      },
+      {
+        "start": 23.591,
+        "end": 23.681,
+        "midi": 64,
+        "confidence": 0.851,
+        "onset": 23.441,
+        "start_raw": 23.441,
+        "end_raw": 23.719,
+        "lyric": null
+      },
+      {
+        "start": 23.742,
+        "end": 26.169,
+        "midi": 69,
+        "confidence": 0.866,
+        "onset": 23.742,
+        "start_raw": 23.742,
+        "end_raw": 26.169,
+        "lyric": null
+      },
+      {
+        "start": 26.169,
+        "end": 26.259,
+        "midi": 67,
+        "confidence": 0.565,
+        "onset": 26.215,
+        "start_raw": 26.215,
+        "end_raw": 26.32,
+        "lyric": null
+      },
+      {
+        "start": 26.494,
+        "end": 26.584,
+        "midi": 61,
+        "confidence": 0.788,
+        "onset": 26.482,
+        "start_raw": 26.482,
+        "end_raw": 26.598,
+        "lyric": null
+      },
+      {
+        "start": 26.598,
+        "end": 28.421,
+        "midi": 62,
+        "confidence": 0.841,
+        "onset": 26.598,
+        "start_raw": 26.598,
+        "end_raw": 28.514,
+        "lyric": null
+      },
+      {
+        "start": 28.421,
+        "end": 28.758,
+        "midi": 57,
+        "confidence": 0.679,
+        "onset": 28.514,
+        "start_raw": 28.514,
+        "end_raw": 28.723,
+        "lyric": null
+      },
+      {
+        "start": 28.758,
+        "end": 28.848,
+        "midi": 66,
+        "confidence": 0.867,
+        "onset": 28.758,
+        "start_raw": 28.758,
+        "end_raw": 28.92,
+        "lyric": null
+      },
+      {
+        "start": 28.92,
+        "end": 30.511,
+        "midi": 64,
+        "confidence": 0.818,
+        "onset": 28.92,
+        "start_raw": 28.92,
+        "end_raw": 30.348,
+        "lyric": null
+      },
+      {
+        "start": 30.511,
+        "end": 30.859,
+        "midi": 57,
+        "confidence": 0.841,
+        "onset": 30.674,
+        "start_raw": 30.557,
+        "end_raw": 30.824,
+        "lyric": "Let's"
+      },
+      {
+        "start": 30.859,
+        "end": 31.208,
+        "midi": 66,
+        "confidence": 0.902,
+        "onset": 30.941,
+        "start_raw": 30.941,
+        "end_raw": 31.092,
+        "lyric": "get",
+        "tie": "start"
+      },
+      {
+        "start": 31.208,
+        "end": 31.298,
+        "midi": 64,
+        "confidence": 0.895,
+        "onset": 31.161,
+        "start_raw": 31.161,
+        "end_raw": 31.277,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 31.324,
+        "end": 31.567,
+        "midi": 62,
+        "confidence": 0.906,
+        "onset": 31.324,
+        "start_raw": 31.324,
+        "end_raw": 31.556,
+        "lyric": "it"
+      },
+      {
+        "start": 44.234,
+        "end": 44.324,
+        "midi": 66,
+        "confidence": 0.699,
+        "onset": 44.153,
+        "start_raw": 44.153,
+        "end_raw": 44.257,
+        "lyric": null
+      },
+      {
+        "start": 44.559,
+        "end": 44.649,
+        "midi": 64,
+        "confidence": 0.973,
+        "onset": 44.571,
+        "start_raw": 44.466,
+        "end_raw": 44.71,
+        "lyric": null
+      },
+      {
+        "start": 44.71,
+        "end": 45.198,
+        "midi": 66,
+        "confidence": 0.805,
+        "onset": 44.71,
+        "start_raw": 44.71,
+        "end_raw": 45.082,
+        "lyric": null
+      },
+      {
+        "start": 45.198,
+        "end": 46.161,
+        "midi": 66,
+        "confidence": 0.806,
+        "onset": 45.198,
+        "start_raw": 45.198,
+        "end_raw": 46.254,
+        "lyric": "What's",
+        "tie": "start"
+      },
+      {
+        "start": 46.486,
+        "end": 46.576,
+        "midi": 67,
+        "confidence": 0.756,
+        "onset": 46.405,
+        "start_raw": 46.405,
+        "end_raw": 46.591,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 46.602,
+        "end": 47.136,
+        "midi": 69,
+        "confidence": 0.921,
+        "onset": 46.602,
+        "start_raw": 46.602,
+        "end_raw": 46.986,
+        "lyric": "stret",
+        "tie": "start"
+      },
+      {
+        "start": 47.136,
+        "end": 47.227,
+        "midi": 62,
+        "confidence": 0.791,
+        "onset": 47.148,
+        "start_raw": 47.148,
+        "end_raw": 47.241,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 47.276,
+        "end": 47.462,
+        "midi": 64,
+        "confidence": 0.858,
+        "onset": 47.276,
+        "start_raw": 47.276,
+        "end_raw": 47.485,
+        "lyric": "ching",
+        "tie": "start"
+      },
+      {
+        "start": 47.462,
+        "end": 47.552,
+        "midi": 62,
+        "confidence": 0.598,
+        "onset": 47.485,
+        "start_raw": 47.485,
+        "end_raw": 47.589,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 47.787,
+        "end": 48.112,
+        "midi": 62,
+        "confidence": 0.696,
+        "onset": 47.798,
+        "start_raw": 47.798,
+        "end_raw": 48.193,
+        "lyric": "so",
+        "tie": "start"
+      },
+      {
+        "start": 48.425,
+        "end": 48.515,
+        "midi": 61,
+        "confidence": 0.652,
+        "onset": 48.483,
+        "start_raw": 48.402,
+        "end_raw": 48.576,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 48.576,
+        "end": 49.064,
+        "midi": 62,
+        "confidence": 0.898,
+        "onset": 48.576,
+        "start_raw": 48.576,
+        "end_raw": 49.052,
+        "lyric": "far",
+        "tie": "start"
+      },
+      {
+        "start": 49.064,
+        "end": 49.389,
+        "midi": 64,
+        "confidence": 0.837,
+        "onset": 49.052,
+        "start_raw": 49.052,
+        "end_raw": 49.319,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 49.389,
+        "end": 49.714,
+        "midi": 66,
+        "confidence": 0.85,
+        "onset": 49.366,
+        "start_raw": 49.366,
+        "end_raw": 49.876,
+        "lyric": "al"
+      },
+      {
+        "start": 50.039,
+        "end": 50.364,
+        "midi": 66,
+        "confidence": 0.748,
+        "onset": 49.923,
+        "start_raw": 49.923,
+        "end_raw": 50.248,
+        "lyric": "Oh",
+        "tie": "start"
+      },
+      {
+        "start": 51.966,
+        "end": 52.257,
+        "midi": 76,
+        "confidence": 0.784,
+        "onset": 51.943,
+        "start_raw": 51.943,
+        "end_raw": 52.117,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 52.257,
+        "end": 53.127,
+        "midi": 76,
+        "confidence": 0.839,
+        "onset": 52.117,
+        "start_raw": 52.117,
+        "end_raw": 53.058,
+        "lyric": "the",
+        "tie": "start"
+      },
+      {
+        "start": 54.381,
+        "end": 54.471,
+        "midi": 72,
+        "confidence": 0.826,
+        "onset": 54.404,
+        "start_raw": 54.404,
+        "end_raw": 54.497,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 54.509,
+        "end": 54.671,
+        "midi": 62,
+        "confidence": 0.944,
+        "onset": 54.509,
+        "start_raw": 54.509,
+        "end_raw": 54.753,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 54.962,
+        "end": 55.052,
+        "midi": 64,
+        "confidence": 0.718,
+        "onset": 54.869,
+        "start_raw": 54.869,
+        "end_raw": 55.066,
+        "lyric": "rays",
+        "tie": "start"
+      },
+      {
+        "start": 55.24,
+        "end": 56.169,
+        "midi": 66,
+        "confidence": 0.827,
+        "onset": 55.101,
+        "start_raw": 55.101,
+        "end_raw": 56.065,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 56.169,
+        "end": 56.483,
+        "midi": 66,
+        "confidence": 0.845,
+        "onset": 56.099,
+        "start_raw": 56.099,
+        "end_raw": 56.61,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 56.796,
+        "end": 56.886,
+        "midi": 67,
+        "confidence": 0.89,
+        "onset": 56.808,
+        "start_raw": 56.808,
+        "end_raw": 56.924,
+        "lyric": "of",
+        "tie": "start"
+      },
+      {
+        "start": 56.935,
+        "end": 57.446,
+        "midi": 69,
+        "confidence": 0.959,
+        "onset": 56.935,
+        "start_raw": 56.935,
+        "end_raw": 57.342,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 57.446,
+        "end": 57.536,
+        "midi": 62,
+        "confidence": 0.662,
+        "onset": 57.446,
+        "start_raw": 57.446,
+        "end_raw": 57.585,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 57.585,
+        "end": 57.771,
+        "midi": 64,
+        "confidence": 0.868,
+        "onset": 57.585,
+        "start_raw": 57.585,
+        "end_raw": 57.899,
+        "lyric": "our",
+        "tie": "start"
+      },
+      {
+        "start": 57.771,
+        "end": 58.421,
+        "midi": 61,
+        "confidence": 0.684,
+        "onset": 57.899,
+        "start_raw": 57.899,
+        "end_raw": 58.305,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 58.421,
+        "end": 58.746,
+        "midi": 62,
+        "confidence": 0.774,
+        "onset": 58.363,
+        "start_raw": 58.363,
+        "end_raw": 58.607,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 58.746,
+        "end": 59.373,
+        "midi": 62,
+        "confidence": 0.847,
+        "onset": 58.746,
+        "start_raw": 58.746,
+        "end_raw": 59.246,
+        "lyric": "mut"
+      },
+      {
+        "start": 59.373,
+        "end": 59.699,
+        "midi": 64,
+        "confidence": 0.853,
+        "onset": 59.315,
+        "start_raw": 59.315,
+        "end_raw": 59.559,
+        "lyric": "ual"
+      },
+      {
+        "start": 59.699,
+        "end": 60.349,
+        "midi": 66,
+        "confidence": 0.862,
+        "onset": 59.699,
+        "start_raw": 59.699,
+        "end_raw": 60.36,
+        "lyric": "bond",
+        "tie": "start"
+      },
+      {
+        "start": 60.349,
+        "end": 60.674,
+        "midi": 66,
+        "confidence": 0.772,
+        "onset": 60.43,
+        "start_raw": 60.43,
+        "end_raw": 60.639,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 62.299,
+        "end": 62.389,
+        "midi": 69,
+        "confidence": 0.959,
+        "onset": 62.288,
+        "start_raw": 62.171,
+        "end_raw": 62.392,
+        "lyric": "Whoa",
+        "tie": "start"
+      },
+      {
+        "start": 62.392,
+        "end": 63.274,
+        "midi": 64,
+        "confidence": 0.894,
+        "onset": 62.485,
+        "start_raw": 62.392,
+        "end_raw": 63.251,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 64.714,
+        "end": 65.109,
+        "midi": 66,
+        "confidence": 0.869,
+        "onset": 64.853,
+        "start_raw": 64.853,
+        "end_raw": 65.109,
+        "lyric": "we"
+      },
+      {
+        "start": 65.109,
+        "end": 65.306,
+        "midi": 67,
+        "confidence": 0.89,
+        "onset": 65.109,
+        "start_raw": 65.109,
+        "end_raw": 65.306,
+        "lyric": "drive",
+        "tie": "start"
+      },
+      {
+        "start": 65.504,
+        "end": 65.829,
+        "midi": 69,
+        "confidence": 0.845,
+        "onset": 65.318,
+        "start_raw": 65.318,
+        "end_raw": 65.759,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 65.829,
+        "end": 66.154,
+        "midi": 65,
+        "confidence": 0.711,
+        "onset": 65.887,
+        "start_raw": 65.829,
+        "end_raw": 66.212,
+        "lyric": "through"
+      },
+      {
+        "start": 66.154,
+        "end": 66.479,
+        "midi": 66,
+        "confidence": 0.756,
+        "onset": 66.281,
+        "start_raw": 66.281,
+        "end_raw": 66.409,
+        "lyric": "the"
+      },
+      {
+        "start": 66.479,
+        "end": 66.804,
+        "midi": 69,
+        "confidence": 0.941,
+        "onset": 66.444,
+        "start_raw": 66.444,
+        "end_raw": 66.92,
+        "lyric": "quiet",
+        "tie": "start"
+      },
+      {
+        "start": 67.129,
+        "end": 67.219,
+        "midi": 71,
+        "confidence": 0.685,
+        "onset": 67.082,
+        "start_raw": 67.001,
+        "end_raw": 67.233,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 67.233,
+        "end": 67.454,
+        "midi": 72,
+        "confidence": 0.594,
+        "onset": 67.233,
+        "start_raw": 67.233,
+        "end_raw": 67.361,
+        "lyric": "land"
+      },
+      {
+        "start": 67.454,
+        "end": 67.544,
+        "midi": 66,
+        "confidence": 0.799,
+        "onset": 67.408,
+        "start_raw": 67.408,
+        "end_raw": 67.57,
+        "lyric": "to",
+        "tie": "start"
+      },
+      {
+        "start": 67.57,
+        "end": 67.779,
+        "midi": 67,
+        "confidence": 0.771,
+        "onset": 67.57,
+        "start_raw": 67.57,
+        "end_raw": 67.733,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 67.779,
+        "end": 68.418,
+        "midi": 69,
+        "confidence": 0.954,
+        "onset": 67.744,
+        "start_raw": 67.744,
+        "end_raw": 68.348,
+        "lyric": "car-ry",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "car",
+          "ry"
+        ]
+      },
+      {
+        "start": 68.418,
+        "end": 68.731,
+        "midi": 66,
+        "confidence": 0.849,
+        "onset": 68.348,
+        "start_raw": 68.348,
+        "end_raw": 68.615,
+        "lyric": "us"
+      },
+      {
+        "start": 68.731,
+        "end": 69.056,
+        "midi": 66,
+        "confidence": 0.624,
+        "onset": 68.766,
+        "start_raw": 68.766,
+        "end_raw": 68.952,
+        "lyric": "Ac"
+      },
+      {
+        "start": 69.056,
+        "end": 69.381,
+        "midi": 69,
+        "confidence": 0.818,
+        "onset": 69.01,
+        "start_raw": 69.01,
+        "end_raw": 69.462,
+        "lyric": "ross"
+      },
+      {
+        "start": 69.381,
+        "end": 70.031,
+        "midi": 71,
+        "confidence": 0.952,
+        "onset": 69.532,
+        "start_raw": 69.532,
+        "end_raw": 69.939,
+        "lyric": "the-sky-can't",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "the",
+          "sky",
+          "can't"
+        ]
+      },
+      {
+        "start": 70.356,
+        "end": 70.446,
+        "midi": 73,
+        "confidence": 0.893,
+        "onset": 70.24,
+        "start_raw": 70.24,
+        "end_raw": 70.438,
+        "lyric": "see"
+      },
+      {
+        "start": 70.681,
+        "end": 71.332,
+        "midi": 66,
+        "confidence": 0.918,
+        "onset": 70.763,
+        "start_raw": 70.763,
+        "end_raw": 71.262,
+        "lyric": "when"
+      },
+      {
+        "start": 71.332,
+        "end": 71.645,
+        "midi": 64,
+        "confidence": 0.761,
+        "onset": 71.32,
+        "start_raw": 71.32,
+        "end_raw": 71.634,
+        "lyric": "they're"
+      },
+      {
+        "start": 71.645,
+        "end": 71.959,
+        "midi": 62,
+        "confidence": 0.869,
+        "onset": 71.645,
+        "start_raw": 71.645,
+        "end_raw": 71.877,
+        "lyric": "aw"
+      },
+      {
+        "start": 71.959,
+        "end": 72.284,
+        "midi": 62,
+        "confidence": 0.549,
+        "onset": 71.877,
+        "start_raw": 71.877,
+        "end_raw": 72.191,
+        "lyric": "ay-far",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "ay",
+          "far"
+        ]
+      },
+      {
+        "start": 72.284,
+        "end": 72.609,
+        "midi": 64,
+        "confidence": 0.761,
+        "onset": 72.191,
+        "start_raw": 72.191,
+        "end_raw": 72.528,
+        "lyric": "aw-ay",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "aw",
+          "ay"
+        ]
+      },
+      {
+        "start": 73.259,
+        "end": 73.349,
+        "midi": 62,
+        "confidence": 0.824,
+        "onset": 73.201,
+        "start_raw": 73.201,
+        "end_raw": 73.363,
+        "lyric": "Look"
+      },
+      {
+        "start": 73.363,
+        "end": 73.909,
+        "midi": 61,
+        "confidence": 0.852,
+        "onset": 73.503,
+        "start_raw": 73.363,
+        "end_raw": 73.77,
+        "lyric": "at"
+      },
+      {
+        "start": 73.909,
+        "end": 74.559,
+        "midi": 64,
+        "confidence": 0.856,
+        "onset": 73.979,
+        "start_raw": 73.979,
+        "end_raw": 74.408,
+        "lyric": "why-I",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "why",
+          "I"
+        ]
+      },
+      {
+        "start": 74.559,
+        "end": 74.884,
+        "midi": 62,
+        "confidence": 0.501,
+        "onset": 74.408,
+        "start_raw": 74.408,
+        "end_raw": 74.989,
+        "lyric": "don't-bel",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "don't",
+          "bel"
+        ]
+      },
+      {
+        "start": 74.884,
+        "end": 75.209,
+        "midi": 62,
+        "confidence": 0.763,
+        "onset": 75.012,
+        "start_raw": 75.012,
+        "end_raw": 75.163,
+        "lyric": "ieve-the",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "ieve",
+          "the"
+        ]
+      },
+      {
+        "start": 75.523,
+        "end": 75.613,
+        "midi": 61,
+        "confidence": 0.887,
+        "onset": 75.523,
+        "start_raw": 75.523,
+        "end_raw": 75.674,
+        "lyric": "way"
+      },
+      {
+        "start": 75.674,
+        "end": 77.462,
+        "midi": 62,
+        "confidence": 0.941,
+        "onset": 75.674,
+        "start_raw": 75.674,
+        "end_raw": 77.531,
+        "lyric": "Oh"
+      },
+      {
+        "start": 77.462,
+        "end": 77.787,
+        "midi": 64,
+        "confidence": 0.917,
+        "onset": 77.578,
+        "start_raw": 77.578,
+        "end_raw": 77.706,
+        "lyric": "oh",
+        "tie": "start"
+      },
+      {
+        "start": 77.787,
+        "end": 77.877,
+        "midi": 66,
+        "confidence": 0.845,
+        "onset": 77.706,
+        "start_raw": 77.706,
+        "end_raw": 77.926,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 77.926,
+        "end": 80.364,
+        "midi": 64,
+        "confidence": 0.939,
+        "onset": 77.926,
+        "start_raw": 77.926,
+        "end_raw": 80.364,
+        "lyric": "oh-oh",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "oh",
+          "oh"
+        ]
+      },
+      {
+        "start": 80.689,
+        "end": 80.779,
+        "midi": 61,
+        "confidence": 0.942,
+        "onset": 80.655,
+        "start_raw": 80.655,
+        "end_raw": 80.829,
+        "lyric": "oh"
+      },
+      {
+        "start": 80.829,
+        "end": 82.675,
+        "midi": 62,
+        "confidence": 0.982,
+        "onset": 80.829,
+        "start_raw": 80.829,
+        "end_raw": 82.744,
+        "lyric": "Oh-oh",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "Oh",
+          "oh"
+        ]
+      },
+      {
+        "start": 82.675,
+        "end": 83.035,
+        "midi": 64,
+        "confidence": 0.913,
+        "onset": 82.744,
+        "start_raw": 82.744,
+        "end_raw": 82.884,
+        "lyric": "oh",
+        "tie": "start"
+      },
+      {
+        "start": 83.035,
+        "end": 83.125,
+        "midi": 66,
+        "confidence": 0.88,
+        "onset": 82.884,
+        "start_raw": 82.884,
+        "end_raw": 83.081,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 83.151,
+        "end": 84.776,
+        "midi": 69,
+        "confidence": 0.897,
+        "onset": 83.151,
+        "start_raw": 83.151,
+        "end_raw": 84.66,
+        "lyric": "oh-oh",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "oh",
+          "oh"
+        ]
+      },
+      {
+        "start": 84.776,
+        "end": 84.866,
+        "midi": 64,
+        "confidence": 0.877,
+        "onset": 84.706,
+        "start_raw": 84.706,
+        "end_raw": 84.869,
+        "lyric": "I"
+      },
+      {
+        "start": 84.869,
+        "end": 85.124,
+        "midi": 66,
+        "confidence": 0.846,
+        "onset": 84.869,
+        "start_raw": 84.869,
+        "end_raw": 85.055,
+        "lyric": "stand",
+        "tie": "start"
+      },
+      {
+        "start": 85.484,
+        "end": 85.844,
+        "midi": 59,
+        "confidence": 0.923,
+        "onset": 85.357,
+        "start_raw": 85.357,
+        "end_raw": 85.786,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 85.844,
+        "end": 85.934,
+        "midi": 57,
+        "confidence": 0.846,
+        "onset": 85.844,
+        "start_raw": 85.844,
+        "end_raw": 85.937,
+        "lyric": "in"
+      },
+      {
+        "start": 85.96,
+        "end": 86.169,
+        "midi": 59,
+        "confidence": 0.851,
+        "onset": 85.96,
+        "start_raw": 85.96,
+        "end_raw": 86.146,
+        "lyric": "prom"
+      },
+      {
+        "start": 86.169,
+        "end": 86.494,
+        "midi": 61,
+        "confidence": 0.931,
+        "onset": 86.169,
+        "start_raw": 86.169,
+        "end_raw": 86.343,
+        "lyric": "ise"
+      },
+      {
+        "start": 86.494,
+        "end": 86.819,
+        "midi": 62,
+        "confidence": 0.892,
+        "onset": 86.494,
+        "start_raw": 86.494,
+        "end_raw": 86.761,
+        "lyric": "with"
+      },
+      {
+        "start": 86.819,
+        "end": 87.144,
+        "midi": 66,
+        "confidence": 0.914,
+        "onset": 86.808,
+        "start_raw": 86.808,
+        "end_raw": 87.052,
+        "lyric": "my",
+        "tie": "start"
+      },
+      {
+        "start": 87.144,
+        "end": 87.234,
+        "midi": 71,
+        "confidence": 0.888,
+        "onset": 87.121,
+        "start_raw": 87.121,
+        "end_raw": 87.237,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 87.237,
+        "end": 87.458,
+        "midi": 73,
+        "confidence": 0.851,
+        "onset": 87.237,
+        "start_raw": 87.237,
+        "end_raw": 87.574,
+        "lyric": "heart"
+      },
+      {
+        "start": 87.771,
+        "end": 88.097,
+        "midi": 69,
+        "confidence": 0.891,
+        "onset": 87.655,
+        "start_raw": 87.655,
+        "end_raw": 87.98,
+        "lyric": "and",
+        "tie": "start"
+      },
+      {
+        "start": 88.097,
+        "end": 88.422,
+        "midi": 67,
+        "confidence": 0.806,
+        "onset": 88.201,
+        "start_raw": 88.131,
+        "end_raw": 88.305,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 88.422,
+        "end": 88.512,
+        "midi": 65,
+        "confidence": 0.862,
+        "onset": 88.433,
+        "start_raw": 88.433,
+        "end_raw": 88.526,
+        "lyric": "shame",
+        "tie": "start"
+      },
+      {
+        "start": 88.526,
+        "end": 88.747,
+        "midi": 67,
+        "confidence": 0.815,
+        "onset": 88.526,
+        "start_raw": 88.526,
+        "end_raw": 88.619,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 89.072,
+        "end": 89.699,
+        "midi": 66,
+        "confidence": 0.763,
+        "onset": 89.153,
+        "start_raw": 89.153,
+        "end_raw": 89.548,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 89.699,
+        "end": 90.024,
+        "midi": 64,
+        "confidence": 0.91,
+        "onset": 89.78,
+        "start_raw": 89.78,
+        "end_raw": 89.954,
+        "lyric": "No",
+        "tie": "start"
+      },
+      {
+        "start": 90.024,
+        "end": 90.349,
+        "midi": 66,
+        "confidence": 0.82,
+        "onset": 89.954,
+        "start_raw": 89.954,
+        "end_raw": 90.256,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 90.349,
+        "end": 90.999,
+        "midi": 59,
+        "confidence": 0.824,
+        "onset": 90.349,
+        "start_raw": 90.349,
+        "end_raw": 90.953,
+        "lyric": "as"
+      },
+      {
+        "start": 90.999,
+        "end": 91.324,
+        "midi": 59,
+        "confidence": 0.815,
+        "onset": 91.115,
+        "start_raw": 91.115,
+        "end_raw": 91.312,
+        "lyric": "we're"
+      },
+      {
+        "start": 91.324,
+        "end": 91.414,
+        "midi": 61,
+        "confidence": 0.544,
+        "onset": 91.371,
+        "start_raw": 91.371,
+        "end_raw": 91.463,
+        "lyric": "caught"
+      },
+      {
+        "start": 91.649,
+        "end": 91.974,
+        "midi": 62,
+        "confidence": 0.897,
+        "onset": 91.638,
+        "start_raw": 91.638,
+        "end_raw": 91.881,
+        "lyric": "vain"
+      },
+      {
+        "start": 91.974,
+        "end": 92.299,
+        "midi": 66,
+        "confidence": 0.867,
+        "onset": 91.951,
+        "start_raw": 91.951,
+        "end_raw": 92.183,
+        "lyric": "to"
+      },
+      {
+        "start": 92.299,
+        "end": 92.389,
+        "midi": 71,
+        "confidence": 0.863,
+        "onset": 92.299,
+        "start_raw": 92.299,
+        "end_raw": 92.45,
+        "lyric": "say",
+        "tie": "start"
+      },
+      {
+        "start": 92.624,
+        "end": 92.714,
+        "midi": 73,
+        "confidence": 0.906,
+        "onset": 92.485,
+        "start_raw": 92.485,
+        "end_raw": 92.729,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 92.95,
+        "end": 93.309,
+        "midi": 73,
+        "confidence": 0.907,
+        "onset": 92.799,
+        "start_raw": 92.799,
+        "end_raw": 93.263,
+        "lyric": "my",
+        "tie": "start"
+      },
+      {
+        "start": 93.309,
+        "end": 93.399,
+        "midi": 73,
+        "confidence": 0.881,
+        "onset": 93.263,
+        "start_raw": 93.263,
+        "end_raw": 93.425,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 93.425,
+        "end": 95.062,
+        "midi": 74,
+        "confidence": 0.932,
+        "onset": 93.425,
+        "start_raw": 93.425,
+        "end_raw": 94.912,
+        "lyric": "name"
+      },
+      {
+        "start": 106.487,
+        "end": 106.812,
+        "midi": 64,
+        "confidence": 0.912,
+        "onset": 106.463,
+        "start_raw": 106.463,
+        "end_raw": 106.707,
+        "lyric": null
+      },
+      {
+        "start": 106.812,
+        "end": 107.148,
+        "midi": 66,
+        "confidence": 0.767,
+        "onset": 106.742,
+        "start_raw": 106.742,
+        "end_raw": 107.032,
+        "lyric": "Just",
+        "tie": "start"
+      },
+      {
+        "start": 107.148,
+        "end": 107.485,
+        "midi": 66,
+        "confidence": 0.858,
+        "onset": 107.241,
+        "start_raw": 107.079,
+        "end_raw": 107.601,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 107.81,
+        "end": 108.449,
+        "midi": 66,
+        "confidence": 0.817,
+        "onset": 107.648,
+        "start_raw": 107.648,
+        "end_raw": 108.368,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 108.449,
+        "end": 108.762,
+        "midi": 67,
+        "confidence": 0.978,
+        "onset": 108.402,
+        "start_raw": 108.402,
+        "end_raw": 108.739,
+        "lyric": "let",
+        "tie": "start"
+      },
+      {
+        "start": 108.762,
+        "end": 109.076,
+        "midi": 71,
+        "confidence": 0.732,
+        "onset": 108.739,
+        "start_raw": 108.739,
+        "end_raw": 108.936,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 109.076,
+        "end": 109.166,
+        "midi": 62,
+        "confidence": 0.822,
+        "onset": 109.076,
+        "start_raw": 109.076,
+        "end_raw": 109.192,
+        "lyric": "the",
+        "tie": "start"
+      },
+      {
+        "start": 109.227,
+        "end": 109.389,
+        "midi": 64,
+        "confidence": 0.88,
+        "onset": 109.227,
+        "start_raw": 109.227,
+        "end_raw": 109.436,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 109.703,
+        "end": 109.793,
+        "midi": 62,
+        "confidence": 0.734,
+        "onset": 109.679,
+        "start_raw": 109.679,
+        "end_raw": 109.772,
+        "lyric": "safe",
+        "tie": "start"
+      },
+      {
+        "start": 110.016,
+        "end": 110.341,
+        "midi": 62,
+        "confidence": 0.785,
+        "onset": 109.958,
+        "start_raw": 109.958,
+        "end_raw": 110.214,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 110.341,
+        "end": 110.666,
+        "midi": 62,
+        "confidence": 0.888,
+        "onset": 110.364,
+        "start_raw": 110.364,
+        "end_raw": 110.631,
+        "lyric": "op"
+      },
+      {
+        "start": 110.666,
+        "end": 111.317,
+        "midi": 64,
+        "confidence": 0.945,
+        "onset": 110.806,
+        "start_raw": 110.806,
+        "end_raw": 111.154,
+        "lyric": "tions"
+      },
+      {
+        "start": 111.317,
+        "end": 111.967,
+        "midi": 66,
+        "confidence": 0.891,
+        "onset": 111.328,
+        "start_raw": 111.328,
+        "end_raw": 111.967,
+        "lyric": "come"
+      },
+      {
+        "start": 113.894,
+        "end": 113.984,
+        "midi": 64,
+        "confidence": 0.762,
+        "onset": 113.905,
+        "start_raw": 113.905,
+        "end_raw": 113.998,
+        "lyric": null
+      },
+      {
+        "start": 113.998,
+        "end": 114.219,
+        "midi": 66,
+        "confidence": 0.675,
+        "onset": 113.998,
+        "start_raw": 113.998,
+        "end_raw": 114.08,
+        "lyric": null
+      },
+      {
+        "start": 114.219,
+        "end": 114.544,
+        "midi": 64,
+        "confidence": 0.819,
+        "onset": 114.08,
+        "start_raw": 114.08,
+        "end_raw": 114.579,
+        "lyric": null
+      },
+      {
+        "start": 114.544,
+        "end": 114.869,
+        "midi": 66,
+        "confidence": 0.664,
+        "onset": 114.579,
+        "start_raw": 114.579,
+        "end_raw": 114.858,
+        "lyric": "Oh",
+        "tie": "start"
+      },
+      {
+        "start": 116.495,
+        "end": 116.82,
+        "midi": 62,
+        "confidence": 0.903,
+        "onset": 116.483,
+        "start_raw": 116.483,
+        "end_raw": 116.703,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 116.82,
+        "end": 117.145,
+        "midi": 64,
+        "confidence": 0.885,
+        "onset": 116.808,
+        "start_raw": 116.808,
+        "end_raw": 116.994,
+        "lyric": "no"
+      },
+      {
+        "start": 117.145,
+        "end": 117.772,
+        "midi": 66,
+        "confidence": 0.871,
+        "onset": 117.005,
+        "start_raw": 117.005,
+        "end_raw": 117.76,
+        "lyric": "real",
+        "tie": "start"
+      },
+      {
+        "start": 117.772,
+        "end": 118.747,
+        "midi": 66,
+        "confidence": 0.943,
+        "onset": 117.83,
+        "start_raw": 117.83,
+        "end_raw": 118.735,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 118.747,
+        "end": 118.837,
+        "midi": 67,
+        "confidence": 0.933,
+        "onset": 118.747,
+        "start_raw": 118.747,
+        "end_raw": 118.886,
+        "lyric": "is",
+        "tie": "start"
+      },
+      {
+        "start": 118.909,
+        "end": 119.385,
+        "midi": 69,
+        "confidence": 0.94,
+        "onset": 118.909,
+        "start_raw": 118.909,
+        "end_raw": 119.258,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 119.385,
+        "end": 119.475,
+        "midi": 62,
+        "confidence": 0.816,
+        "onset": 119.327,
+        "start_raw": 119.327,
+        "end_raw": 119.49,
+        "lyric": "sues",
+        "tie": "start"
+      },
+      {
+        "start": 119.513,
+        "end": 119.699,
+        "midi": 64,
+        "confidence": 0.881,
+        "onset": 119.513,
+        "start_raw": 119.513,
+        "end_raw": 119.815,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 120.024,
+        "end": 120.114,
+        "midi": 63,
+        "confidence": 0.62,
+        "onset": 119.943,
+        "start_raw": 119.943,
+        "end_raw": 120.036,
+        "lyric": "as",
+        "tie": "start"
+      },
+      {
+        "start": 120.349,
+        "end": 120.439,
+        "midi": 62,
+        "confidence": 0.833,
+        "onset": 120.303,
+        "start_raw": 120.303,
+        "end_raw": 120.5,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 120.674,
+        "end": 120.764,
+        "midi": 60,
+        "confidence": 0.8,
+        "onset": 120.686,
+        "start_raw": 120.686,
+        "end_raw": 120.779,
+        "lyric": "fat",
+        "tie": "start"
+      },
+      {
+        "start": 120.999,
+        "end": 121.089,
+        "midi": 62,
+        "confidence": 0.874,
+        "onset": 120.871,
+        "start_raw": 120.871,
+        "end_raw": 121.08,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 121.324,
+        "end": 121.649,
+        "midi": 64,
+        "confidence": 0.87,
+        "onset": 121.197,
+        "start_raw": 121.197,
+        "end_raw": 121.615,
+        "lyric": "e's"
+      },
+      {
+        "start": 121.649,
+        "end": 121.974,
+        "midi": 66,
+        "confidence": 0.869,
+        "onset": 121.847,
+        "start_raw": 121.684,
+        "end_raw": 122.102,
+        "lyric": "out"
+      },
+      {
+        "start": 122.299,
+        "end": 122.389,
+        "midi": 66,
+        "confidence": 0.849,
+        "onset": 122.149,
+        "start_raw": 122.149,
+        "end_raw": 122.416,
+        "lyric": "come"
+      },
+      {
+        "start": 123.577,
+        "end": 123.667,
+        "midi": 69,
+        "confidence": 0.663,
+        "onset": 123.484,
+        "start_raw": 123.484,
+        "end_raw": 123.739,
+        "lyric": null
+      },
+      {
+        "start": 123.902,
+        "end": 123.992,
+        "midi": 68,
+        "confidence": 0.724,
+        "onset": 123.774,
+        "start_raw": 123.774,
+        "end_raw": 123.983,
+        "lyric": null
+      },
+      {
+        "start": 124.227,
+        "end": 124.317,
+        "midi": 69,
+        "confidence": 0.926,
+        "onset": 124.215,
+        "start_raw": 124.215,
+        "end_raw": 124.389,
+        "lyric": null
+      },
+      {
+        "start": 124.552,
+        "end": 125.527,
+        "midi": 64,
+        "confidence": 0.926,
+        "onset": 124.401,
+        "start_raw": 124.401,
+        "end_raw": 125.469,
+        "lyric": "Oh",
+        "tie": "start"
+      },
+      {
+        "start": 125.527,
+        "end": 125.617,
+        "midi": 62,
+        "confidence": 0.715,
+        "onset": 125.469,
+        "start_raw": 125.469,
+        "end_raw": 125.62,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 125.62,
+        "end": 125.841,
+        "midi": 61,
+        "confidence": 0.801,
+        "onset": 125.62,
+        "start_raw": 125.62,
+        "end_raw": 125.899,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 126.154,
+        "end": 126.479,
+        "midi": 61,
+        "confidence": 0.778,
+        "onset": 126.038,
+        "start_raw": 126.038,
+        "end_raw": 126.421,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 126.804,
+        "end": 127.129,
+        "midi": 66,
+        "confidence": 0.854,
+        "onset": 126.746,
+        "start_raw": 126.746,
+        "end_raw": 127.234,
+        "lyric": "what"
+      },
+      {
+        "start": 127.129,
+        "end": 127.454,
+        "midi": 69,
+        "confidence": 0.758,
+        "onset": 127.234,
+        "start_raw": 127.234,
+        "end_raw": 127.338,
+        "lyric": "we'll",
+        "tie": "start"
+      },
+      {
+        "start": 127.454,
+        "end": 127.779,
+        "midi": 69,
+        "confidence": 0.789,
+        "onset": 127.489,
+        "start_raw": 127.489,
+        "end_raw": 127.733,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 127.779,
+        "end": 128.105,
+        "midi": 66,
+        "confidence": 0.951,
+        "onset": 127.745,
+        "start_raw": 127.745,
+        "end_raw": 128.255,
+        "lyric": "do"
+      },
+      {
+        "start": 128.105,
+        "end": 128.43,
+        "midi": 65,
+        "confidence": 0.611,
+        "onset": 128.255,
+        "start_raw": 128.255,
+        "end_raw": 128.395,
+        "lyric": "when"
+      },
+      {
+        "start": 128.43,
+        "end": 128.755,
+        "midi": 69,
+        "confidence": 0.876,
+        "onset": 128.418,
+        "start_raw": 128.418,
+        "end_raw": 128.836,
+        "lyric": "we're"
+      },
+      {
+        "start": 129.068,
+        "end": 129.158,
+        "midi": 71,
+        "confidence": 0.789,
+        "onset": 129.01,
+        "start_raw": 129.01,
+        "end_raw": 129.138,
+        "lyric": "done-To",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "done",
+          "To"
+        ]
+      },
+      {
+        "start": 129.707,
+        "end": 130.426,
+        "midi": 69,
+        "confidence": 0.837,
+        "onset": 129.649,
+        "start_raw": 129.649,
+        "end_raw": 130.241,
+        "lyric": "set-the",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "set",
+          "the"
+        ]
+      },
+      {
+        "start": 130.426,
+        "end": 130.821,
+        "midi": 66,
+        "confidence": 0.813,
+        "onset": 130.322,
+        "start_raw": 130.322,
+        "end_raw": 130.937,
+        "lyric": "soul's"
+      },
+      {
+        "start": 130.821,
+        "end": 131.158,
+        "midi": 69,
+        "confidence": 0.919,
+        "onset": 130.972,
+        "start_raw": 130.972,
+        "end_raw": 131.204,
+        "lyric": "bil"
+      },
+      {
+        "start": 131.158,
+        "end": 131.495,
+        "midi": 70,
+        "confidence": 0.487,
+        "onset": 131.286,
+        "start_raw": 131.286,
+        "end_raw": 131.425,
+        "lyric": "let-ab",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "let",
+          "ab"
+        ]
+      },
+      {
+        "start": 131.495,
+        "end": 131.855,
+        "midi": 71,
+        "confidence": 0.882,
+        "onset": 131.448,
+        "start_raw": 131.448,
+        "end_raw": 131.704,
+        "lyric": "ove"
+      },
+      {
+        "start": 131.855,
+        "end": 131.945,
+        "midi": 74,
+        "confidence": 0.787,
+        "onset": 131.773,
+        "start_raw": 131.773,
+        "end_raw": 132.005,
+        "lyric": "my"
+      },
+      {
+        "start": 132.214,
+        "end": 132.574,
+        "midi": 73,
+        "confidence": 0.98,
+        "onset": 132.098,
+        "start_raw": 132.098,
+        "end_raw": 132.505,
+        "lyric": "soul"
+      },
+      {
+        "start": 132.574,
+        "end": 133.259,
+        "midi": 66,
+        "confidence": 0.815,
+        "onset": 132.563,
+        "start_raw": 132.563,
+        "end_raw": 133.248,
+        "lyric": "And-we're-gone",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "And",
+          "we're",
+          "gone"
+        ]
+      },
+      {
+        "start": 133.259,
+        "end": 133.91,
+        "midi": 69,
+        "confidence": 0.902,
+        "onset": 133.248,
+        "start_raw": 133.248,
+        "end_raw": 133.805,
+        "lyric": "in-your-mind",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "in",
+          "your",
+          "mind"
+        ]
+      },
+      {
+        "start": 133.91,
+        "end": 134.56,
+        "midi": 66,
+        "confidence": 0.817,
+        "onset": 133.805,
+        "start_raw": 133.805,
+        "end_raw": 134.502,
+        "lyric": "we-won't-leave",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "we",
+          "won't",
+          "leave"
+        ]
+      },
+      {
+        "start": 134.56,
+        "end": 134.885,
+        "midi": 69,
+        "confidence": 0.814,
+        "onset": 134.502,
+        "start_raw": 134.502,
+        "end_raw": 134.757,
+        "lyric": "I'm-beh",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "I'm",
+          "beh"
+        ]
+      },
+      {
+        "start": 134.885,
+        "end": 135.198,
+        "midi": 69,
+        "confidence": 0.967,
+        "onset": 134.873,
+        "start_raw": 134.873,
+        "end_raw": 135.117,
+        "lyric": "ind"
+      },
+      {
+        "start": 135.198,
+        "end": 135.837,
+        "midi": 66,
+        "confidence": 0.96,
+        "onset": 135.117,
+        "start_raw": 135.117,
+        "end_raw": 135.837,
+        "lyric": "I'm-a-waste",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "I'm",
+          "a",
+          "waste"
+        ]
+      },
+      {
+        "start": 135.837,
+        "end": 136.487,
+        "midi": 69,
+        "confidence": 0.799,
+        "onset": 135.895,
+        "start_raw": 135.895,
+        "end_raw": 136.382,
+        "lyric": "I'll-be-quiet",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "I'll",
+          "be",
+          "quiet"
+        ]
+      },
+      {
+        "start": 136.487,
+        "end": 136.812,
+        "midi": 74,
+        "confidence": 0.904,
+        "onset": 136.487,
+        "start_raw": 136.487,
+        "end_raw": 136.661,
+        "lyric": "Let's"
+      },
+      {
+        "start": 136.812,
+        "end": 137.137,
+        "midi": 74,
+        "confidence": 0.908,
+        "onset": 136.951,
+        "start_raw": 136.951,
+        "end_raw": 137.288,
+        "lyric": "play-me",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "play",
+          "me"
+        ]
+      },
+      {
+        "start": 137.787,
+        "end": 139.064,
+        "midi": 74,
+        "confidence": 0.905,
+        "onset": 137.694,
+        "start_raw": 137.694,
+        "end_raw": 139.215,
+        "lyric": "now"
+      },
+      {
+        "start": 139.389,
+        "end": 139.479,
+        "midi": 74,
+        "confidence": 0.905,
+        "onset": 139.331,
+        "start_raw": 139.331,
+        "end_raw": 139.494,
+        "lyric": null
+      },
+      {
+        "start": 140.04,
+        "end": 141.003,
+        "midi": 69,
+        "confidence": 0.904,
+        "onset": 139.97,
+        "start_raw": 139.97,
+        "end_raw": 141.05,
+        "lyric": null
+      },
+      {
+        "start": 141.317,
+        "end": 141.967,
+        "midi": 64,
+        "confidence": 0.728,
+        "onset": 141.328,
+        "start_raw": 141.328,
+        "end_raw": 142.118,
+        "lyric": null
+      },
+      {
+        "start": 142.292,
+        "end": 142.617,
+        "midi": 67,
+        "confidence": 0.73,
+        "onset": 142.315,
+        "start_raw": 142.199,
+        "end_raw": 142.478,
+        "lyric": null
+      },
+      {
+        "start": 142.617,
+        "end": 143.917,
+        "midi": 62,
+        "confidence": 0.907,
+        "onset": 142.721,
+        "start_raw": 142.721,
+        "end_raw": 143.778,
+        "lyric": null
+      },
+      {
+        "start": 143.917,
+        "end": 144.544,
+        "midi": 62,
+        "confidence": 0.916,
+        "onset": 143.859,
+        "start_raw": 143.859,
+        "end_raw": 144.66,
+        "lyric": null
+      },
+      {
+        "start": 145.194,
+        "end": 145.845,
+        "midi": 57,
+        "confidence": 0.908,
+        "onset": 145.16,
+        "start_raw": 145.16,
+        "end_raw": 145.705,
+        "lyric": null
+      },
+      {
+        "start": 145.845,
+        "end": 146.471,
+        "midi": 57,
+        "confidence": 0.903,
+        "onset": 145.856,
+        "start_raw": 145.856,
+        "end_raw": 146.437,
+        "lyric": null
+      },
+      {
+        "start": 146.797,
+        "end": 146.887,
+        "midi": 64,
+        "confidence": 0.943,
+        "onset": 146.669,
+        "start_raw": 146.669,
+        "end_raw": 146.808,
+        "lyric": "I",
+        "tie": "start"
+      },
+      {
+        "start": 146.889,
+        "end": 147.458,
+        "midi": 65,
+        "confidence": 0.79,
+        "onset": 146.889,
+        "start_raw": 146.889,
+        "end_raw": 147.528,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 147.795,
+        "end": 147.885,
+        "midi": 57,
+        "confidence": 0.53,
+        "onset": 147.76,
+        "start_raw": 147.76,
+        "end_raw": 147.876,
+        "lyric": "stand"
+      },
+      {
+        "start": 147.946,
+        "end": 148.422,
+        "midi": 59,
+        "confidence": 0.876,
+        "onset": 147.946,
+        "start_raw": 147.946,
+        "end_raw": 148.352,
+        "lyric": "in",
+        "tie": "start"
+      },
+      {
+        "start": 148.422,
+        "end": 148.512,
+        "midi": 57,
+        "confidence": 0.765,
+        "onset": 148.399,
+        "start_raw": 148.399,
+        "end_raw": 148.503,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 148.55,
+        "end": 148.747,
+        "midi": 59,
+        "confidence": 0.91,
+        "onset": 148.55,
+        "start_raw": 148.55,
+        "end_raw": 148.724,
+        "lyric": "prom"
+      },
+      {
+        "start": 148.747,
+        "end": 149.072,
+        "midi": 61,
+        "confidence": 0.993,
+        "onset": 148.747,
+        "start_raw": 148.747,
+        "end_raw": 148.921,
+        "lyric": "ise"
+      },
+      {
+        "start": 149.072,
+        "end": 149.397,
+        "midi": 62,
+        "confidence": 0.871,
+        "onset": 149.06,
+        "start_raw": 149.06,
+        "end_raw": 149.304,
+        "lyric": "with"
+      },
+      {
+        "start": 149.397,
+        "end": 149.722,
+        "midi": 66,
+        "confidence": 0.997,
+        "onset": 149.362,
+        "start_raw": 149.362,
+        "end_raw": 149.653,
+        "lyric": "my",
+        "tie": "start"
+      },
+      {
+        "start": 149.722,
+        "end": 149.812,
+        "midi": 71,
+        "confidence": 0.878,
+        "onset": 149.676,
+        "start_raw": 149.676,
+        "end_raw": 149.838,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 149.862,
+        "end": 150.036,
+        "midi": 73,
+        "confidence": 0.909,
+        "onset": 149.862,
+        "start_raw": 149.862,
+        "end_raw": 150.152,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 150.036,
+        "end": 150.349,
+        "midi": 69,
+        "confidence": 0.875,
+        "onset": 150.175,
+        "start_raw": 150.175,
+        "end_raw": 150.465,
+        "lyric": "heart"
+      },
+      {
+        "start": 150.349,
+        "end": 150.674,
+        "midi": 66,
+        "confidence": 0.791,
+        "onset": 150.477,
+        "start_raw": 150.477,
+        "end_raw": 150.593,
+        "lyric": "and",
+        "tie": "start"
+      },
+      {
+        "start": 150.674,
+        "end": 150.999,
+        "midi": 67,
+        "confidence": 0.677,
+        "onset": 150.593,
+        "start_raw": 150.593,
+        "end_raw": 150.872,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 150.999,
+        "end": 151.649,
+        "midi": 66,
+        "confidence": 0.856,
+        "onset": 151.034,
+        "start_raw": 150.872,
+        "end_raw": 151.557,
+        "lyric": "chain",
+        "tie": "start"
+      },
+      {
+        "start": 151.649,
+        "end": 151.963,
+        "midi": 66,
+        "confidence": 0.775,
+        "onset": 151.719,
+        "start_raw": 151.719,
+        "end_raw": 152.009,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 152.276,
+        "end": 152.602,
+        "midi": 64,
+        "confidence": 0.902,
+        "onset": 152.404,
+        "start_raw": 152.404,
+        "end_raw": 152.532,
+        "lyric": "No",
+        "tie": "start"
+      },
+      {
+        "start": 152.602,
+        "end": 152.927,
+        "midi": 66,
+        "confidence": 0.853,
+        "onset": 152.532,
+        "start_raw": 152.532,
+        "end_raw": 152.845,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 152.927,
+        "end": 153.902,
+        "midi": 59,
+        "confidence": 0.678,
+        "onset": 152.938,
+        "start_raw": 152.938,
+        "end_raw": 154.041,
+        "lyric": "as-we-go",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "as",
+          "we",
+          "go"
+        ]
+      },
+      {
+        "start": 154.227,
+        "end": 154.564,
+        "midi": 62,
+        "confidence": 0.873,
+        "onset": 154.227,
+        "start_raw": 154.227,
+        "end_raw": 154.494,
+        "lyric": "vain"
+      },
+      {
+        "start": 154.564,
+        "end": 154.9,
+        "midi": 66,
+        "confidence": 0.876,
+        "onset": 154.529,
+        "start_raw": 154.529,
+        "end_raw": 154.749,
+        "lyric": "to",
+        "tie": "start"
+      },
+      {
+        "start": 154.9,
+        "end": 154.99,
+        "midi": 72,
+        "confidence": 0.85,
+        "onset": 154.877,
+        "start_raw": 154.877,
+        "end_raw": 155.016,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 155.016,
+        "end": 155.527,
+        "midi": 73,
+        "confidence": 0.941,
+        "onset": 155.016,
+        "start_raw": 155.016,
+        "end_raw": 155.481,
+        "lyric": "say"
+      },
+      {
+        "start": 155.527,
+        "end": 155.841,
+        "midi": 74,
+        "confidence": 0.896,
+        "onset": 155.481,
+        "start_raw": 155.481,
+        "end_raw": 155.806,
+        "lyric": "my",
+        "tie": "start"
+      },
+      {
+        "start": 155.841,
+        "end": 155.931,
+        "midi": 73,
+        "confidence": 0.917,
+        "onset": 155.818,
+        "start_raw": 155.818,
+        "end_raw": 155.945,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 155.945,
+        "end": 157.129,
+        "midi": 74,
+        "confidence": 0.894,
+        "onset": 155.945,
+        "start_raw": 155.945,
+        "end_raw": 157.199,
+        "lyric": "name"
+      },
+      {
+        "start": 157.129,
+        "end": 157.454,
+        "midi": 76,
+        "confidence": 0.757,
+        "onset": 157.269,
+        "start_raw": 157.269,
+        "end_raw": 157.431,
+        "lyric": "I",
+        "tie": "start"
+      },
+      {
+        "start": 157.454,
+        "end": 157.78,
+        "midi": 77,
+        "confidence": 0.903,
+        "onset": 157.571,
+        "start_raw": 157.571,
+        "end_raw": 157.675,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 157.78,
+        "end": 158.105,
+        "midi": 78,
+        "confidence": 0.869,
+        "onset": 157.675,
+        "start_raw": 157.675,
+        "end_raw": 157.954,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 158.105,
+        "end": 158.43,
+        "midi": 83,
+        "confidence": 0.791,
+        "onset": 158.174,
+        "start_raw": 158.07,
+        "end_raw": 158.557,
+        "lyric": "storm-the",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "storm",
+          "the"
+        ]
+      },
+      {
+        "start": 158.755,
+        "end": 159.068,
+        "midi": 82,
+        "confidence": 0.804,
+        "onset": 158.708,
+        "start_raw": 158.708,
+        "end_raw": 159.022,
+        "lyric": "sil"
+      },
+      {
+        "start": 159.068,
+        "end": 159.382,
+        "midi": 73,
+        "confidence": 0.872,
+        "onset": 159.033,
+        "raw_midi": 85,
+        "start_raw": 159.033,
+        "end_raw": 159.254,
+        "lyric": "ence"
+      },
+      {
+        "start": 159.382,
+        "end": 159.707,
+        "midi": 74,
+        "confidence": 0.951,
+        "onset": 159.393,
+        "raw_midi": 86,
+        "start_raw": 159.393,
+        "end_raw": 159.66,
+        "lyric": "with"
+      },
+      {
+        "start": 159.707,
+        "end": 160.032,
+        "midi": 78,
+        "confidence": 0.929,
+        "onset": 159.684,
+        "start_raw": 159.684,
+        "end_raw": 159.962,
+        "lyric": "her",
+        "tie": "start"
+      },
+      {
+        "start": 160.032,
+        "end": 160.122,
+        "midi": 83,
+        "confidence": 0.871,
+        "onset": 160.02,
+        "start_raw": 160.02,
+        "end_raw": 160.125,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 160.125,
+        "end": 160.357,
+        "midi": 73,
+        "confidence": 0.773,
+        "onset": 160.125,
+        "raw_midi": 85,
+        "start_raw": 160.125,
+        "end_raw": 160.427,
+        "lyric": "hands"
+      },
+      {
+        "start": 160.682,
+        "end": 161.332,
+        "midi": 78,
+        "confidence": 0.928,
+        "onset": 160.752,
+        "start_raw": 160.752,
+        "end_raw": 161.448,
+        "lyric": "aw"
+      },
+      {
+        "start": 162.609,
+        "end": 162.934,
+        "midi": 76,
+        "confidence": 0.864,
+        "onset": 162.725,
+        "start_raw": 162.725,
+        "end_raw": 162.842,
+        "lyric": "I",
+        "tie": "start"
+      },
+      {
+        "start": 162.934,
+        "end": 163.024,
+        "midi": 78,
+        "confidence": 0.796,
+        "onset": 162.842,
+        "start_raw": 162.842,
+        "end_raw": 163.085,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 163.085,
+        "end": 163.26,
+        "midi": 82,
+        "confidence": 0.626,
+        "onset": 163.085,
+        "start_raw": 163.085,
+        "end_raw": 163.213,
+        "lyric": "save"
+      },
+      {
+        "start": 163.585,
+        "end": 163.91,
+        "midi": 83,
+        "confidence": 0.836,
+        "onset": 163.55,
+        "start_raw": 163.55,
+        "end_raw": 163.77,
+        "lyric": "the"
+      },
+      {
+        "start": 163.91,
+        "end": 164.235,
+        "midi": 83,
+        "confidence": 0.805,
+        "onset": 163.91,
+        "start_raw": 163.91,
+        "end_raw": 164.165,
+        "lyric": "life"
+      },
+      {
+        "start": 164.235,
+        "end": 164.56,
+        "midi": 73,
+        "confidence": 0.843,
+        "onset": 164.2,
+        "raw_midi": 85,
+        "start_raw": 164.2,
+        "end_raw": 164.49,
+        "lyric": "from"
+      },
+      {
+        "start": 164.56,
+        "end": 164.873,
+        "midi": 74,
+        "confidence": 0.885,
+        "onset": 164.537,
+        "raw_midi": 86,
+        "start_raw": 164.537,
+        "end_raw": 164.78,
+        "lyric": "ev"
+      },
+      {
+        "start": 164.873,
+        "end": 165.187,
+        "midi": 78,
+        "confidence": 0.884,
+        "onset": 164.838,
+        "start_raw": 164.838,
+        "end_raw": 165.094,
+        "lyric": "er"
+      },
+      {
+        "start": 165.187,
+        "end": 165.5,
+        "midi": 76,
+        "confidence": 0.925,
+        "onset": 165.373,
+        "start_raw": 165.28,
+        "end_raw": 165.489,
+        "lyric": "y"
+      },
+      {
+        "start": 165.5,
+        "end": 166.394,
+        "midi": 74,
+        "confidence": 0.897,
+        "onset": 165.64,
+        "raw_midi": 86,
+        "start_raw": 165.64,
+        "end_raw": 166.266,
+        "lyric": "past"
+      },
+      {
+        "start": 166.394,
+        "end": 167.555,
+        "midi": 79,
+        "confidence": 0.94,
+        "onset": 166.29,
+        "start_raw": 166.29,
+        "end_raw": 167.544,
+        "lyric": "reg"
+      },
+      {
+        "start": 167.555,
+        "end": 168.449,
+        "midi": 74,
+        "confidence": 0.863,
+        "onset": 167.613,
+        "start_raw": 167.613,
+        "end_raw": 168.449,
+        "lyric": "ret"
+      },
+      {
+        "start": 169.39,
+        "end": 170.667,
+        "midi": 74,
+        "confidence": 0.759,
+        "onset": 169.424,
+        "start_raw": 169.424,
+        "end_raw": 170.516,
+        "lyric": null
+      },
+      {
+        "start": 170.667,
+        "end": 171.317,
+        "midi": 74,
+        "confidence": 0.742,
+        "onset": 170.609,
+        "start_raw": 170.609,
+        "end_raw": 171.398,
+        "lyric": null
+      },
+      {
+        "start": 178.747,
+        "end": 180.349,
+        "midi": 74,
+        "confidence": 0.738,
+        "onset": 179.037,
+        "start_raw": 178.887,
+        "end_raw": 180.268,
+        "lyric": null
+      },
+      {
+        "start": 180.349,
+        "end": 180.439,
+        "midi": 74,
+        "confidence": 0.702,
+        "onset": 180.338,
+        "start_raw": 180.338,
+        "end_raw": 180.477,
+        "lyric": "So",
+        "tie": "start"
+      },
+      {
+        "start": 181.0,
+        "end": 181.325,
+        "midi": 76,
+        "confidence": 0.808,
+        "onset": 180.849,
+        "start_raw": 180.849,
+        "end_raw": 181.197,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 181.325,
+        "end": 181.415,
+        "midi": 81,
+        "confidence": 0.78,
+        "onset": 181.325,
+        "start_raw": 181.325,
+        "end_raw": 181.429,
+        "lyric": "I",
+        "tie": "start"
+      },
+      {
+        "start": 181.441,
+        "end": 181.975,
+        "midi": 83,
+        "confidence": 0.847,
+        "onset": 181.441,
+        "start_raw": 181.441,
+        "end_raw": 181.894,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 181.975,
+        "end": 182.065,
+        "midi": 81,
+        "confidence": 0.822,
+        "onset": 181.917,
+        "start_raw": 181.917,
+        "end_raw": 182.079,
+        "lyric": "won't"
+      },
+      {
+        "start": 182.079,
+        "end": 182.3,
+        "midi": 83,
+        "confidence": 0.863,
+        "onset": 182.079,
+        "start_raw": 182.079,
+        "end_raw": 182.311,
+        "lyric": "turn"
+      },
+      {
+        "start": 182.3,
+        "end": 182.625,
+        "midi": 73,
+        "confidence": 0.835,
+        "onset": 182.451,
+        "raw_midi": 85,
+        "start_raw": 182.451,
+        "end_raw": 182.625,
+        "lyric": "aw"
+      },
+      {
+        "start": 182.625,
+        "end": 182.95,
+        "midi": 74,
+        "confidence": 0.923,
+        "onset": 182.695,
+        "raw_midi": 86,
+        "start_raw": 182.695,
+        "end_raw": 182.938,
+        "lyric": "ay"
+      },
+      {
+        "start": 182.95,
+        "end": 183.275,
+        "midi": 78,
+        "confidence": 0.958,
+        "onset": 182.973,
+        "start_raw": 182.973,
+        "end_raw": 183.24,
+        "lyric": "I",
+        "tie": "start"
+      },
+      {
+        "start": 183.275,
+        "end": 183.6,
+        "midi": 83,
+        "confidence": 0.798,
+        "onset": 183.275,
+        "start_raw": 183.275,
+        "end_raw": 183.438,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 183.6,
+        "end": 183.69,
+        "midi": 73,
+        "confidence": 0.799,
+        "onset": 183.449,
+        "raw_midi": 85,
+        "start_raw": 183.449,
+        "end_raw": 183.635,
+        "lyric": "won't",
+        "tie": "start"
+      },
+      {
+        "start": 183.693,
+        "end": 184.227,
+        "midi": 81,
+        "confidence": 0.817,
+        "onset": 183.693,
+        "start_raw": 183.693,
+        "end_raw": 184.076,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 184.227,
+        "end": 184.552,
+        "midi": 78,
+        "confidence": 0.862,
+        "onset": 184.25,
+        "start_raw": 184.25,
+        "end_raw": 184.622,
+        "lyric": "let"
+      },
+      {
+        "start": 184.552,
+        "end": 184.877,
+        "midi": 78,
+        "confidence": 0.864,
+        "onset": 184.68,
+        "start_raw": 184.68,
+        "end_raw": 184.947,
+        "lyric": "go",
+        "tie": "start"
+      },
+      {
+        "start": 184.877,
+        "end": 185.191,
+        "midi": 78,
+        "confidence": 0.705,
+        "onset": 184.993,
+        "start_raw": 184.993,
+        "end_raw": 185.284,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 185.191,
+        "end": 185.829,
+        "midi": 78,
+        "confidence": 0.768,
+        "onset": 185.33,
+        "start_raw": 185.33,
+        "end_raw": 185.667,
+        "lyric": "I",
+        "tie": "start"
+      },
+      {
+        "start": 186.154,
+        "end": 186.479,
+        "midi": 78,
+        "confidence": 0.821,
+        "onset": 186.236,
+        "start_raw": 186.236,
+        "end_raw": 186.375,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 186.479,
+        "end": 186.569,
+        "midi": 81,
+        "confidence": 0.681,
+        "onset": 186.41,
+        "start_raw": 186.41,
+        "end_raw": 186.607,
+        "lyric": "count"
+      },
+      {
+        "start": 186.63,
+        "end": 187.141,
+        "midi": 83,
+        "confidence": 0.889,
+        "onset": 186.63,
+        "start_raw": 186.63,
+        "end_raw": 187.06,
+        "lyric": "the"
+      },
+      {
+        "start": 187.141,
+        "end": 187.478,
+        "midi": 81,
+        "confidence": 0.851,
+        "onset": 187.06,
+        "start_raw": 187.06,
+        "end_raw": 187.42,
+        "lyric": "heav"
+      },
+      {
+        "start": 187.478,
+        "end": 187.568,
+        "midi": 73,
+        "confidence": 0.918,
+        "onset": 187.455,
+        "raw_midi": 85,
+        "start_raw": 187.455,
+        "end_raw": 187.594,
+        "lyric": "ens",
+        "tie": "start"
+      },
+      {
+        "start": 187.594,
+        "end": 187.803,
+        "midi": 84,
+        "confidence": 0.77,
+        "onset": 187.594,
+        "start_raw": 187.594,
+        "end_raw": 187.722,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 187.803,
+        "end": 188.128,
+        "midi": 74,
+        "confidence": 0.895,
+        "onset": 187.78,
+        "raw_midi": 86,
+        "start_raw": 187.78,
+        "end_raw": 188.047,
+        "lyric": "through"
+      },
+      {
+        "start": 188.128,
+        "end": 188.442,
+        "midi": 78,
+        "confidence": 0.914,
+        "onset": 188.07,
+        "start_raw": 188.07,
+        "end_raw": 188.314,
+        "lyric": "the"
+      },
+      {
+        "start": 188.442,
+        "end": 189.069,
+        "midi": 83,
+        "confidence": 0.935,
+        "onset": 188.395,
+        "start_raw": 188.395,
+        "end_raw": 188.987,
+        "lyric": "fad"
+      },
+      {
+        "start": 189.069,
+        "end": 189.707,
+        "midi": 74,
+        "confidence": 0.944,
+        "onset": 188.987,
+        "raw_midi": 86,
+        "start_raw": 188.987,
+        "end_raw": 189.579,
+        "lyric": "ing-wir",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "ing",
+          "wir"
+        ]
+      },
+      {
+        "start": 189.707,
+        "end": 190.682,
+        "midi": 74,
+        "confidence": 0.907,
+        "onset": 189.626,
+        "raw_midi": 86,
+        "start_raw": 189.626,
+        "end_raw": 190.647,
+        "lyric": "es"
+      },
+      {
+        "start": 190.682,
+        "end": 191.007,
+        "midi": 76,
+        "confidence": 0.63,
+        "onset": 190.764,
+        "start_raw": 190.764,
+        "end_raw": 190.891,
+        "lyric": "I",
+        "tie": "start"
+      },
+      {
+        "start": 191.007,
+        "end": 191.332,
+        "midi": 64,
+        "confidence": 0.9,
+        "onset": 191.158,
+        "start_raw": 191.158,
+        "end_raw": 191.286,
+        "lyric": null,
+        "tie": "continue"
+      },
+      {
+        "start": 191.332,
+        "end": 191.646,
+        "midi": 66,
+        "confidence": 0.906,
+        "onset": 191.286,
+        "start_raw": 191.286,
+        "end_raw": 191.495,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 191.646,
+        "end": 192.284,
+        "midi": 58,
+        "confidence": 0.719,
+        "onset": 191.588,
+        "start_raw": 191.588,
+        "end_raw": 192.145,
+        "lyric": "strike-the",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "strike",
+          "the"
+        ]
+      },
+      {
+        "start": 192.284,
+        "end": 192.609,
+        "midi": 57,
+        "confidence": 0.806,
+        "onset": 192.25,
+        "start_raw": 192.25,
+        "end_raw": 192.575,
+        "lyric": "fire"
+      },
+      {
+        "start": 192.609,
+        "end": 192.935,
+        "midi": 61,
+        "confidence": 0.881,
+        "onset": 192.691,
+        "start_raw": 192.586,
+        "end_raw": 192.865,
+        "lyric": "un"
+      },
+      {
+        "start": 192.935,
+        "end": 193.26,
+        "midi": 62,
+        "confidence": 0.838,
+        "onset": 192.877,
+        "start_raw": 192.877,
+        "end_raw": 193.225,
+        "lyric": "til"
+      },
+      {
+        "start": 193.26,
+        "end": 193.573,
+        "midi": 66,
+        "confidence": 0.873,
+        "onset": 193.236,
+        "start_raw": 193.236,
+        "end_raw": 193.422,
+        "lyric": "the",
+        "tie": "start"
+      },
+      {
+        "start": 193.573,
+        "end": 193.663,
+        "midi": 71,
+        "confidence": 0.978,
+        "onset": 193.55,
+        "start_raw": 193.55,
+        "end_raw": 193.689,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 193.689,
+        "end": 193.887,
+        "midi": 73,
+        "confidence": 0.818,
+        "onset": 193.689,
+        "start_raw": 193.689,
+        "end_raw": 193.968,
+        "lyric": "stars"
+      },
+      {
+        "start": 194.212,
+        "end": 194.862,
+        "midi": 66,
+        "confidence": 0.829,
+        "onset": 194.13,
+        "start_raw": 194.13,
+        "end_raw": 195.024,
+        "lyric": "al"
+      },
+      {
+        "start": 195.187,
+        "end": 195.837,
+        "midi": 66,
+        "confidence": 0.758,
+        "onset": 195.071,
+        "start_raw": 195.071,
+        "end_raw": 195.686,
+        "lyric": "ign"
+      },
+      {
+        "start": 195.837,
+        "end": 195.927,
+        "midi": 66,
+        "confidence": 0.656,
+        "onset": 195.733,
+        "start_raw": 195.733,
+        "end_raw": 195.93,
+        "lyric": "Un",
+        "tie": "start"
+      },
+      {
+        "start": 196.162,
+        "end": 196.487,
+        "midi": 64,
+        "confidence": 0.912,
+        "onset": 196.301,
+        "start_raw": 196.301,
+        "end_raw": 196.441,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 196.487,
+        "end": 196.812,
+        "midi": 66,
+        "confidence": 0.926,
+        "onset": 196.441,
+        "start_raw": 196.441,
+        "end_raw": 196.731,
+        "lyric": "til",
+        "tie": "start"
+      },
+      {
+        "start": 196.812,
+        "end": 196.902,
+        "midi": 57,
+        "confidence": 0.655,
+        "onset": 196.731,
+        "start_raw": 196.731,
+        "end_raw": 196.905,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 196.917,
+        "end": 197.137,
+        "midi": 59,
+        "confidence": 0.911,
+        "onset": 196.917,
+        "start_raw": 196.917,
+        "end_raw": 197.254,
+        "lyric": "the"
+      },
+      {
+        "start": 197.463,
+        "end": 197.788,
+        "midi": 59,
+        "confidence": 0.837,
+        "onset": 197.509,
+        "start_raw": 197.509,
+        "end_raw": 197.718,
+        "lyric": "sil"
+      },
+      {
+        "start": 197.788,
+        "end": 197.878,
+        "midi": 61,
+        "confidence": 0.878,
+        "onset": 197.741,
+        "start_raw": 197.741,
+        "end_raw": 197.95,
+        "lyric": "ence"
+      },
+      {
+        "start": 197.95,
+        "end": 198.438,
+        "midi": 62,
+        "confidence": 0.851,
+        "onset": 197.95,
+        "start_raw": 197.95,
+        "end_raw": 198.391,
+        "lyric": "from"
+      },
+      {
+        "start": 198.438,
+        "end": 198.751,
+        "midi": 66,
+        "confidence": 0.858,
+        "onset": 198.403,
+        "start_raw": 198.403,
+        "end_raw": 198.647,
+        "lyric": "the",
+        "tie": "start"
+      },
+      {
+        "start": 198.751,
+        "end": 199.065,
+        "midi": 73,
+        "confidence": 0.936,
+        "onset": 198.821,
+        "start_raw": 198.821,
+        "end_raw": 199.007,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 199.065,
+        "end": 199.155,
+        "midi": 74,
+        "confidence": 0.624,
+        "onset": 199.007,
+        "start_raw": 199.007,
+        "end_raw": 199.181,
+        "lyric": "an",
+        "tie": "start"
+      },
+      {
+        "start": 199.181,
+        "end": 199.39,
+        "midi": 73,
+        "confidence": 0.844,
+        "onset": 199.181,
+        "start_raw": 199.181,
+        "end_raw": 199.32,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 199.39,
+        "end": 199.48,
+        "midi": 74,
+        "confidence": 0.882,
+        "onset": 199.32,
+        "start_raw": 199.32,
+        "end_raw": 199.494,
+        "lyric": "cient",
+        "tie": "start"
+      },
+      {
+        "start": 199.494,
+        "end": 199.715,
+        "midi": 75,
+        "confidence": 0.601,
+        "onset": 199.494,
+        "start_raw": 199.494,
+        "end_raw": 199.657,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 199.715,
+        "end": 199.805,
+        "midi": 73,
+        "confidence": 0.856,
+        "onset": 199.68,
+        "start_raw": 199.68,
+        "end_raw": 199.843,
+        "lyric": "time",
+        "tie": "start"
+      },
+      {
+        "start": 199.843,
+        "end": 202.292,
+        "midi": 74,
+        "confidence": 0.969,
+        "onset": 199.843,
+        "start_raw": 199.843,
+        "end_raw": 202.234,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 202.617,
+        "end": 203.256,
+        "midi": 74,
+        "confidence": 0.794,
+        "onset": 202.745,
+        "start_raw": 202.745,
+        "end_raw": 203.209,
+        "lyric": null
+      },
+      {
+        "start": 203.256,
+        "end": 203.569,
+        "midi": 74,
+        "confidence": 0.754,
+        "onset": 203.337,
+        "start_raw": 203.337,
+        "end_raw": 203.488,
+        "lyric": null
+      },
+      {
+        "start": 203.569,
+        "end": 204.545,
+        "midi": 74,
+        "confidence": 0.744,
+        "onset": 203.569,
+        "start_raw": 203.569,
+        "end_raw": 204.684,
+        "lyric": null
+      },
+      {
+        "start": 205.195,
+        "end": 206.82,
+        "midi": 69,
+        "confidence": 0.827,
+        "onset": 205.195,
+        "start_raw": 205.195,
+        "end_raw": 206.75,
+        "lyric": null
+      },
+      {
+        "start": 207.784,
+        "end": 208.422,
+        "midi": 62,
+        "confidence": 0.728,
+        "onset": 207.795,
+        "start_raw": 207.795,
+        "end_raw": 208.318,
+        "lyric": null
+      },
+      {
+        "start": 209.398,
+        "end": 209.711,
+        "midi": 62,
+        "confidence": 0.8,
+        "onset": 209.328,
+        "start_raw": 209.328,
+        "end_raw": 209.839,
+        "lyric": null
+      },
+      {
+        "start": 210.35,
+        "end": 211.638,
+        "midi": 62,
+        "confidence": 0.84,
+        "onset": 210.21,
+        "start_raw": 210.21,
+        "end_raw": 211.696,
+        "lyric": null
+      },
+      {
+        "start": 211.638,
+        "end": 211.952,
+        "midi": 65,
+        "confidence": 0.763,
+        "onset": 211.708,
+        "start_raw": 211.708,
+        "end_raw": 211.905,
+        "lyric": "Tog",
+        "tie": "start"
+      },
+      {
+        "start": 211.952,
+        "end": 212.042,
+        "midi": 66,
+        "confidence": 0.769,
+        "onset": 211.905,
+        "start_raw": 211.905,
+        "end_raw": 212.033,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 212.056,
+        "end": 212.277,
+        "midi": 69,
+        "confidence": 0.797,
+        "onset": 212.056,
+        "start_raw": 212.056,
+        "end_raw": 212.172,
+        "lyric": "et"
+      },
+      {
+        "start": 212.277,
+        "end": 212.602,
+        "midi": 59,
+        "confidence": 0.823,
+        "onset": 212.393,
+        "start_raw": 212.23,
+        "end_raw": 212.718,
+        "lyric": "her"
+      },
+      {
+        "start": 212.927,
+        "end": 213.252,
+        "midi": 59,
+        "confidence": 0.888,
+        "onset": 212.973,
+        "start_raw": 212.973,
+        "end_raw": 213.217,
+        "lyric": "we"
+      },
+      {
+        "start": 213.252,
+        "end": 213.577,
+        "midi": 61,
+        "confidence": 0.849,
+        "onset": 213.229,
+        "start_raw": 213.229,
+        "end_raw": 213.426,
+        "lyric": "will-stop-the",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "will",
+          "stop",
+          "the"
+        ]
+      },
+      {
+        "start": 215.516,
+        "end": 215.829,
+        "midi": 62,
+        "confidence": 0.878,
+        "onset": 215.528,
+        "start_raw": 215.528,
+        "end_raw": 215.783,
+        "lyric": "cos-mos-We",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "cos",
+          "mos",
+          "We"
+        ]
+      },
+      {
+        "start": 215.829,
+        "end": 216.155,
+        "midi": 64,
+        "confidence": 0.771,
+        "onset": 215.783,
+        "start_raw": 215.783,
+        "end_raw": 216.038,
+        "lyric": "will"
+      },
+      {
+        "start": 216.155,
+        "end": 216.48,
+        "midi": 66,
+        "confidence": 0.763,
+        "onset": 216.097,
+        "start_raw": 216.097,
+        "end_raw": 216.398,
+        "lyric": "shop"
+      },
+      {
+        "start": 216.48,
+        "end": 216.57,
+        "midi": 69,
+        "confidence": 0.911,
+        "onset": 216.468,
+        "start_raw": 216.468,
+        "end_raw": 216.631,
+        "lyric": "the-cos-mos",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "the",
+          "cos",
+          "mos"
+        ]
+      },
+      {
+        "start": 217.78,
+        "end": 218.093,
+        "midi": 78,
+        "confidence": 0.69,
+        "onset": 217.861,
+        "start_raw": 217.861,
+        "end_raw": 218.047,
+        "lyric": "Tuck"
+      },
+      {
+        "start": 218.407,
+        "end": 218.732,
+        "midi": 76,
+        "confidence": 0.758,
+        "onset": 218.477,
+        "start_raw": 218.477,
+        "end_raw": 218.651,
+        "lyric": "in"
+      },
+      {
+        "start": 218.732,
+        "end": 219.057,
+        "midi": 78,
+        "confidence": 0.85,
+        "onset": 218.662,
+        "start_raw": 218.662,
+        "end_raw": 219.022,
+        "lyric": "to"
+      },
+      {
+        "start": 219.057,
+        "end": 219.382,
+        "midi": 69,
+        "confidence": 0.831,
+        "onset": 219.022,
+        "start_raw": 219.022,
+        "end_raw": 219.278,
+        "lyric": "the"
+      },
+      {
+        "start": 219.382,
+        "end": 219.472,
+        "midi": 72,
+        "confidence": 0.698,
+        "onset": 219.324,
+        "start_raw": 219.324,
+        "end_raw": 219.452,
+        "lyric": "cos",
+        "tie": "start"
+      },
+      {
+        "start": 219.487,
+        "end": 220.032,
+        "midi": 73,
+        "confidence": 0.91,
+        "onset": 219.487,
+        "start_raw": 219.487,
+        "end_raw": 219.939,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 220.032,
+        "end": 220.122,
+        "midi": 74,
+        "confidence": 0.931,
+        "onset": 219.963,
+        "start_raw": 219.963,
+        "end_raw": 220.148,
+        "lyric": "mos"
+      },
+      {
+        "start": 220.682,
+        "end": 222.958,
+        "midi": 74,
+        "confidence": 0.922,
+        "onset": 220.566,
+        "start_raw": 220.566,
+        "end_raw": 222.9,
+        "lyric": "hey"
+      }
+    ],
+    "range": {
+      "low_midi": 57,
+      "high_midi": 84
+    },
+    "warnings": [
+      "八度修正 2797 帧（pyin 常见八度误判）",
+      "超音域帧按八度归位 672 帧",
+      "20 个音符超出主旋律合理音域（55-84），已按八度归位",
+      "5 个歌词音节未能对齐到音符（ASR 可能多识别或旋律缺失）：up、ong、in、in、ay"
+    ],
+    "engine": "pyin",
+    "quantize": {
+      "grid_points": 707,
+      "beat_period": 0.6501,
+      "snapped": 326,
+      "kept_raw": 0,
+      "adjusted_overlap": 70
+    },
+    "alignment": {
+      "lines": 18,
+      "syllables": 242,
+      "notes": 326,
+      "matched_syllables": 237,
+      "notes_with_lyric": 200,
+      "coverage": 0.613,
+      "melisma": 65,
+      "shared": 27,
+      "unmatched": [
+        {
+          "text": "up",
+          "start": 31.56
+        },
+        {
+          "text": "ong",
+          "start": 49.73
+        },
+        {
+          "text": "in",
+          "start": 91.42
+        },
+        {
+          "text": "in",
+          "start": 154.0
+        },
+        {
+          "text": "ay",
+          "start": 161.54
+        }
+      ],
+      "lines_without_notes": 0
+    },
+    "available": true
+  },
+  "tools": {
+    "python": "3.12.8",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "librosa": "1.0.0",
+    "soundfile": "0.14.0",
+    "demucs": "4.1.0",
+    "torch": "2.14.1+cpu",
+    "jsonschema": "4.26.0",
+    "ffmpeg": "ffmpeg version 9.0.1-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+    "demucs_model": "htdemucs",
+    "lyrics": {
+      "available": true,
+      "engine": "faster-whisper",
+      "model": "medium",
+      "device": "cpu",
+      "line_count": 18
+    },
+    "melody": {
+      "available": true,
+      "engine": "pyin",
+      "note_count": 326
+    }
+  },
+  "warnings": [
+    {
+      "level": "warn",
+      "message": "原采样率 44100Hz，分析音频已重采样至 22050Hz。",
+      "stage": "ingest",
+      "code": "audio.resampled"
+    },
+    {
+      "level": "warn",
+      "message": "未提供和弦事件，调性仅由音频 chroma 推断。",
+      "stage": "key",
+      "code": "key.chroma_only"
+    },
+    {
+      "level": "warn",
+      "message": "关系大小调歧义（B 小调 vs D 大调，delta=0.036），按行业惯例按大调标注。",
+      "stage": "key",
+      "code": "key.relative_ambiguity"
+    },
+    {
+      "level": "info",
+      "message": "段落可能切得不够细：桥段 1 超过 16 小节（谱面连续重复同一和弦进行，对弹唱无影响，仅提示结构信息可能不够细）。",
+      "stage": "structure",
+      "code": "structure.coarse"
+    }
+  ],
+  "meta": {
+    "total_elapsed_seconds": 538.687,
+    "stage_timings": {
+      "ingest": 2.828,
+      "separate": 308.469,
+      "beats": 11.594,
+      "key": 12.218,
+      "chords": 13.188,
+      "key_refine": 12.219,
+      "structure": 13.781,
+      "lyrics": 151.469,
+      "melody": 12.875
+    },
+    "options": {
+      "include_tab": true,
+      "no_lyrics": false,
+      "no_melody": false
+    },
+    "engines": {
+      "separation": "demucs",
+      "beats": "librosa.beat",
+      "key": "krumhansl+chords",
+      "chords": "chroma-template+viterbi",
+      "structure": "ssm+novelty"
+    },
+    "field_notes": {
+      "chords[].bars": "该和弦事件持续了几个小节（按 BPM 与拍号估算，四舍五入到 0.01 小节）。",
+      "chords[].bar_aligned": "和弦起点是否落在小节线上（容差 8% 小节长度）。false 表示和弦从反拍/半小节开始，属于正常现象，不是识别错误，score-engine 不应据此降级。",
+      "quality": "assess_analysis_quality 的自检结果：overall 0..1，stages 为各阶段分，issues 为需要人工关注的点（level 为 info/warn/error）。"
+    },
+    "analysis_json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\analysis.json",
+    "manifest_json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\manifest.json"
+  },
+  "quality": {
+    "overall": 0.824,
+    "stages": {
+      "beats": 0.882,
+      "key": 0.843,
+      "chords": 0.745,
+      "structure": 0.851,
+      "melody": 0.849,
+      "lyrics": 1.0
+    },
+    "issues": [
+      {
+        "level": "warn",
+        "code": "chords.low_confidence",
+        "message": "和弦平均置信度 0.57，转位/七和弦建议人工校对。",
+        "target": "整曲和弦"
+      },
+      {
+        "level": "info",
+        "code": "structure.coarse",
+        "message": "桥段 1（99.1s-140.7s）超过 16 小节，可能还能细分，但连续重复同一和弦进行对弹唱无影响。",
+        "target": "桥段 1"
+      }
+    ]
+  }
+}

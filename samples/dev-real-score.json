@@ -1,0 +1,5755 @@
+{
+ "schema": "aitsm.score/v1",
+ "meta": {
+  "title": "小林未郁、HOYO-MiX - 下一站 Beyond This Station · 弹唱谱",
+  "artist": "",
+  "source": {
+   "file": "K:\\workspaces\\hackmagic\\hackmagic-music\\assets\\小林未郁、HOYO-MiX\\小林未郁、HOYO-MiX - 下一站 Beyond This Station.flac",
+   "original_name": "小林未郁、HOYO-MiX - 下一站 Beyond This Station.flac",
+   "duration_sec": 60.0,
+   "sha256": "9b99e9b943aa948b4cfc24a483760f05b07a6c28f7b8acce503a22958beda224",
+   "audio_url": "work\\analysis-t1\\playback.mp3"
+  },
+  "tempo": 92.28,
+  "tempo_source": "beat-track",
+  "time_signature": [
+   4,
+   4
+  ],
+  "key": {
+   "detected": "B minor",
+   "sounding": "B",
+   "mode": "minor",
+   "play": "B",
+   "num_sharps_flats": 2,
+   "confidence": 0.724
+  },
+  "capo": 0,
+  "guitar": {
+   "strings": 6,
+   "tuning": [
+    40,
+    45,
+    50,
+    55,
+    59,
+    64
+   ],
+   "tuning_name": "standard"
+  },
+  "difficulty": "elementary",
+  "style": "pop",
+  "generator": {
+   "version": "0.1.0",
+   "created_at": "2026-10-21T00:46:46+08:00",
+   "engines": {
+    "arranger": "aitsm.score.arrange 0.1.0",
+    "chords": "analysis",
+    "melody": "{'available': True, 'engine': 'pyin', 'note_count': 79}",
+    "voicings": "aitsm.score.voicings"
+   }
+  },
+  "warnings": []
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "label": "前奏 1",
+   "kind": "intro",
+   "start_bar": 1,
+   "end_bar": 7,
+   "start_sec": 0.0,
+   "end_sec": 18.7617,
+   "repeat_of": null,
+   "pattern_id": "ballad4",
+   "energy": 0.0
+  },
+  {
+   "id": "s2",
+   "label": "预副歌 1",
+   "kind": "prechorus",
+   "start_bar": 8,
+   "end_bar": 10,
+   "start_sec": 18.7617,
+   "end_sec": 26.494,
+   "repeat_of": null,
+   "pattern_id": "pop8",
+   "energy": 0.582
+  },
+  {
+   "id": "s3",
+   "label": "副歌 1",
+   "kind": "chorus",
+   "start_bar": 11,
+   "end_bar": 14,
+   "start_sec": 26.494,
+   "end_sec": 37.1287,
+   "repeat_of": null,
+   "pattern_id": "drive8",
+   "energy": 0.965
+  },
+  {
+   "id": "s4",
+   "label": "副歌 2",
+   "kind": "chorus",
+   "start_bar": 15,
+   "end_bar": 16,
+   "start_sec": 37.1287,
+   "end_sec": 42.3068,
+   "repeat_of": "副歌 1",
+   "pattern_id": "drive8",
+   "energy": 1.0
+  },
+  {
+   "id": "s5",
+   "label": "间奏 1",
+   "kind": "interlude",
+   "start_bar": 17,
+   "end_bar": 18,
+   "start_sec": 42.3068,
+   "end_sec": 47.4616,
+   "repeat_of": null,
+   "pattern_id": "ballad8",
+   "energy": 0.177
+  },
+  {
+   "id": "s6",
+   "label": "主歌 1",
+   "kind": "verse",
+   "start_bar": 19,
+   "end_bar": 20,
+   "start_sec": 47.4616,
+   "end_sec": 52.5468,
+   "repeat_of": null,
+   "pattern_id": "folk4",
+   "energy": 0.289
+  },
+  {
+   "id": "s7",
+   "label": "主歌 2",
+   "kind": "verse",
+   "start_bar": 21,
+   "end_bar": 23,
+   "start_sec": 52.5468,
+   "end_sec": 60.0,
+   "repeat_of": "主歌 1",
+   "pattern_id": "pop8",
+   "energy": 0.45
+  }
+ ],
+ "bars": [
+  {
+   "index": 1,
+   "start_sec": 0.6734,
+   "end_sec": 3.274,
+   "section": "s1",
+   "time_signature": [
+    4,
+    4
+   ],
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 3.0,
+     "symbol": "Gmaj7",
+     "concert": "Gmaj7",
+     "confidence": 0.497,
+     "start_sec": 0.6734,
+     "voicing_id": "Gmaj7_320002"
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.495,
+     "start_sec": 2.6239,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 0.5,
+     "midi": 54,
+     "confidence": 0.233,
+     "start_sec": 0.6734,
+     "lyric": null
+    },
+    {
+     "beat": 0.5,
+     "dur": 1.5,
+     "midi": 52,
+     "confidence": 0.027,
+     "start_sec": 0.9984,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 1.5,
+     "midi": 52,
+     "confidence": 0.029,
+     "start_sec": 2.2988,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 1.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        0
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        2,
+        0
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 3.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 2,
+   "start_sec": 3.274,
+   "end_sec": 5.8514,
+   "section": "s1",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 2.0,
+     "symbol": "Asus4",
+     "concert": "Asus4",
+     "confidence": 0.434,
+     "start_sec": 3.274,
+     "voicing_id": "Asus4_x02230"
+    },
+    {
+     "beat": 2.0,
+     "dur": 1.0,
+     "symbol": "Amaj7",
+     "concert": "Amaj7",
+     "confidence": 0.436,
+     "start_sec": 4.5743,
+     "voicing_id": "Amaj7_x02120"
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Asus2",
+     "concert": "Asus2",
+     "confidence": 0.555,
+     "start_sec": 5.2245,
+     "voicing_id": "Asus2_x02200"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 0.5,
+     "midi": 58,
+     "confidence": 0.053,
+     "start_sec": 3.274,
+     "lyric": null
+    },
+    {
+     "beat": 0.5,
+     "dur": 1.0,
+     "midi": 50,
+     "confidence": 0.189,
+     "start_sec": 3.5991,
+     "lyric": null
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.25,
+     "midi": 57,
+     "confidence": 0.12,
+     "start_sec": 4.2492,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.5,
+     "midi": 57,
+     "confidence": 0.325,
+     "start_sec": 5.538,
+     "lyric": null
+    },
+    {
+     "beat": 4.0,
+     "dur": 0.0,
+     "midi": 57,
+     "confidence": 0.293,
+     "start_sec": 5.8514,
+     "lyric": null,
+     "tie": "start"
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        0
+       ]
+      ],
+      "voicing_id": "Asus4_x02230"
+     },
+     {
+      "beat": 1.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "Asus4_x02230"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        0
+       ]
+      ],
+      "voicing_id": "Amaj7_x02120"
+     },
+     {
+      "beat": 3.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        0
+       ]
+      ],
+      "voicing_id": "Asus2_x02200"
+     }
+    ]
+   }
+  },
+  {
+   "index": 3,
+   "start_sec": 5.8514,
+   "end_sec": 8.4521,
+   "section": "s1",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 1.0,
+     "symbol": "Asus2/B",
+     "concert": "Asus2/B",
+     "confidence": 0.49,
+     "start_sec": 5.8514,
+     "voicing_id": "Asus2_over_B_x22200"
+    },
+    {
+     "beat": 1.0,
+     "dur": 1.0,
+     "symbol": "Asus2",
+     "concert": "Asus2",
+     "confidence": 0.526,
+     "start_sec": 6.5016,
+     "voicing_id": "Asus2_x02200"
+    },
+    {
+     "beat": 2.0,
+     "dur": 2.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.58,
+     "start_sec": 7.1517,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 0.25,
+     "midi": 57,
+     "confidence": 0.293,
+     "start_sec": 5.8514,
+     "lyric": null,
+     "tie": "stop"
+    },
+    {
+     "beat": 0.5,
+     "dur": 0.25,
+     "midi": 48,
+     "confidence": 0.073,
+     "start_sec": 6.1765,
+     "lyric": null
+    },
+    {
+     "beat": 0.75,
+     "dur": 0.25,
+     "midi": 57,
+     "confidence": 0.058,
+     "start_sec": 6.3391,
+     "lyric": null
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 50,
+     "confidence": 0.012,
+     "start_sec": 6.8266,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 1.0,
+     "midi": 57,
+     "confidence": 0.011,
+     "start_sec": 7.4768,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.5,
+     "midi": 66,
+     "confidence": 0.053,
+     "start_sec": 8.127,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Asus2_over_B_x22200"
+     },
+     {
+      "beat": 1.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        0
+       ]
+      ],
+      "voicing_id": "Asus2_x02200"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 4,
+   "start_sec": 8.4521,
+   "end_sec": 11.0063,
+   "section": "s1",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 1.0,
+     "symbol": "Bsus4",
+     "concert": "Bsus4",
+     "confidence": 0.452,
+     "start_sec": 8.4521,
+     "voicing_id": "Bsus4_x24400"
+    },
+    {
+     "beat": 1.0,
+     "dur": 1.0,
+     "symbol": "Bsus2",
+     "concert": "Bsus2",
+     "confidence": 0.542,
+     "start_sec": 9.079,
+     "voicing_id": "Bsus2_7444xx"
+    },
+    {
+     "beat": 2.0,
+     "dur": 2.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.514,
+     "start_sec": 9.7292,
+     "voicing_id": "Bm7_754475"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 1.0,
+     "dur": 0.5,
+     "midi": 61,
+     "confidence": 0.018,
+     "start_sec": 9.079,
+     "lyric": null
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.014,
+     "start_sec": 9.4041,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "midi": 57,
+     "confidence": 0.011,
+     "start_sec": 10.0311,
+     "lyric": null
+    },
+    {
+     "beat": 3.0,
+     "dur": 0.25,
+     "midi": 66,
+     "confidence": 0.011,
+     "start_sec": 10.3329,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.25,
+     "midi": 64,
+     "confidence": 0.01,
+     "start_sec": 10.6696,
+     "lyric": null
+    },
+    {
+     "beat": 3.75,
+     "dur": 0.25,
+     "midi": 62,
+     "confidence": 0.013,
+     "start_sec": 10.8379,
+     "lyric": null
+    },
+    {
+     "beat": 4.0,
+     "dur": 0.0,
+     "midi": 62,
+     "confidence": 0.024,
+     "start_sec": 11.0063,
+     "lyric": null,
+     "tie": "start"
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Bsus4_x24400"
+     },
+     {
+      "beat": 1.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        4
+       ]
+      ],
+      "voicing_id": "Bsus2_7444xx"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        5
+       ]
+      ],
+      "voicing_id": "Bm7_754475"
+     },
+     {
+      "beat": 3.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        4
+       ]
+      ],
+      "voicing_id": "Bm7_754475"
+     }
+    ]
+   }
+  },
+  {
+   "index": 5,
+   "start_sec": 11.0063,
+   "end_sec": 13.6069,
+   "section": "s1",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 4.0,
+     "symbol": "D",
+     "concert": "D",
+     "confidence": 0.431,
+     "start_sec": 11.0063,
+     "voicing_id": "D_xx0232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 1.5,
+     "midi": 62,
+     "confidence": 0.024,
+     "start_sec": 11.0063,
+     "lyric": null,
+     "tie": "stop"
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 62,
+     "confidence": 0.043,
+     "start_sec": 11.9815,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 1.0,
+     "midi": 62,
+     "confidence": 0.043,
+     "start_sec": 12.3066,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "D_xx0232"
+     },
+     {
+      "beat": 1.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "D_xx0232"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        2,
+        3
+       ]
+      ],
+      "voicing_id": "D_xx0232"
+     },
+     {
+      "beat": 3.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "D_xx0232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 6,
+   "start_sec": 13.6069,
+   "end_sec": 16.1611,
+   "section": "s1",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 4.0,
+     "symbol": "Asus4",
+     "concert": "Asus4",
+     "confidence": 0.592,
+     "start_sec": 13.6069,
+     "voicing_id": "Asus4_x02230"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 0.5,
+     "midi": 57,
+     "confidence": 0.016,
+     "start_sec": 13.6069,
+     "lyric": null
+    },
+    {
+     "beat": 0.5,
+     "dur": 2.5,
+     "midi": 57,
+     "confidence": 0.13,
+     "start_sec": 13.932,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        0
+       ]
+      ],
+      "voicing_id": "Asus4_x02230"
+     },
+     {
+      "beat": 1.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "Asus4_x02230"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        2,
+        3
+       ]
+      ],
+      "voicing_id": "Asus4_x02230"
+     },
+     {
+      "beat": 3.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Asus4_x02230"
+     }
+    ]
+   }
+  },
+  {
+   "index": 7,
+   "start_sec": 16.1611,
+   "end_sec": 18.7617,
+   "section": "s1",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 1.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.445,
+     "start_sec": 16.1611,
+     "voicing_id": "Bm7_x24232"
+    },
+    {
+     "beat": 1.0,
+     "dur": 2.0,
+     "symbol": "D",
+     "concert": "D",
+     "confidence": 0.476,
+     "start_sec": 16.8112,
+     "voicing_id": "D_xx0232"
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.529,
+     "start_sec": 18.1116,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 0.5,
+     "midi": 62,
+     "confidence": 0.016,
+     "start_sec": 16.1611,
+     "lyric": null
+    },
+    {
+     "beat": 1.0,
+     "dur": 0.25,
+     "midi": 62,
+     "confidence": 0.012,
+     "start_sec": 16.8112,
+     "lyric": null
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 62,
+     "confidence": 0.021,
+     "start_sec": 17.1363,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 0.5,
+     "midi": 62,
+     "confidence": 0.041,
+     "start_sec": 17.4614,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "midi": 62,
+     "confidence": 0.016,
+     "start_sec": 17.7865,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.25,
+     "midi": 66,
+     "confidence": 0.01,
+     "start_sec": 18.4367,
+     "lyric": null
+    },
+    {
+     "beat": 3.75,
+     "dur": 0.25,
+     "midi": 64,
+     "confidence": 0.019,
+     "start_sec": 18.5992,
+     "lyric": null,
+     "tie": "start"
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "D_xx0232"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "D_xx0232"
+     },
+     {
+      "beat": 3.0,
+      "dur": 1,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 8,
+   "start_sec": 18.7617,
+   "end_sec": 21.3159,
+   "section": "s2",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 3.0,
+     "symbol": "Esus4",
+     "concert": "Esus4",
+     "confidence": 0.486,
+     "start_sec": 18.7617,
+     "voicing_id": "Esus4_002400"
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.45,
+     "start_sec": 20.6658,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 2.0,
+     "midi": 64,
+     "confidence": 0.019,
+     "start_sec": 18.7617,
+     "lyric": null,
+     "tie": "stop"
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "midi": 57,
+     "confidence": 0.01,
+     "start_sec": 20.3523,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "pop8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus4_002400"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        4,
+        2
+       ]
+      ],
+      "voicing_id": "Esus4_002400"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus4_002400"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        4,
+        2
+       ]
+      ],
+      "voicing_id": "Esus4_002400"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus4_002400"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        4,
+        2
+       ]
+      ],
+      "voicing_id": "Esus4_002400"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        4
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 9,
+   "start_sec": 21.3159,
+   "end_sec": 23.9166,
+   "section": "s2",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 4.0,
+     "symbol": "Dmaj7",
+     "concert": "Dmaj7",
+     "confidence": 0.484,
+     "start_sec": 21.3159,
+     "voicing_id": "Dmaj7_xx0222"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.5,
+     "dur": 0.5,
+     "midi": 50,
+     "confidence": 0.01,
+     "start_sec": 21.641,
+     "lyric": null
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 50,
+     "confidence": 0.01,
+     "start_sec": 22.2912,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 0.5,
+     "midi": 50,
+     "confidence": 0.01,
+     "start_sec": 22.6162,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "midi": 50,
+     "confidence": 0.011,
+     "start_sec": 22.9413,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "pop8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     }
+    ]
+   }
+  },
+  {
+   "index": 10,
+   "start_sec": 23.9166,
+   "end_sec": 26.494,
+   "section": "s2",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 4.0,
+     "symbol": "Dmaj7",
+     "concert": "Dmaj7",
+     "confidence": 0.484,
+     "start_sec": 23.9166,
+     "voicing_id": "Dmaj7_xx0222",
+     "continue": true
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 3.0,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 25.8438,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.009,
+     "start_sec": 26.1689,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "pop8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     }
+    ]
+   }
+  },
+  {
+   "index": 11,
+   "start_sec": 26.494,
+   "end_sec": 29.0946,
+   "section": "s3",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 3.0,
+     "symbol": "Dmaj7",
+     "concert": "Dmaj7",
+     "confidence": 0.484,
+     "start_sec": 26.494,
+     "voicing_id": "Dmaj7_xx0222",
+     "continue": true
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.545,
+     "start_sec": 28.4212,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "guitar": {
+    "pattern_id": "drive8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 12,
+   "start_sec": 29.0946,
+   "end_sec": 31.9274,
+   "section": "s3",
+   "tempo": 84.722,
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 3.0,
+     "symbol": "Esus2",
+     "concert": "Esus2",
+     "confidence": 0.463,
+     "start_sec": 29.0946,
+     "voicing_id": "Esus2_024400"
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.504,
+     "start_sec": 31.2076,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 54,
+     "confidence": 0.021,
+     "start_sec": 30.1511,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 0.5,
+     "midi": 57,
+     "confidence": 0.01,
+     "start_sec": 30.511,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "midi": 54,
+     "confidence": 0.01,
+     "start_sec": 30.8593,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "drive8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus2_024400"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus2_024400"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus2_024400"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus2_024400"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus2_024400"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        0
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "Esus2_024400"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 13,
+   "start_sec": 31.9274,
+   "end_sec": 34.5513,
+   "section": "s3",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 3.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.504,
+     "start_sec": 31.9274,
+     "voicing_id": "Bm7_x24232",
+     "continue": true
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Gmaj7",
+     "concert": "Gmaj7",
+     "confidence": 0.517,
+     "start_sec": 33.9011,
+     "voicing_id": "Gmaj7_320002"
+    }
+   ],
+   "guitar": {
+    "pattern_id": "drive8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     }
+    ]
+   }
+  },
+  {
+   "index": 14,
+   "start_sec": 34.5513,
+   "end_sec": 37.1287,
+   "section": "s3",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 4.0,
+     "symbol": "Gmaj7",
+     "concert": "Gmaj7",
+     "confidence": 0.517,
+     "start_sec": 34.5513,
+     "voicing_id": "Gmaj7_320002",
+     "continue": true
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 3.0,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 36.4785,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "drive8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     }
+    ]
+   }
+  },
+  {
+   "index": 15,
+   "start_sec": 37.1287,
+   "end_sec": 39.7061,
+   "section": "s4",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 3.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.457,
+     "start_sec": 37.1287,
+     "voicing_id": "Bm7_x24232"
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Gmaj7",
+     "concert": "Gmaj7",
+     "confidence": 0.425,
+     "start_sec": 39.056,
+     "voicing_id": "Gmaj7_320002"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 3.0,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 39.056,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.5,
+     "midi": 48,
+     "confidence": 0.01,
+     "start_sec": 39.3811,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "drive8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     }
+    ]
+   }
+  },
+  {
+   "index": 16,
+   "start_sec": 39.7061,
+   "end_sec": 42.3068,
+   "section": "s4",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 1.0,
+     "symbol": "Gmaj7",
+     "concert": "Gmaj7",
+     "confidence": 0.425,
+     "start_sec": 39.7061,
+     "voicing_id": "Gmaj7_320002",
+     "continue": true
+    },
+    {
+     "beat": 1.0,
+     "dur": 3.0,
+     "symbol": "A7",
+     "concert": "A7",
+     "confidence": 0.432,
+     "start_sec": 40.3563,
+     "voicing_id": "A7_x02020"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.5,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 40.0312,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 0.25,
+     "midi": 50,
+     "confidence": 0.01,
+     "start_sec": 41.0064,
+     "lyric": null
+    },
+    {
+     "beat": 2.25,
+     "dur": 0.25,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 41.1689,
+     "lyric": null
+    },
+    {
+     "beat": 3.0,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 41.6566,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "drive8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        6,
+        3
+       ],
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Gmaj7_320002"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "A7_x02020"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "A7_x02020"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "A7_x02020"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "A7_x02020"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "A7_x02020"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        0
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      "voicing_id": "A7_x02020"
+     }
+    ]
+   }
+  },
+  {
+   "index": 17,
+   "start_sec": 42.3068,
+   "end_sec": 44.8842,
+   "section": "s5",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 3.0,
+     "symbol": "F#maj7",
+     "concert": "F#maj7",
+     "confidence": 0.481,
+     "start_sec": 42.3068,
+     "voicing_id": "Fsmaj7_213321"
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Bmaj7",
+     "concert": "Bmaj7",
+     "confidence": 0.483,
+     "start_sec": 44.234,
+     "voicing_id": "Bmaj7_x24342"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 1.5,
+     "midi": 54,
+     "confidence": 0.01,
+     "start_sec": 42.3068,
+     "lyric": null
+    },
+    {
+     "beat": 1.5,
+     "dur": 2.0,
+     "midi": 54,
+     "confidence": 0.13,
+     "start_sec": 43.282,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.25,
+     "midi": 53,
+     "confidence": 0.01,
+     "start_sec": 44.5591,
+     "lyric": null
+    },
+    {
+     "beat": 3.75,
+     "dur": 0.25,
+     "midi": 54,
+     "confidence": 0.01,
+     "start_sec": 44.7216,
+     "lyric": null,
+     "tie": "start"
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        1
+       ]
+      ],
+      "voicing_id": "Fsmaj7_213321"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        3
+       ]
+      ],
+      "voicing_id": "Fsmaj7_213321"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        2,
+        2
+       ]
+      ],
+      "voicing_id": "Fsmaj7_213321"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        3
+       ]
+      ],
+      "voicing_id": "Fsmaj7_213321"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        1,
+        1
+       ]
+      ],
+      "voicing_id": "Fsmaj7_213321"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        3
+       ]
+      ],
+      "voicing_id": "Fsmaj7_213321"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Bmaj7_x24342"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        3
+       ]
+      ],
+      "voicing_id": "Bmaj7_x24342"
+     }
+    ]
+   }
+  },
+  {
+   "index": 18,
+   "start_sec": 44.8842,
+   "end_sec": 47.4616,
+   "section": "s5",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 4.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.479,
+     "start_sec": 44.8842,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 1.5,
+     "midi": 54,
+     "confidence": 0.01,
+     "start_sec": 44.8842,
+     "lyric": null,
+     "tie": "stop"
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 59,
+     "confidence": 0.01,
+     "start_sec": 45.8362,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 0.25,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 46.1613,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.25,
+     "midi": 67,
+     "confidence": 0.027,
+     "start_sec": 46.4864,
+     "lyric": null
+    },
+    {
+     "beat": 2.75,
+     "dur": 0.25,
+     "midi": 69,
+     "confidence": 0.134,
+     "start_sec": 46.6489,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "ballad8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "bass",
+      "strings": [
+       [
+        5,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        2,
+        3
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        2,
+        3
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "pluck",
+      "strings": [
+       [
+        3,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 19,
+   "start_sec": 47.4616,
+   "end_sec": 50.039,
+   "section": "s6",
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 2.0,
+     "symbol": "Dmaj7",
+     "concert": "Dmaj7",
+     "confidence": 0.537,
+     "start_sec": 47.4616,
+     "voicing_id": "Dmaj7_xx0222"
+    },
+    {
+     "beat": 2.0,
+     "dur": 2.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.507,
+     "start_sec": 48.7387,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 0.5,
+     "midi": 73,
+     "confidence": 0.01,
+     "start_sec": 47.4616,
+     "lyric": null
+    },
+    {
+     "beat": 0.5,
+     "dur": 0.5,
+     "midi": 62,
+     "confidence": 0.015,
+     "start_sec": 47.7866,
+     "lyric": null
+    },
+    {
+     "beat": 1.0,
+     "dur": 0.25,
+     "midi": 62,
+     "confidence": 0.019,
+     "start_sec": 48.1117,
+     "lyric": null
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 61,
+     "confidence": 0.04,
+     "start_sec": 48.4252,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 0.5,
+     "midi": 62,
+     "confidence": 0.022,
+     "start_sec": 48.7387,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 49.0637,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.25,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 49.7139,
+     "lyric": null
+    },
+    {
+     "beat": 3.75,
+     "dur": 0.25,
+     "midi": 50,
+     "confidence": 0.01,
+     "start_sec": 49.8765,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "folk4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        4
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 20,
+   "start_sec": 50.039,
+   "end_sec": 52.5468,
+   "section": "s6",
+   "tempo": 95.701,
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 1.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.507,
+     "start_sec": 50.039,
+     "voicing_id": "Bm7_x24232",
+     "continue": true
+    },
+    {
+     "beat": 1.0,
+     "dur": 1.0,
+     "symbol": "Dmaj7",
+     "concert": "Dmaj7",
+     "confidence": 0.457,
+     "start_sec": 50.6892,
+     "voicing_id": "Dmaj7_xx0222"
+    },
+    {
+     "beat": 2.0,
+     "dur": 2.0,
+     "symbol": "Dm7",
+     "concert": "Dm7",
+     "confidence": 0.473,
+     "start_sec": 51.3161,
+     "voicing_id": "Dm7_xx0211"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.0,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 50.039,
+     "lyric": null
+    },
+    {
+     "beat": 0.5,
+     "dur": 0.5,
+     "midi": 50,
+     "confidence": 0.01,
+     "start_sec": 50.3641,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 0.25,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 51.3161,
+     "lyric": null
+    },
+    {
+     "beat": 2.25,
+     "dur": 0.25,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 51.4787,
+     "lyric": null
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.009,
+     "start_sec": 51.6412,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "folk4",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 1,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.0,
+      "dur": 1,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.0,
+      "dur": 1,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      "voicing_id": "Dm7_xx0211"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      "voicing_id": "Dm7_xx0211"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        1
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dm7_xx0211"
+     }
+    ]
+   }
+  },
+  {
+   "index": 21,
+   "start_sec": 52.5468,
+   "end_sec": 54.9616,
+   "section": "s7",
+   "tempo": 99.387,
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 1.0,
+     "symbol": "Dm7",
+     "concert": "Dm7",
+     "confidence": 0.473,
+     "start_sec": 52.5468,
+     "voicing_id": "Dm7_xx0211",
+     "continue": true
+    },
+    {
+     "beat": 1.0,
+     "dur": 2.0,
+     "symbol": "Dmaj7",
+     "concert": "Dmaj7",
+     "confidence": 0.489,
+     "start_sec": 53.1273,
+     "voicing_id": "Dmaj7_xx0222"
+    },
+    {
+     "beat": 3.0,
+     "dur": 1.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.475,
+     "start_sec": 54.3811,
+     "voicing_id": "Bm7_x24232"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 2.0,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 53.731,
+     "lyric": null
+    },
+    {
+     "beat": 3.0,
+     "dur": 0.25,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 54.3811,
+     "lyric": null
+    },
+    {
+     "beat": 3.25,
+     "dur": 0.25,
+     "midi": 50,
+     "confidence": 0.018,
+     "start_sec": 54.5262,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "pop8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      "voicing_id": "Dm7_xx0211"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        1
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dm7_xx0211"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        4
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 22,
+   "start_sec": 54.9616,
+   "end_sec": 57.4462,
+   "section": "s7",
+   "tempo": 96.595,
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 4.0,
+     "symbol": "Bm7",
+     "concert": "Bm7",
+     "confidence": 0.475,
+     "start_sec": 54.9616,
+     "voicing_id": "Bm7_x24232",
+     "continue": true
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 1.0,
+     "dur": 0.25,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 55.5189,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 0.5,
+     "midi": 60,
+     "confidence": 0.01,
+     "start_sec": 56.1691,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "pop8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        4
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        4
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        4
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        5,
+        2
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        4
+       ]
+      ],
+      "voicing_id": "Bm7_x24232"
+     }
+    ]
+   }
+  },
+  {
+   "index": 23,
+   "start_sec": 57.4462,
+   "end_sec": 59.9771,
+   "section": "s7",
+   "tempo": 94.828,
+   "chords": [
+    {
+     "beat": 0.0,
+     "dur": 4.0,
+     "symbol": "Dmaj7",
+     "concert": "Dmaj7",
+     "confidence": 0.481,
+     "start_sec": 57.4462,
+     "voicing_id": "Dmaj7_xx0222"
+    }
+   ],
+   "vocal": [
+    {
+     "beat": 0.5,
+     "dur": 0.5,
+     "midi": 49,
+     "confidence": 0.011,
+     "start_sec": 57.7712,
+     "lyric": null
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "midi": 49,
+     "confidence": 0.058,
+     "start_sec": 58.4214,
+     "lyric": null
+    },
+    {
+     "beat": 2.0,
+     "dur": 1.0,
+     "midi": 50,
+     "confidence": 0.062,
+     "start_sec": 58.7465,
+     "lyric": null
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.5,
+     "midi": 55,
+     "confidence": 0.014,
+     "start_sec": 59.6752,
+     "lyric": null
+    },
+    {
+     "beat": 4.0,
+     "dur": 0.0,
+     "midi": 54,
+     "confidence": 0.011,
+     "start_sec": 59.9771,
+     "lyric": null
+    }
+   ],
+   "guitar": {
+    "pattern_id": "pop8",
+    "hits": [
+     {
+      "beat": 0.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 0.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 1.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "accent": true,
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 2.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 3.0,
+      "dur": 0.5,
+      "stroke": "down",
+      "strings": [
+       [
+        4,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     },
+     {
+      "beat": 3.5,
+      "dur": 0.5,
+      "stroke": "up",
+      "strings": [
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        4,
+        0
+       ]
+      ],
+      "voicing_id": "Dmaj7_xx0222"
+     }
+    ]
+   }
+  }
+ ],
+ "voicings": {
+  "Gmaj7_320002": {
+   "symbol": "Gmaj7",
+   "frets": [
+    3,
+    2,
+    0,
+    0,
+    0,
+    2
+   ],
+   "fingers": [
+    3,
+    1,
+    null,
+    null,
+    null,
+    2
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 2,
+   "label": "Gmaj7 常用开放把位"
+  },
+  "Bm7_x24232": {
+   "symbol": "Bm7",
+   "frets": [
+    -1,
+    2,
+    4,
+    2,
+    3,
+    2
+   ],
+   "fingers": [
+    null,
+    1,
+    3,
+    1,
+    2,
+    1
+   ],
+   "base_fret": 2,
+   "barres": [
+    {
+     "fret": 2,
+     "from": 1,
+     "to": 5
+    }
+   ],
+   "difficulty": 4,
+   "label": "Bm7 2品横按"
+  },
+  "Asus4_x02230": {
+   "symbol": "Asus4",
+   "frets": [
+    -1,
+    0,
+    2,
+    2,
+    3,
+    0
+   ],
+   "fingers": [
+    null,
+    null,
+    1,
+    1,
+    2,
+    null
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 1,
+   "label": "Asus4 常用开放把位"
+  },
+  "Amaj7_x02120": {
+   "symbol": "Amaj7",
+   "frets": [
+    -1,
+    0,
+    2,
+    1,
+    2,
+    0
+   ],
+   "fingers": [
+    null,
+    null,
+    2,
+    1,
+    3,
+    null
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 2,
+   "label": "Amaj7 常用开放把位"
+  },
+  "Asus2_x02200": {
+   "symbol": "Asus2",
+   "frets": [
+    -1,
+    0,
+    2,
+    2,
+    0,
+    0
+   ],
+   "fingers": [
+    null,
+    null,
+    1,
+    1,
+    null,
+    null
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 1,
+   "label": "Asus2 常用开放把位"
+  },
+  "Asus2_over_B_x22200": {
+   "symbol": "Asus2/B",
+   "frets": [
+    -1,
+    2,
+    2,
+    2,
+    0,
+    0
+   ],
+   "fingers": [
+    null,
+    1,
+    1,
+    1,
+    null,
+    null
+   ],
+   "base_fret": 0,
+   "barres": [
+    {
+     "fret": 2,
+     "from": 1,
+     "to": 3
+    }
+   ],
+   "difficulty": 3,
+   "label": "Asus2/B 0品横按"
+  },
+  "Bsus4_x24400": {
+   "symbol": "Bsus4",
+   "frets": [
+    -1,
+    2,
+    4,
+    4,
+    0,
+    0
+   ],
+   "fingers": [
+    null,
+    1,
+    3,
+    3,
+    null,
+    null
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 1,
+   "label": "Bsus4 开放把位"
+  },
+  "Bsus2_7444xx": {
+   "symbol": "Bsus2",
+   "frets": [
+    7,
+    4,
+    4,
+    4,
+    -1,
+    -1
+   ],
+   "fingers": [
+    4,
+    1,
+    1,
+    1,
+    null,
+    null
+   ],
+   "base_fret": 4,
+   "barres": [],
+   "difficulty": 2,
+   "label": "Bsus2 第4把位"
+  },
+  "Bm7_754475": {
+   "symbol": "Bm7",
+   "frets": [
+    7,
+    5,
+    4,
+    4,
+    7,
+    5
+   ],
+   "fingers": [
+    4,
+    2,
+    1,
+    1,
+    4,
+    3
+   ],
+   "base_fret": 4,
+   "barres": [],
+   "difficulty": 3,
+   "label": "Bm7 第4把位"
+  },
+  "D_xx0232": {
+   "symbol": "D",
+   "frets": [
+    -1,
+    -1,
+    0,
+    2,
+    3,
+    2
+   ],
+   "fingers": [
+    null,
+    null,
+    null,
+    1,
+    3,
+    2
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 2,
+   "label": "D 常用开放把位"
+  },
+  "Esus4_002400": {
+   "symbol": "Esus4",
+   "frets": [
+    0,
+    0,
+    2,
+    4,
+    0,
+    0
+   ],
+   "fingers": [
+    null,
+    null,
+    1,
+    3,
+    null,
+    null
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 1,
+   "label": "Esus4 开放把位"
+  },
+  "Dmaj7_xx0222": {
+   "symbol": "Dmaj7",
+   "frets": [
+    -1,
+    -1,
+    0,
+    2,
+    2,
+    2
+   ],
+   "fingers": [
+    null,
+    null,
+    null,
+    1,
+    1,
+    1
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 1,
+   "label": "Dmaj7 常用开放把位"
+  },
+  "Esus2_024400": {
+   "symbol": "Esus2",
+   "frets": [
+    0,
+    2,
+    4,
+    4,
+    0,
+    0
+   ],
+   "fingers": [
+    null,
+    1,
+    3,
+    3,
+    null,
+    null
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 1,
+   "label": "Esus2 常用开放把位"
+  },
+  "A7_x02020": {
+   "symbol": "A7",
+   "frets": [
+    -1,
+    0,
+    2,
+    0,
+    2,
+    0
+   ],
+   "fingers": [
+    null,
+    null,
+    1,
+    null,
+    2,
+    null
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 2,
+   "label": "A7 常用开放把位"
+  },
+  "Fsmaj7_213321": {
+   "symbol": "F#maj7",
+   "frets": [
+    2,
+    1,
+    3,
+    3,
+    2,
+    1
+   ],
+   "fingers": [
+    3,
+    1,
+    3,
+    3,
+    4,
+    2
+   ],
+   "base_fret": 1,
+   "barres": [],
+   "difficulty": 3,
+   "label": "F#maj7 第1把位"
+  },
+  "Bmaj7_x24342": {
+   "symbol": "Bmaj7",
+   "frets": [
+    -1,
+    2,
+    4,
+    3,
+    4,
+    2
+   ],
+   "fingers": [
+    null,
+    1,
+    3,
+    2,
+    4,
+    1
+   ],
+   "base_fret": 2,
+   "barres": [
+    {
+     "fret": 2,
+     "from": 1,
+     "to": 5
+    }
+   ],
+   "difficulty": 5,
+   "label": "Bmaj7 2品横按"
+  },
+  "Dm7_xx0211": {
+   "symbol": "Dm7",
+   "frets": [
+    -1,
+    -1,
+    0,
+    2,
+    1,
+    1
+   ],
+   "fingers": [
+    null,
+    null,
+    null,
+    2,
+    1,
+    1
+   ],
+   "base_fret": 0,
+   "barres": [],
+   "difficulty": 1,
+   "label": "Dm7 常用开放把位"
+  }
+ },
+ "strum_patterns": {
+  "ballad4": {
+   "id": "ballad4",
+   "name": "四分分解",
+   "kind": "arpeggio",
+   "beats_per_bar": 4,
+   "subdivision": "quarter",
+   "display": "T 3 2 1",
+   "energy": 0.15,
+   "styles": [
+    "ballad",
+    "pop"
+   ],
+   "difficulty": 1,
+   "events": [
+    {
+     "beat": 0,
+     "dur": 1,
+     "stroke": "bass",
+     "strings": [
+      5
+     ]
+    },
+    {
+     "beat": 1,
+     "dur": 1,
+     "stroke": "pluck",
+     "strings": [
+      3
+     ]
+    },
+    {
+     "beat": 2,
+     "dur": 1,
+     "stroke": "pluck",
+     "strings": [
+      2
+     ]
+    },
+    {
+     "beat": 3,
+     "dur": 1,
+     "stroke": "pluck",
+     "strings": [
+      1
+     ]
+    }
+   ]
+  },
+  "pop8": {
+   "id": "pop8",
+   "name": "民谣八分",
+   "kind": "strum",
+   "beats_per_bar": 4,
+   "subdivision": "eighth",
+   "display": "↓ ↓↑ ↑↓↑",
+   "energy": 0.5,
+   "styles": [
+    "pop",
+    "folk",
+    "rock",
+    "general"
+   ],
+   "difficulty": 2,
+   "events": [
+    {
+     "beat": 0,
+     "dur": 0.5,
+     "stroke": "down",
+     "accent": true
+    },
+    {
+     "beat": 0.5,
+     "dur": 0.5,
+     "stroke": "up"
+    },
+    {
+     "beat": 1,
+     "dur": 0.5,
+     "stroke": "down"
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "stroke": "up"
+    },
+    {
+     "beat": 2,
+     "dur": 0.5,
+     "stroke": "down",
+     "accent": true
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "stroke": "up"
+    },
+    {
+     "beat": 3,
+     "dur": 0.5,
+     "stroke": "down"
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.5,
+     "stroke": "up"
+    }
+   ]
+  },
+  "drive8": {
+   "id": "drive8",
+   "name": "摇滚八分",
+   "kind": "strum",
+   "beats_per_bar": 4,
+   "subdivision": "eighth",
+   "display": "↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓",
+   "energy": 0.75,
+   "styles": [
+    "rock",
+    "pop"
+   ],
+   "difficulty": 2,
+   "events": [
+    {
+     "beat": 0,
+     "dur": 0.5,
+     "stroke": "down",
+     "accent": true
+    },
+    {
+     "beat": 0.5,
+     "dur": 0.5,
+     "stroke": "down"
+    },
+    {
+     "beat": 1,
+     "dur": 0.5,
+     "stroke": "down"
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "stroke": "down"
+    },
+    {
+     "beat": 2,
+     "dur": 0.5,
+     "stroke": "down",
+     "accent": true
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "stroke": "down"
+    },
+    {
+     "beat": 3,
+     "dur": 0.5,
+     "stroke": "down"
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.5,
+     "stroke": "down"
+    }
+   ]
+  },
+  "ballad8": {
+   "id": "ballad8",
+   "name": "分解八分 53231323",
+   "kind": "arpeggio",
+   "beats_per_bar": 4,
+   "subdivision": "eighth",
+   "display": "T 3 2 3 1 3 2 3",
+   "energy": 0.2,
+   "styles": [
+    "ballad",
+    "folk",
+    "pop"
+   ],
+   "difficulty": 2,
+   "events": [
+    {
+     "beat": 0,
+     "dur": 0.5,
+     "stroke": "bass",
+     "strings": [
+      5
+     ]
+    },
+    {
+     "beat": 0.5,
+     "dur": 0.5,
+     "stroke": "pluck",
+     "strings": [
+      3
+     ]
+    },
+    {
+     "beat": 1,
+     "dur": 0.5,
+     "stroke": "pluck",
+     "strings": [
+      2
+     ]
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "stroke": "pluck",
+     "strings": [
+      3
+     ]
+    },
+    {
+     "beat": 2,
+     "dur": 0.5,
+     "stroke": "pluck",
+     "strings": [
+      1
+     ]
+    },
+    {
+     "beat": 2.5,
+     "dur": 0.5,
+     "stroke": "pluck",
+     "strings": [
+      3
+     ]
+    },
+    {
+     "beat": 3,
+     "dur": 0.5,
+     "stroke": "pluck",
+     "strings": [
+      2
+     ]
+    },
+    {
+     "beat": 3.5,
+     "dur": 0.5,
+     "stroke": "pluck",
+     "strings": [
+      3
+     ]
+    }
+   ]
+  },
+  "folk4": {
+   "id": "folk4",
+   "name": "四分扫弦",
+   "kind": "strum",
+   "beats_per_bar": 4,
+   "subdivision": "quarter",
+   "display": "↓ ↓↑ ↓",
+   "energy": 0.3,
+   "styles": [
+    "folk",
+    "pop",
+    "ballad"
+   ],
+   "difficulty": 1,
+   "events": [
+    {
+     "beat": 0,
+     "dur": 1,
+     "stroke": "down",
+     "accent": true
+    },
+    {
+     "beat": 1,
+     "dur": 0.5,
+     "stroke": "down"
+    },
+    {
+     "beat": 1.5,
+     "dur": 0.5,
+     "stroke": "up"
+    },
+    {
+     "beat": 2,
+     "dur": 1,
+     "stroke": "down",
+     "accent": true
+    },
+    {
+     "beat": 3,
+     "dur": 1,
+     "stroke": "down"
+    }
+   ]
+  }
+ },
+ "quality": {
+  "overall": 0.399,
+  "stages": {
+   "beats": 0.744,
+   "key": 0.724,
+   "chords": 0.489,
+   "melody": 0.036,
+   "lyrics": 0.0,
+   "lyric_match": 0.0
+  },
+  "warnings": [
+   {
+    "level": "info",
+    "code": "bars.tempo_changes",
+    "message": "检测到速度波动（85~99 BPM），已写入各小节 tempo",
+    "stage": "bars"
+   },
+   {
+    "level": "warn",
+    "code": "lyrics.missing",
+    "message": "79 个旋律音没有匹配到歌词，暂留空",
+    "stage": "lyrics"
+   },
+   {
+    "level": "warn",
+    "code": "chords.low_confidence",
+    "message": "和弦平均置信度 0.49，建议人工确认",
+    "stage": "chords"
+   },
+   {
+    "level": "warn",
+    "code": "melody.low_confidence",
+    "message": "旋律平均置信度 0.04",
+    "stage": "melody"
+   },
+   {
+    "level": "info",
+    "code": "melody.silent_bars",
+    "message": "2 个小节没有旋律（纯伴奏）",
+    "stage": "melody"
+   }
+  ]
+ }
+}

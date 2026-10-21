@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aitsm.local/schemas/analysis.schema.json",
+  "title": "AI-To-Sheet-Music analysis.json",
+  "description": "aitsm.analysis/v1：只看证据，不含编配决定。时间单位一律为秒（绝对时间轴）。",
+  "type": "object",
+  "required": ["schema", "source", "audio", "beats", "key", "chords", "sections"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "aitsm.analysis/v1" },
+    "source": {
+      "type": "object",
+      "required": ["original_name", "sha256"],
+      "additionalProperties": true,
+      "properties": {
+        "original_name": { "type": "string" },
+        "path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "size_bytes": { "type": "integer" }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "required": ["analysis_wav", "duration", "sample_rate"],
+      "additionalProperties": true,
+      "properties": {
+        "analysis_wav": { "type": "string", "description": "16k/22.05k 单声道分析用 WAV" },
+        "playback_audio": { "type": "string", "description": "给浏览器播放的 mp3/m4a" },
+        "duration": { "type": "number" },
+        "sample_rate": { "type": "integer" },
+        "channels": { "type": "integer" }
+      }
+    },
+    "stems": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "engine": { "enum": ["demucs", "demucs-6s", "fallback", "none"] },
+        "device": { "type": "string" },
+        "vocals": { "type": ["string", "null"] },
+        "drums": { "type": ["string", "null"] },
+        "bass": { "type": ["string", "null"] },
+        "other": { "type": ["string", "null"] },
+        "guitar": { "type": ["string", "null"] },
+        "piano": { "type": ["string", "null"] }
+      }
+    },
+    "beats": {
+      "type": "object",
+      "required": ["bpm", "beats"],
+      "additionalProperties": true,
+      "properties": {
+        "bpm": { "type": "number", "minimum": 20, "maximum": 320 },
+        "bpm_display": { "type": "number", "description": "显示用速度（半速/倍速修正后）" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "beats": { "type": "array", "items": { "type": "number" } },
+        "downbeats": { "type": "array", "items": { "type": "number" } },
+        "beats_per_bar": { "type": "integer", "minimum": 2, "maximum": 12 },
+        "time_signature": { "type": "string" },
+        "beat_strength": { "type": "array", "items": { "type": "number" } },
+        "first_downbeat_sec": { "type": "number" },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "key": {
+      "type": "object",
+      "required": ["tonic", "mode"],
+      "additionalProperties": true,
+      "properties": {
+        "tonic": { "type": "string", "description": "C, C#, D, ... 用升号表示，展示时再按调号选等音" },
+        "mode": { "enum": ["major", "minor"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "num_sharps_flats": { "type": "integer", "minimum": -7, "maximum": 7 },
+        "alternatives": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+      }
+    },
+    "chords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["start", "end", "symbol"],
+        "additionalProperties": true,
+        "properties": {
+          "start": { "type": "number", "minimum": 0 },
+          "end": { "type": "number" },
+          "symbol": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "source": { "type": "string", "description": "template / bass-constrained / beat-slice / manual" },
+          "root_pc": { "type": ["integer", "null"] },
+          "bass_pc": { "type": ["integer", "null"] }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["start", "end", "kind"],
+        "additionalProperties": true,
+        "properties": {
+          "start": { "type": "number", "minimum": 0 },
+          "end": { "type": "number" },
+          "kind": { "enum": ["intro", "verse", "prechorus", "chorus", "bridge", "interlude", "solo", "outro", "other"] },
+          "label": { "type": "string" },
+          "energy": { "type": "number", "minimum": 0, "maximum": 1 },
+          "repeat_of": { "type": ["string", "null"] },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "lyrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["start", "end", "text"],
+        "additionalProperties": true,
+        "properties": {
+          "start": { "type": "number", "minimum": 0 },
+          "end": { "type": "number" },
+          "text": { "type": "string" },
+          "words": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "start": { "type": "number" },
+                "end": { "type": "number" },
+                "text": { "type": "string" }
+              }
+            }
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "melody": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["start", "midi"],
+            "additionalProperties": true,
+            "properties": {
+              "start": { "type": "number", "minimum": 0 },
+              "end": { "type": "number" },
+              "midi": { "type": "integer", "minimum": 12, "maximum": 108 },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+              "lyric": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "range": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "low_midi": { "type": "integer" },
+            "high_midi": { "type": "integer" }
+          }
+        },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "各阶段实际使用的引擎与版本"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level", "message"],
+        "additionalProperties": true,
+        "properties": {
+          "level": { "enum": ["info", "warn", "error"] },
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "stage": { "type": "string" }
+        }
+      }
+    }
+  }
+}
