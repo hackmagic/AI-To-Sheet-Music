@@ -83,23 +83,39 @@ _EXTRA_DEGREES: dict[str, list[tuple[int, int, str]]] = {
     "7sus4": [(7, -1, "add")],
 }
 
-#: (四分音符时值, MusicXML type, 附点数)
-_NOTE_VALUES: tuple[tuple[float, str, int], ...] = (
-    (8.0, "breve", 0),
-    (6.0, "whole", 1),
-    (4.0, "whole", 0),
-    (3.0, "half", 1),
-    (2.0, "half", 0),
-    (1.5, "quarter", 1),
-    (1.0, "quarter", 0),
-    (0.75, "eighth", 1),
-    (0.5, "eighth", 0),
-    (0.375, "16th", 1),
-    (0.25, "16th", 0),
-    (0.1875, "32nd", 1),
-    (0.125, "32nd", 0),
-    (0.0625, "64th", 0),
+#: 一个音符片段：(四分音符时值, MusicXML type, 附点数, 三连音比例)
+_Segment = tuple[float, str, int, tuple[int, int] | None]
+
+_BASE_VALUES: tuple[tuple[float, str], ...] = (
+    (8.0, "breve"),
+    (4.0, "whole"),
+    (2.0, "half"),
+    (1.0, "quarter"),
+    (0.5, "eighth"),
+    (0.25, "16th"),
+    (0.125, "32nd"),
+    (0.0625, "64th"),
 )
+
+
+def _build_note_values() -> tuple[_Segment, ...]:
+    """列出所有「能用一个音符形状写出来」的时值。
+
+    三种形态：单纯音符（2 的幂）、附点（×1.5）、三连音（×2/3，配
+    ``<time-modification>3:2``）。按值从大到小排，拆分时贪心取第一个装得下的。
+    """
+    entries: list[_Segment] = []
+    for value, name in _BASE_VALUES:
+        entries.append((value, name, 0, None))
+        entries.append((value * 1.5, name, 1, None))
+        if value <= 4.0:  # 全音符以上的三连音没有实际意义
+            entries.append((value * 2.0 / 3.0, name, 0, (3, 2)))
+    entries.sort(key=lambda item: item[0], reverse=True)
+    return tuple(entries)
+
+
+#: (四分音符时值, type, 附点数, 三连音比例)，按时值降序
+_NOTE_VALUES: tuple[_Segment, ...] = _build_note_values()
 
 
 # ---------------------------------------------------------------- 类型与时值换算
@@ -110,20 +126,69 @@ def _ticks(dur_quarters: float) -> int:
     return max(1, int(round(float(dur_quarters) * DIVISIONS)))
 
 
-def _triplet_ratio(dur_quarters: float) -> tuple[int, int] | None:
-    """判断是否为三连音时值（1/3、2/3、4/3、8/3 拍），返回 (3, 2)。"""
-    for numerator in (1, 2, 4, 8):
-        if abs(dur_quarters - numerator / 3.0) < 1e-6:
-            return (3, 2)
+def _exact_segment(ticks: int) -> _Segment | None:
+    """ticks 恰好等于某个合法时值时返回该片段。"""
+    for entry in _NOTE_VALUES:
+        if _ticks(entry[0]) == ticks:
+            return entry
     return None
 
 
-def _note_type(dur_quarters: float) -> tuple[str, int, tuple[int, int] | None]:
-    """时值 -> (type 文本, 附点数, 三连音比例)。"""
-    ratio = _triplet_ratio(dur_quarters)
-    target = dur_quarters * 1.5 if ratio else dur_quarters
-    best = min(_NOTE_VALUES, key=lambda item: abs(item[0] - target))
-    return best[1], best[2], ratio
+def _triplet_ratio(dur_quarters: float) -> tuple[int, int] | None:
+    """时值是否正好是三连音值（1/3、1/6、2/3……），是则返回 (3, 2)。"""
+    total = _ticks(dur_quarters)
+    for entry in _NOTE_VALUES:
+        if entry[3] is not None and _ticks(entry[0]) == total:
+            return entry[3]
+    return None
+
+
+def _segment_duration(dur_quarters: float, *, position: float = 0.0) -> list[_Segment]:
+    """把任意时值拆成**能真正记谱**的一串片段（相邻片段之间必须加延音线）。
+
+    演奏时值来自量化后的 beat 网格，会出现 3.5、2.25、1/6 这类**没有单一音符
+    形状**的时值。若硬塞给最接近的 ``<type>``，``<duration>`` 与 ``<type>``
+    就自相矛盾：MuseScore 严格导入会直接报
+    ``Incomplete measure: found 10/8, expected 9/8``（exit 1320）拒绝打开，
+    宽松导入（``-f``）则按 ``type`` 重排，谱面节奏和音频对不上。
+
+    拆分规则（二分网格对齐的贪心）：先试整段是否合法；否则每次取「不超过剩余
+    时值、且起点落在它自身网格上」的最大合法值，这样不会跨过自己的边界，
+    读者也容易数拍。
+    """
+    total = _ticks(dur_quarters)
+    if total <= 0:
+        return []
+    exact = _exact_segment(total)
+    if exact is not None:
+        return [exact]
+
+    segments: list[_Segment] = []
+    pos_ticks = int(round(float(position) * DIVISIONS))
+    guard = 0
+    while total > 0 and guard < 64:
+        guard += 1
+        pick = _exact_segment(total)
+        if pick is None:
+            for entry in _NOTE_VALUES:
+                value_ticks = _ticks(entry[0])
+                if value_ticks > total:
+                    continue
+                if pos_ticks % value_ticks:  # 起点必须对齐到该时值自己的网格
+                    continue
+                pick = entry
+                break
+        if pick is None:  # 网格对齐失败时退回「能装下的最大时值」
+            for entry in _NOTE_VALUES:
+                if _ticks(entry[0]) <= total:
+                    pick = entry
+                    break
+        if pick is None:
+            break
+        segments.append(pick)
+        total -= _ticks(pick[0])
+        pos_ticks += _ticks(pick[0])
+    return segments
 
 
 def _append_pitch(parent: ET.Element, step: str, alter: int, octave: int) -> None:
@@ -139,14 +204,14 @@ def _append_duration(parent: ET.Element, dur_quarters: float) -> None:
     ET.SubElement(parent, "duration").text = str(_ticks(dur_quarters))
 
 
-def _append_note_type(parent: ET.Element, dur_quarters: float) -> None:
-    """写 ``<type>`` + 附点 + 三连音标记。
+def _append_segment_type(parent: ET.Element, segment: _Segment) -> None:
+    """按片段写 ``<type>`` + 附点 + 三连音标记。
 
     MusicXML 的 note 子元素有**固定顺序**：``duration`` → ``tie`` → ``voice`` →
     ``type`` → ``dot`` → ``time-modification`` → ``notations`` → ``lyric``。
     所以 type 必须在 voice 之后单独写，不能和 duration 一起写。
     """
-    note_type, dots, ratio = _note_type(dur_quarters)
+    _, note_type, dots, ratio = segment
     ET.SubElement(parent, "type").text = note_type
     for _ in range(dots):
         ET.SubElement(parent, "dot")
@@ -156,14 +221,26 @@ def _append_note_type(parent: ET.Element, dur_quarters: float) -> None:
         ET.SubElement(mod, "normal-notes").text = str(ratio[1])
 
 
-def _append_rest(parent: ET.Element, dur_quarters: float, *, voice: int = 1) -> None:
-    if dur_quarters <= _EPS:
-        return
-    note = ET.SubElement(parent, "note")
-    ET.SubElement(note, "rest")
-    _append_duration(note, dur_quarters)
-    ET.SubElement(note, "voice").text = str(voice)
-    _append_note_type(note, dur_quarters)
+def _append_rest(
+    parent: ET.Element,
+    dur_quarters: float,
+    *,
+    voice: int = 1,
+    position: float = 0.0,
+    tuplets: Sequence[str] = (),
+) -> None:
+    """休止符。无法用一个音符形状写出的时值拆成连续休止，保证小节时值合法。"""
+    segments = _segment_duration(dur_quarters, position=position)
+    for seg_index, segment in enumerate(segments):
+        note = ET.SubElement(parent, "note")
+        ET.SubElement(note, "rest")
+        _append_duration(note, segment[0])
+        ET.SubElement(note, "voice").text = str(voice)
+        _append_segment_type(note, segment)
+        _append_notations(
+            note,
+            tuplets=_segment_tuplets(tuple(tuplets), seg_index, len(segments)),
+        )
 
 
 
@@ -206,13 +283,28 @@ def _vocal_tie_maps(bars: Sequence[dict]) -> tuple[dict[tuple[int, int], str], d
     return tie_map, extend_map
 
 
-def _append_notations(note: ET.Element, *, tie: str | None = None, tab: tuple[int, int] | None = None) -> None:
-    """写 ``<notations>``：延音线 + TAB 弦品。``tab`` 为 (弦号, 品位)。"""
-    if tie is None and tab is None:
+def _append_notations(
+    note: ET.Element,
+    *,
+    ties: Sequence[str] = (),
+    tab: tuple[int, int] | None = None,
+    tuplets: Sequence[str] = (),
+) -> None:
+    """写 ``<notations>``：延音线 + 三连音组边界 + TAB 弦品。``tab`` 为 (弦号, 品位)。
+
+    一个音符可能同时是上一段的终点、下一段的起点（拆段时 ``stop`` + ``start``），
+    所以 ``<tied>`` 可以有多个。MusicXML 的 notations 子元素有固定顺序：
+    ``tied`` → ``tuplet`` → ``technical``。
+    """
+    valid = [tie for tie in ties if tie in ("start", "stop", "continue")]
+    marks = [mark for mark in tuplets if mark in ("start", "stop")]
+    if not valid and tab is None and not marks:
         return
     notations = ET.SubElement(note, "notations")
-    if tie in ("start", "stop", "continue"):
+    for tie in valid:
         ET.SubElement(notations, "tied", {"type": tie})
+    for mark in marks:
+        ET.SubElement(notations, "tuplet", {"type": mark, "bracket": "yes"})
     if tab is not None:
         technical = ET.SubElement(notations, "technical")
         string_number, fret = tab
@@ -560,6 +652,102 @@ def _append_rehearsal(measure: ET.Element, label: str) -> None:
 
 # ---------------------------------------------------------------- 声部内容
 
+#: 节奏吸附网格（四分音符 = 1 拍）。1/8 拍 = 三十二分音符，是大多数流行歌最细的常用单位。
+RHYTHM_GRID = 0.125
+
+
+def _snap_to_grid(value: float, grid: float = RHYTHM_GRID) -> float:
+    """把拍值吸附到二分网格上。"""
+    return round(float(value) / grid) * grid
+
+
+def _normalize_events(
+    events: Sequence[tuple[float, dict]],
+    bar_len: float,
+    *,
+    grid: float = RHYTHM_GRID,
+) -> list[tuple[float, dict]]:
+    """把一行的位置/时值吸附到二分网格，消掉性能量化残留的三连音。
+
+    为什么不用三连音写出：量化器给出的三连音时值经常凑不成规整的三连音组
+    （例如 1/6 + 1/3 拍、或者 1/6 + 2/3 + 1/6 这种混合时值组）。MusicXML 允许
+    这样写，但宿主软件要靠 ``<tuplet>`` 自己推断组长度，MuseScore 4 会算错小节
+    时值，直接报 ``Incomplete measure`` 拒绝导入（exit 1320）。流行歌单上把这类
+    十六分/三十二分音符的细微错位吸附掉，乐谱更好读，也不丢音。
+
+    规则：位置逐个吸附并保持严格递增（至少隔一个格子）；时值吸附后截到下一个
+    位置为止；最后一个小节的尾巴由调用方补休止。
+    """
+    if not events:
+        return []
+    snapped: list[tuple[float, dict]] = []
+    previous = -grid
+    for onset, payload in events:
+        position = _snap_to_grid(onset, grid)
+        if position <= previous + _EPS:  # 保持严格递增，避免两音重合
+            position = previous + grid
+        if position >= bar_len - _EPS:  # 越过小节线的事件丢弃（数据越界时才会发生）
+            continue
+        previous = position
+        snapped.append((position, payload))
+
+    result: list[tuple[float, dict]] = []
+    for index, (onset, payload) in enumerate(snapped):
+        following = snapped[index + 1][0] if index + 1 < len(snapped) else bar_len
+        room = max(following - onset, grid)
+        dur = _safe_dur(payload.get("dur"), room)
+        dur = min(max(_snap_to_grid(dur, grid), grid), room)
+        adjusted = dict(payload)
+        adjusted["dur"] = dur
+        result.append((onset, adjusted))
+    return result
+
+
+def _tuplet_marks(events: Sequence[tuple[float, dict]]) -> list[tuple[str, ...]]:
+    """给每个事件算出要写的三连音**组边界**记号。
+
+    MusicXML 里三连音必须用 ``<tuplet type="start">`` / ``stop`` 声明组边界。
+    不声明时宿主软件只能自己推断：MuseScore 4 会把「不完整三连音组」的小节时值
+    算错，直接报 ``Incomplete measure``（exit 1320）拒绝导入文件。
+    这里把**时值连续、比例相同**的一串事件归成一组（可以是 2 个音，也可以是 3 个）。
+    """
+    marks: list[tuple[str, ...]] = [() for _ in events]
+    index = 0
+    while index < len(events):
+        ratio = _triplet_ratio(_safe_dur(events[index][1].get("dur"), 0.0))
+        if ratio is None:
+            index += 1
+            continue
+        end = index
+        cursor = events[index][0] + _safe_dur(events[index][1].get("dur"), 0.0)
+        while end + 1 < len(events):
+            following = events[end + 1]
+            if _triplet_ratio(_safe_dur(following[1].get("dur"), 0.0)) != ratio:
+                break
+            if abs(following[0] - cursor) > _EPS:  # 必须首尾相接
+                break
+            end += 1
+            cursor += _safe_dur(events[end][1].get("dur"), 0.0)
+        if end == index:
+            marks[index] = ("start", "stop")
+        else:
+            marks[index] = ("start",)
+            marks[end] = ("stop",)
+        index = end + 1
+    return marks
+
+
+def _segment_tuplets(marks: tuple[str, ...], seg_index: int, seg_count: int) -> tuple[str, ...]:
+    """把一个事件的三连音组记号分配到它的第一个 / 最后一个片段上。"""
+    if not marks:
+        return ()
+    picked: list[str] = []
+    if seg_index == 0 and "start" in marks:
+        picked.append("start")
+    if seg_index == seg_count - 1 and "stop" in marks:
+        picked.append("stop")
+    return tuple(picked)
+
 
 def _vocal_events(bar: dict) -> list[tuple[float, dict]]:
     """小节内的旋律事件（按拍排序）。"""
@@ -590,9 +778,10 @@ def _emit_vocal_measure(
     counts: dict[str, int],
 ) -> None:
     """主旋律小节：和弦符号与音符按拍位置交织，空隙补休止。"""
-    notes = _vocal_events(bar)
-    chords = _chord_events(bar)
     bar_len = _bar_length(bar, ctx)
+    notes = _normalize_events(_vocal_events(bar), bar_len)
+    tuplet_marks = _tuplet_marks(notes)
+    chords = _normalize_events(_chord_events(bar), bar_len)
     cursor = 0.0
     index_note = index_chord = 0
     guard = 0
@@ -605,7 +794,7 @@ def _emit_vocal_measure(
             break
         target = min(positions)
         if target > cursor + _EPS:
-            _append_rest(measure, target - cursor)
+            _append_rest(measure, target - cursor, position=cursor)
             cursor = target
         if next_chord is not None and next_chord <= cursor + _EPS:
             if _append_harmony(measure, chords[index_chord][1], ctx):
@@ -625,29 +814,44 @@ def _emit_vocal_measure(
                 )
                 dur = clipped
             midi = note.get("midi")
+            marks = tuplet_marks[index_note] if index_note < len(tuplet_marks) else ()
             if note.get("rest") or midi is None:
-                _append_rest(measure, dur)
+                _append_rest(measure, dur, position=cursor, tuplets=marks)
             else:
-                element = ET.SubElement(measure, "note")
-                step, alter, octave = spell_midi(int(midi), ctx.fifths)
-                _append_pitch(element, step, alter, octave)
-                _append_duration(element, dur)
                 key = (int(bar.get("index") or 0), index_note)
                 tie = ctx.tie_map.get(key)
-                if tie:
-                    ET.SubElement(element, "tie", {"type": tie})
-                ET.SubElement(element, "voice").text = "1"
-                _append_note_type(element, dur)
-                _append_notations(element, tie=tie)
                 lyric = str(note.get("lyric") or "").strip()
-                if lyric:
-                    lyric_element = ET.SubElement(element, "lyric", {"number": "1"})
-                    ET.SubElement(lyric_element, "syllabic").text = "single"
-                    ET.SubElement(lyric_element, "text").text = lyric
-                elif ctx.extend_map.get(key):
-                    # 一字多音：后续音符不重复写词，用 <extend/> 表示延长
-                    lyric_element = ET.SubElement(element, "lyric", {"number": "1"})
-                    ET.SubElement(lyric_element, "extend")
+                step, alter, octave = spell_midi(int(midi), ctx.fifths)
+                segments = _segment_duration(dur, position=cursor)
+                for seg_index, segment in enumerate(segments):
+                    element = ET.SubElement(measure, "note")
+                    _append_pitch(element, step, alter, octave)
+                    _append_duration(element, segment[0])
+                    ties: list[str] = []
+                    if seg_index > 0:
+                        ties.append("stop")
+                    if seg_index < len(segments) - 1:
+                        ties.append("start")
+                    elif tie:
+                        ties.append(str(tie))
+                    for tie_type in ties:
+                        ET.SubElement(element, "tie", {"type": tie_type})
+                    ET.SubElement(element, "voice").text = "1"
+                    _append_segment_type(element, segment)
+                    _append_notations(
+                        element,
+                        ties=ties,
+                        tuplets=_segment_tuplets(marks, seg_index, len(segments)),
+                    )
+                    if seg_index == 0:
+                        if lyric:
+                            lyric_element = ET.SubElement(element, "lyric", {"number": "1"})
+                            ET.SubElement(lyric_element, "syllabic").text = "single"
+                            ET.SubElement(lyric_element, "text").text = lyric
+                        elif ctx.extend_map.get(key):
+                            # 一字多音：后续音符不重复写词，用 <extend/> 表示延长
+                            lyric_element = ET.SubElement(element, "lyric", {"number": "1"})
+                            ET.SubElement(lyric_element, "extend")
                 counts["notes"] += 1
             cursor += dur
             index_note += 1
@@ -662,7 +866,7 @@ def _emit_vocal_measure(
         else:  # 理论上不可达，防止死循环
             break
     if cursor < bar_len - _EPS:
-        _append_rest(measure, bar_len - cursor)
+        _append_rest(measure, bar_len - cursor, position=cursor)
 
 
 def _voicing_for(chord: dict, ctx: _Context) -> dict | None:
@@ -683,10 +887,17 @@ def _append_tab_chord(
     dur: float,
     ctx: _Context,
     counts: dict[str, int],
+    *,
+    position: float = 0.0,
+    tuplets: Sequence[str] = (),
 ) -> int:
-    """把指法写成一串同时发声的 TAB 音（低音弦在前）。返回写入的音数。"""
+    """把指法写成一串同时发声的 TAB 音（低音弦在前）。返回写入的音数。
+
+    时值无法用一个音符形状写完时，拆成带延音线的连续和弦，避免
+    ``<duration>`` 与 ``<type>`` 不一致导致宿主软件拒绝导入。
+    """
     frets = voicing.get("frets") or []
-    written = 0
+    strings: list[tuple[int, int, int]] = []  # (弦号, 品位, midi)
     for index, fret in enumerate(frets[:6]):
         if fret is None or int(fret) < 0:
             continue
@@ -694,16 +905,36 @@ def _append_tab_chord(
         midi = fret_to_midi(ctx.tuning_midis, string_number, int(fret))
         if midi is None:
             continue
-        note = ET.SubElement(measure, "note")
-        if written > 0:
-            ET.SubElement(note, "chord")
-        step, alter, octave = spell_midi(midi, ctx.fifths)
-        _append_pitch(note, step, alter, octave)
-        _append_duration(note, dur)
-        ET.SubElement(note, "voice").text = "5"
-        _append_note_type(note, dur)
-        _append_notations(note, tab=(string_number, int(fret)))
-        written += 1
+        strings.append((string_number, int(fret), midi))
+    if not strings:
+        return 0
+
+    segments = _segment_duration(dur, position=position)
+    written = 0
+    for seg_index, segment in enumerate(segments):
+        ties: list[str] = []
+        if seg_index > 0:
+            ties.append("stop")
+        if seg_index < len(segments) - 1:
+            ties.append("start")
+        for note_index, (string_number, fret, midi) in enumerate(strings):
+            note = ET.SubElement(measure, "note")
+            if note_index > 0:
+                ET.SubElement(note, "chord")
+            step, alter, octave = spell_midi(midi, ctx.fifths)
+            _append_pitch(note, step, alter, octave)
+            _append_duration(note, segment[0])
+            for tie_type in ties:
+                ET.SubElement(note, "tie", {"type": tie_type})
+            ET.SubElement(note, "voice").text = "5"
+            _append_segment_type(note, segment)
+            _append_notations(
+                note,
+                ties=ties,
+                tab=(string_number, fret),
+                tuplets=_segment_tuplets(tuple(tuplets), seg_index, len(segments)),
+            )
+            written += 1
     counts["tab_notes"] += written
     return written
 
@@ -716,13 +947,14 @@ def _emit_guitar_measure(
     counts: dict[str, int],
 ) -> None:
     """TAB 小节：每个和弦以指法整块发声，空隙补休止。"""
-    chords = _chord_events(bar)
     bar_len = _bar_length(bar, ctx)
+    chords = _normalize_events(_chord_events(bar), bar_len)
+    tuplet_marks = _tuplet_marks(chords)
     cursor = 0.0
     for index, (start, chord) in enumerate(chords):
         start = min(start, bar_len)
         if start > cursor + _EPS:
-            _append_rest(measure, start - cursor, voice=5)
+            _append_rest(measure, start - cursor, voice=5, position=cursor)
             cursor = start
         next_start = chords[index + 1][0] if index + 1 < len(chords) else bar_len
         dur = _safe_dur(chord.get("dur"), next_start - start)
@@ -732,15 +964,23 @@ def _emit_guitar_measure(
         voicing = _voicing_for(chord, ctx)
         if voicing is None:
             warnings.append(f"第 {bar.get('index')} 小节的和弦 {chord.get('symbol')!r} 没有指法，TAB 留空")
-            _append_rest(measure, dur, voice=5)
+            _append_rest(measure, dur, voice=5, position=start)
             cursor = start + dur
             continue
-        if _append_tab_chord(measure, voicing, dur, ctx, counts) == 0:
+        if _append_tab_chord(
+            measure,
+            voicing,
+            dur,
+            ctx,
+            counts,
+            position=start,
+            tuplets=tuplet_marks[index] if index < len(tuplet_marks) else (),
+        ) == 0:
             warnings.append(f"第 {bar.get('index')} 小节的和弦 {chord.get('symbol')!r} 指法全闷音，TAB 留空")
-            _append_rest(measure, dur, voice=5)
+            _append_rest(measure, dur, voice=5, position=start)
         cursor = start + dur
     if cursor < bar_len - _EPS:
-        _append_rest(measure, bar_len - cursor, voice=5)
+        _append_rest(measure, bar_len - cursor, voice=5, position=cursor)
 
 
 # ---------------------------------------------------------------- 组装

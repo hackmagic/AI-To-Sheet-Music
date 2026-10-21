@@ -263,17 +263,63 @@ XSD 立刻报 `Element 'sound': This element is not expected. Expected is ( dire
 **验证**：`artifacts/score.musicxml` 过官方 MusicXML 4.0 XSD，并在 **MuseScore Studio 4.7.5**
 里实际打开：`♩ = 92` 只出现一次且是整数、「前奏」只出现一次、TAB 谱表无速度/段落标记。
 
-## 22. MuseScore 4 不能无头导出
+## 22. MuseScore 4 的无头导出（已推翻「不能无头」的旧结论）
 
-**症状**：想用 CLI 把 MusicXML 转 PDF 做自动校验，`MuseScore4.exe -o out.pdf in.musicxml`
-返回 exit 40/127 且无任何输出；`--help` 直接挂起；`QT_QPA_PLATFORM=offscreen` 也会挂。
+**结论修正**：MuseScore 4 **可以**无头导出（`-o` 足够；`-f` 只用于忽略告警强制转换），
+但 `--help`/`-v` 在 Windows 上确实会把进程挂住（后台常驻），且**转换失败时它 exit>0 却不打印原因**——
+错误只写进日志文件。
 
-**解法**：走 GUI 自动化 + 截图。`work/shot.ps1`（`SystemInformation.VirtualScreen` +
+**可靠调用**（PowerShell，Windows 上不要用 Git bash 直接调，参数解析容易错）：
+
+```powershell
+Start-Process 'C:\Program Files\MuseScore 4\bin\MuseScore4.exe' `
+  -ArgumentList '-o','out.pdf','in.musicxml' -Wait -PassThru | Select-Object ExitCode
+```
+
+失败时的唯一诊断渠道是日志：`%LOCALAPPDATA%\MuseScore\MuseScore4\logs\*.log`
+（搜 `ConverterController::convertFile`、`failed load notation`）。
+
+GUI 自动化仍可用作交叉验证：`work/shot.ps1`（`SystemInformation.VirtualScreen` +
 `Graphics.CopyFromScreen`）截屏；打开文件用 `AppActivate(pid)` + `SendKeys('^o')` +
 剪贴板粘贴路径 + `{ENTER}`。坑：鼠标点击对 MuseScore 无效（键盘有效）；
 缩放快捷键 `^-`/`^+` 在 SendKeys 下无效；打开 454KB / 1170 音符的文件后窗口会短暂「未响应」，等约 45s 恢复。
 
-## 23. 环境自检
+## 23. 节奏时值没有对应音符形状（`<type>` 与 `<duration>` 矛盾）
+
+**症状**：`MuseScore4.exe -o out.pdf artifacts/score.musicxml` 返回 **exit 1320**、
+不产出 PDF，也不打印任何原因。日志里是：
+
+```
+failed load notation, err: [2009] Incomplete measure: Full score, measure 2, staff 1.
+Found: 10/8.  Expected: 9/8.
+```
+
+（分母 8 = 二分音符单位，即「找到 5 拍、期望 4.5 拍」。）
+
+**根因**：量化器给的时值（3.5 拍、3.25 拍、2.75 拍、1/6 拍、1/3 拍…）没有单一音符形状，
+早期实现取「最接近的 type」写进 `<type>`（3.5 拍 → `whole`），`<duration>` 却写真实值。
+XML 自身合法、XSD 也过，但宿主软件按 `<type>` 重排小节就装不下 → 判定不完整小节并**拒绝打开**。
+更危险的是 `-f` 会静默修补，等于打印一份节奏错的谱。
+
+**解法**（`aitsm/score/export/musicxml.py`）：
+
+1. `_segment_duration(dur, position=)` 把任意时值贪心拆成**合法的二进制片段**，必须落在整拍/半拍网格上；
+   长音拆成多个 `<note>` 并用 `<tie type="start"/stop">` 相连，歌词只挂第一段。
+2. `_snap_to_grid()` + `_normalize_events()`：`RHYTHM_GRID = 0.125` 拍（三十二分音符），
+   起音按网格吸附并保持严格递增、时值裁到下一个起音为止、越界事件丢弃 → 三连音位移全部消失，
+   谱面不再需要 `time-modification`（试过保留三连音标记：混合时值组的 `<tuplet>` 会让 MuseScore
+   把小节算错，报 `Found: 49/48. Expected: 131/128`，仍然 exit 1320）。
+3. 小节末尾补休止符也走同一条拆段路径，保证每小节时值**精确等于**拍号。
+
+**验证**：`work/audit-musicxml.py` 检查四份谱面 → 0 个时值矛盾、0 个小节不满；
+不带 `-f` 的严格转换对 `artifacts/score.musicxml`（88 小节 / 1375 音符 / 218 个延音线）、
+`work/zh-medium2`、`work/accept-v2`、`work/deliver` 全部 **exit 0**，并生成 7 页 PNG 与 PDF。
+回归测试：`tests/test_export.py` 新增 4 条（时值/type 一致、长音拆段带延音线、三连音吸附、
+每小节时值求和）。
+
+**教训**：`-f` 成功不能当作验证通过；XSD 过了也不代表宿主软件能打开。
+
+## 24. 环境自检
 
 ```bash
 .venv/Scripts/python -m aitsm.cli doctor          # 项目自身

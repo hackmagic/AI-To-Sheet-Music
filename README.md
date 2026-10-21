@@ -86,7 +86,7 @@ work/mysong/
 | 真实歌曲（229s 英文流行） | quality **0.824**、BPM 92.47 / 4/4、D 大调 conf 0.84、**55 个和弦事件**（mean_conf 0.57）、12 段、**326 个旋律音** | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 歌词 | 字符级 CER **0.49–0.54**（medium；small 约 0.64）；同一配置跑三次差 0.05，因为分轨不是比特可复现 | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 中文歌（216s 慢歌） | 59 小节 / 6 段、D 大调 conf 0.57；歌词 lev_cer **0.669** / recall **0.835** / precision **0.606**（中文专属清洗后） | [docs/05-acceptance.md](docs/05-acceptance.md) |
-| MusicXML 落地 | 过官方 XSD + **MuseScore Studio 4.7.5 实机打开**：双谱表、和弦、逐字歌词、段落、`♩=92` 全部正确 | [docs/05-acceptance.md](docs/05-acceptance.md) |
+| MusicXML 落地 | 过官方 XSD + **MuseScore Studio 4.7.5 实机打开**：双谱表、和弦、逐字歌词、段落、`♩=92` 全部正确；**不带 `-f` 的严格导入 exit 0**（4 份谱面），可导 PDF/PNG | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 成本 | 4 分钟歌 CPU 冷启动约 9 分钟（分轨 5 分钟 + 歌词 2.5 分钟） | [docs/05-acceptance.md](docs/05-acceptance.md) |
 
 合成曲只用于验证**信号层**（BPM / 拍号 / 调性 / 和弦），合成人声是正弦波所以不评歌词与旋律；真实歌曲的段落边界与歌词仍需人工校对。
@@ -156,7 +156,7 @@ web 渲染 / MusicXML / MIDI
 - 暂不处理速度/拍号的**中途变化**（会告警），不支持多声部人声。
 - GPU 加速目前非必需：4 分钟歌曲 CPU 全流程约 9–10 分钟（medium 歌词模型占一半以上；`--whisper-model small` 可缩到约 5 分钟）。
 - **中文歌**会额外做三步清洗（去署名幻觉行、合并单字碎行、繁简统一为简体）；未装 `zhconv` 时跳过繁简转换。中文不能用英文的 CER 口径衡量，按 lev_cer / recall / precision 三元组看（实测 0.669 / 0.835 / 0.606）。
-- MusicXML 通过官方 XSD 校验，并已在 **MuseScore Studio 4.7.5 实机打开**核对（双谱表、和弦、逐字歌词、段落、速度标记均正确）。
+- MusicXML 通过官方 XSD 校验，并已在 **MuseScore Studio 4.7.5 实机打开**核对（双谱表、和弦、逐字歌词、段落、速度标记均正确）；再用 `MuseScore4.exe -o out.pdf score.musicxml`（**不加 `-f`**）严格导入，四份谱面全部 exit 0 → 每一小节的 `<type>`/`<duration>` 都对得上、时值精确等于拍号。
 
 ## 作为 DSH 插件使用
 
@@ -172,7 +172,7 @@ skill 会把整条管线跑在**独立子进程**里（避免 torch/whisper 影�
 ## 测试
 
 ```bash
-.venv/Scripts/python -m pytest tests/ -q   # 516 条：管线、和弦、指法、导出、service、插件脚本
+.venv/Scripts/python -m pytest tests/ -q   # 520 条：管线、和弦、指法、导出（含记谱合法性）、service、插件脚本
 node tests/web-editor.test.mjs             # 34 条：编辑器纯数据层（独立历史、撤销/重做、段落重编号）
 ```
 

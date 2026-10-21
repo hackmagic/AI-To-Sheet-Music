@@ -632,3 +632,108 @@ def test_musicxml_direction_children_follow_schema_order(tmp_path: Path) -> None
         if "sound" in tags:
             assert "direction-type" in tags, tags
             assert tags.index("direction-type") < tags.index("sound"), tags
+
+
+# --------------------------------------------------------- 记谱合法性（实机回归）
+
+_BASE_DURATIONS = {
+    "breve": 8.0,
+    "whole": 4.0,
+    "half": 2.0,
+    "quarter": 1.0,
+    "eighth": 0.5,
+    "16th": 0.25,
+    "32nd": 0.125,
+    "64th": 0.0625,
+}
+
+
+def _note_duration_is_notatable(note: ET.Element, divisions: int) -> bool:
+    """``<duration>`` 必须正好等于 ``<type>``(+附点) 表示的长度（三连音另乘比例）。"""
+    beats = int(note.findtext("duration") or 0) / divisions
+    name = note.findtext("type")
+    if name not in _BASE_DURATIONS:
+        return False
+    value = _BASE_DURATIONS[name]
+    dots = len(note.findall("dot"))
+    if dots:
+        value *= 2 - 0.5**dots  # 1 个附点 ×1.5，2 个 ×1.75
+    tm = note.find("time-modification")
+    if tm is not None:
+        value *= int(tm.findtext("normal-notes")) / int(tm.findtext("actual-notes"))
+    return abs(value - beats) < 1e-9
+
+
+def _awkward_score() -> dict:
+    """第 2 小节塞进「没有单一音符形状」的时值：3.5 拍、1/6 拍、1/3 拍。"""
+    score = make_score()
+    score["bars"][1]["vocal"] = [
+        {"beat": 0.0, "dur": 3.5, "midi": 64, "lyric": "月"},
+        {"beat": 3.5, "dur": "1/6", "midi": 62, "lyric": "亮"},
+        {"beat": 3.5 + 1 / 6, "dur": "1/3", "midi": 64, "lyric": "代"},
+    ]
+    return score
+
+
+def test_musicxml_duration_never_contradicts_note_type(tmp_path: Path) -> None:
+    """实机踩坑：3.5 拍被写成 ``<duration>1680</duration><type>whole</type>``，
+    MuseScore 4 严格导入直接报 ``Incomplete measure``（exit 1320）拒绝打开文件。
+    导出器现在把这种时值拆成带延音线的合法片段。
+    """
+    from aitsm.score.export.musicxml import DIVISIONS
+
+    path = tmp_path / "awkward.musicxml"
+    export_musicxml(_awkward_score(), path)
+    for note in _parse(path).iter("note"):
+        assert _note_duration_is_notatable(note, DIVISIONS), ET.tostring(note, encoding="unicode")[:240]
+
+
+def test_musicxml_long_note_is_split_with_ties(tmp_path: Path) -> None:
+    """3.5 拍的音要拆成两个用延音线相连的音；歌词只在第一个片段上。"""
+    path = tmp_path / "split.musicxml"
+    export_musicxml(_awkward_score(), path)
+    vocal = _parse(path).findall("part")[0]
+    measure = vocal.findall("measure")[1]
+    notes = [note for note in measure.findall("note") if note.find("rest") is None]
+    assert len(notes) >= 3, [ET.tostring(n, encoding="unicode")[:120] for n in notes]
+    assert notes[0].find("tie").get("type") == "start"
+    assert notes[1].find("tie").get("type") == "stop"
+    assert notes[0].find("lyric") is not None
+    assert notes[1].find("lyric") is None
+    # 拆出来的片段必须是常用时值，不能是 whole（4 拍装不下 3.5 拍）
+    assert notes[0].findtext("type") != "whole"
+
+
+def test_musicxml_triplet_durations_are_snapped_to_binary_grid(tmp_path: Path) -> None:
+    """量化残留的三连音时值（1/6、1/3 拍）吸附到二分网格，不写 time-modification。
+
+    MuseScore 要靠 ``<tuplet>`` 推断三连音组长度，量化器给的混合时值组会让它算错
+    小节时值；流行歌单上直接吸附成三十二分/十六分更好读。
+    """
+    path = tmp_path / "grid.musicxml"
+    export_musicxml(_awkward_score(), path)
+    root = _parse(path)
+    assert not list(root.iter("time-modification"))
+    assert not list(root.iter("tuplet"))
+
+
+def test_musicxml_every_measure_sums_to_bar_length(tmp_path: Path) -> None:
+    """除弱起小节外，每小节的时值必须正好等于拍号（否则宿主软件判为不完整小节）。"""
+    from aitsm.score.export.musicxml import DIVISIONS
+
+    path = tmp_path / "sums.musicxml"
+    export_musicxml(_awkward_score(), path)
+    for part in _parse(path).findall("part"):
+        for measure in part.findall("measure"):
+            if measure.get("implicit") == "yes":
+                continue
+            total = 0
+            for element in measure:
+                if element.tag == "note":
+                    if element.find("chord") is None:
+                        total += int(element.findtext("duration") or 0)
+                elif element.tag in ("forward",):
+                    total += int(element.findtext("duration") or 0)
+                elif element.tag == "backup":
+                    total -= int(element.findtext("duration") or 0)
+            assert total == 4 * DIVISIONS, (measure.get("number"), total)

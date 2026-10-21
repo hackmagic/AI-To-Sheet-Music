@@ -88,8 +88,26 @@
 逐小节速度抖动堆出 25 个可见 `♩=` 标记。修法与回归测试见 `docs/04-known-issues.md` #21，
 `tests/test_export.py` 新增 4 条测试锁住（四舍五入 + 只显示一次 + 抖动节流 + `direction` 子元素顺序）。
 
-> MuseScore 4 **不能无头导出**（`-o` 返回 exit 40/127 无输出、`--help` 挂起），
-> 所以验证走 GUI + 截图，脚本与坑见 `docs/04-known-issues.md` #22。
+> MuseScore 4 **可以无头导出**（`-o in.musicxml out.pdf`），只是失败时 exit>0 且不打印原因，
+> 错误只写进 `%LOCALAPPDATA%\MuseScore\MuseScore4\logs\*.log`；`--help`/`-v` 在 Windows 上会挂住。
+> 详见 `docs/04-known-issues.md` #22。
+
+### ✅ MuseScore 严格导入（不带 `-f`）
+
+用 `-f`（忽略告警强制转换）得到 exit 0 **不能算验证通过**——它会静默修补节奏错误。
+关掉 `-f` 后暴露出一个真实缺陷：`<type>` 与 `<duration>` 矛盾（3.5 拍被写成 `whole`），
+MuseScore 报 `Incomplete measure: measure 2, staff 1. Found: 10/8. Expected: 9/8.` 并 **exit 1320 拒绝打开**。
+修复见 `docs/04-known-issues.md` #23（时值拆段 + 延音线、三连音改节奏网格吸附）。
+
+| 谱面 | 严格导入 exit | 输出 |
+| --- | --- | --- |
+| `artifacts/score.musicxml`（88 小节 / 1375 音符 / 218 延音线） | **0** | PDF 140761 B + PNG 7 页 |
+| `work/zh-medium2`（中文歌） | **0** | PDF 131580 B |
+| `work/accept-v2` | **0** | PDF 140761 B |
+| `work/deliver`（另一首） | **0** | PDF 135617 B |
+
+`work/audit-musicxml.py` 静态审计：0 个 `<type>`/`<duration>` 矛盾、0 个不满小节。
+回归测试 `tests/test_export.py` 新增 4 条（时值一致 / 长音拆段带延音线 / 三连音吸附 / 每小节时值求和）。
 
 ### score.mid
 - `MThd` + 3 个 `MTrk`，format 1 / PPQ 480
@@ -228,6 +246,7 @@ BPM 判定 67.0（`beats.tempo_octave` 把 136 → 68 的半拍修正），调�
 24. **静音段幻觉署名行**（`詞曲李宗盛`）→ `is_zh_credit_line()` + `drop_silent_lines()` 双闸门
 25. **MuseScore 里速度显示小数且两个 part 重复** → 速度取整、只显示一次、抖动节流 15%
 26. **不可见速度写 `direction` 时 XSD 报错** → `<direction-type>` 必须排在 `<sound>` 之前
+27. **`<type>` 与 `<duration>` 矛盾导致 MuseScore 拒绝打开**（exit 1320 / `Incomplete measure: Found: 10/8. Expected: 9/8.`，3.5 拍被写成 `whole`）→ 时值贪心拆成合法片段 + 延音线、节奏吸附到 1/8 拍网格；不带 `-f` 的四份谱面严格导入全部 exit 0
 
 ### 🟠 仍存在（可接受，已在 UI/报告里标注）
 1. **歌词 CER 0.49–0.54**（medium，英文歌）：术语、连读、和声段仍会错；偶有整行幻觉。**不保证每句都对**，低置信度会标出。
@@ -240,7 +259,7 @@ BPM 判定 67.0（`beats.tempo_octave` 把 136 → 68 的半拍修正），调�
 
 ### 🟡 环境限制
 1. **GPU 未使用**（cu128 wheel 反复下载损坏）：全流程走 CPU，4 分钟歌冷启动约 9 分钟。
-2. **MuseScore 4 不能无头导出**：`-o` 返回 exit 40/127、`--help` 挂起，实机验证只能走 GUI + 截图（见 `docs/04-known-issues.md` #22）。MuseScore 3 通过 winget 安装失败（jsdelivr `InternetOpenUrl() failed 0x80072eff`）。
+2. **MuseScore 4 无头转换失败时不给原因**：`-o` 在文件有问题时 exit 1320 且 stderr 全空，只能去读 `%LOCALAPPDATA%\MuseScore\MuseScore4\logs\*.log`；`--help`/`-v` 在 Windows 上会挂住进程。MuseScore 3 通过 winget 安装失败（jsdelivr `InternetOpenUrl() failed 0x80072eff`）。
 3. **未做主观听感验证**：所有音频结论基于信号分析与 LRC 文本对照。
 4. **安装 skill 必须用非 Low 完整性解释器**：`.venv/Scripts/python.exe` 带 Low 完整性标签，写不了 `%USERPROFILE%\.config\...`，要改用 `D:/WorkSoftware/anaconda3/python.exe plugin/install.py`。
 
@@ -248,7 +267,7 @@ BPM 判定 67.0（`beats.tempo_octave` 把 136 → 68 的半拍修正），调�
 
 **目标达成**：从真实歌曲音频可端到端产出可渲染、可播放、可编辑、可移调、可打印的弹唱谱。
 - `score.json` 通过 schema + 音乐合理性双重校验（0 错误）
-- `score.musicxml` 通过官方 MusicXML 4.0 XSD，并已在 **MuseScore Studio 4.7.5 实机打开核对**（双谱表/和弦/逐字歌词/段落/速度标记全部正确）
+- `score.musicxml` 通过官方 MusicXML 4.0 XSD，并已在 **MuseScore Studio 4.7.5 实机打开核对**（双谱表/和弦/逐字歌词/段落/速度标记全部正确）；**不带 `-f` 的严格导入 exit 0**（四份谱面），并成功导出 PDF / 7 页 PNG
 - 第二首真实素材（中文慢歌 216.5s）跑通，中文三类特有缺陷已修（繁简 8→0、碎行 4→0、幻觉署名 1→0）
 - `score.mid` 通过独立 SMF 解析与 ffprobe
 - 网页在 88 小节真实谱上渲染、编辑、撤销、打印全部实测通过
@@ -260,12 +279,12 @@ BPM 判定 67.0（`beats.tempo_octave` 把 136 → 68 的半拍修正），调�
 - 旋律：**A-**（音域 57–84，量化漂移 0.048s）
 - 歌词：**C+**（CER 0.49–0.54，不编造但会错；漏词留空）
 - 网页呈现：**A-**（31 systems，0 重叠，编辑/撤销/打印实测通过）
-- 工程质量：**A**（**516** python tests + 34 node tests 全绿，23 条已知问题文档化）
+- 工程质量：**A**（**520** python tests + 34 node tests 全绿，24 条已知问题文档化）
 
 ## 最终验收命令
 
 ```bash
-# 1. 全部单测（期望 516 passed）
+# 1. 全部单测（期望 520 passed）
 .venv/Scripts/python -m pytest tests/ -q
 node tests/web-editor.test.mjs          # 期望 34 passed, 0 failed
 
