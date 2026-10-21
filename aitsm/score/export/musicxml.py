@@ -516,12 +516,37 @@ def _append_attributes(
         ET.SubElement(clef, "line").text = "2"
 
 
-def _append_tempo(measure: ET.Element, bpm: float) -> None:
+def _append_tempo(
+    measure: ET.Element,
+    bpm: float,
+    *,
+    visible: bool = True,
+    label_bpm: float | None = None,
+) -> None:
+    """写速度标记。
+
+    ``visible=False`` 时只保留不可见的 ``<sound tempo>``（用于第二谱表），
+    避免在 MuseScore 里两行谱各挂一个「♩=88」而显得重复。
+    ``label_bpm`` 用于让谱面显示的速度与 ``<sound>`` 里的精确值不同
+    （例如谱面统一标「♩=92」，而小节里保留 92.28 这类精确值给回放）。
+    """
+    if visible:
+        direction = ET.SubElement(measure, "direction", {"placement": "above"})
+        dtype = ET.SubElement(direction, "direction-type")
+        metronome = ET.SubElement(dtype, "metronome")
+        ET.SubElement(metronome, "beat-unit").text = "quarter"
+        # 谱面显示用整数（「♩=88」而不是「♩=87.591」）
+        shown = round(float(label_bpm if label_bpm is not None else bpm))
+        ET.SubElement(metronome, "per-minute").text = f"{shown:d}"
+        ET.SubElement(direction, "sound", {"tempo": f"{bpm:g}"})
+        return
     direction = ET.SubElement(measure, "direction", {"placement": "above"})
+    # XSD 要求 direction 里 <direction-type> 必须在 <sound> 之前，
+    # 所以不可见的速度也用 metronome 承载，只是加 print-object="no" 不打印。
     dtype = ET.SubElement(direction, "direction-type")
-    metronome = ET.SubElement(dtype, "metronome")
+    metronome = ET.SubElement(dtype, "metronome", {"print-object": "no"})
     ET.SubElement(metronome, "beat-unit").text = "quarter"
-    ET.SubElement(metronome, "per-minute").text = f"{bpm:g}"
+    ET.SubElement(metronome, "per-minute").text = f"{round(float(bpm)):d}"
     ET.SubElement(direction, "sound", {"tempo": f"{bpm:g}"})
 
 
@@ -757,6 +782,9 @@ def _build_score(score: dict, warnings: list[str]) -> tuple[ET.Element, dict[str
 
     previous_signature = None
     previous_tempo = None
+    # 上一次「显示出来」的速度值：谱面只标有意义的速度变化，逐小节的
+    # 细微抖动（83/85/86/88…）只写进不可见的 sound，否则整页都是 ♩= 标记
+    shown_tempo = None
     system_breaks = _system_breaks(bars, score)
     for position, bar in enumerate(bars, start=1):
         signature = parse_time_signature(bar.get("time_signature") or ctx.time_signature, ctx.time_signature)
@@ -811,16 +839,30 @@ def _build_score(score: dict, warnings: list[str]) -> tuple[ET.Element, dict[str
         except (TypeError, ValueError):
             tempo_value = ctx.tempo
         if tempo_value and (position == 1 or tempo_value != previous_tempo):
-            _append_tempo(vocal_measure, tempo_value)
+            # 只在速度变化 ≥15% 时显示标记（首小节总是显示）。
+            # 节拍检测给出的逐小节速度（83/85/88/92/101）多是拟合噪声，
+            # 全部标出来会让整页都是 ♩= 标记；精确值仍写进 <sound tempo> 供回放。
+            show = (
+                shown_tempo is None
+                or abs(tempo_value - shown_tempo) / max(float(shown_tempo), 1e-6) >= 0.15
+            )
+            _append_tempo(
+                vocal_measure,
+                tempo_value,
+                visible=show,
+                label_bpm=ctx.tempo if shown_tempo is None and ctx.tempo else None,
+            )
+            if show:
+                shown_tempo = tempo_value
             if ctx.include_tab:
-                _append_tempo(tab_measure, tempo_value)
+                # 第二谱表只放不可见的 sound 事件，避免 MuseScore 里速度标记重复
+                _append_tempo(tab_measure, tempo_value, visible=False)
         previous_tempo = tempo_value
 
         if section:
             label = str(section.get("label") or section.get("kind") or "")
+            # 段落标记只放在第一谱表上方；两行谱各放一个会在 MuseScore 里重复显示
             _append_rehearsal(vocal_measure, label)
-            if ctx.include_tab:
-                _append_rehearsal(tab_measure, label)
 
         _emit_vocal_measure(vocal_measure, bar, ctx, warnings, counts)
         if ctx.include_tab:

@@ -64,7 +64,32 @@
 - 132 个 `<harmony>`，**298 个 `<lyric>`**（逐字音节）
 - `<key><fifths>2` 与 D 大调一致
 - `<staff-details>` 声明 TAB 6 弦调弦
-- ⚠️ **未在 MuseScore 中实际打开验证**（本机未安装 MuseScore）
+- 可见速度标记 **1 个**（`♩ = 92` 整数），`<per-minute>` 50 个（49 个隐藏 + 1 个可见），`<sound tempo>` 每小节精确值保留
+- 段落标记（`<rehearsal>`）只在主旋律 part，TAB part 不重复
+
+### ✅ MuseScore 实机验证（MuseScore Studio 4.7.5）
+
+用 `winget install Musescore.Musescore` 装好后，**实际打开 `artifacts/score.musicxml`**（454KB / 1170 音符），
+截图核对（`work/shots/ms-verify.png`，1463×914）：
+
+| 检查项 | 结果 |
+| --- | --- |
+| 能否打开 | ✅ 40s 加载完成（期间窗口短暂「未响应」，之后 `Responding: True`） |
+| 调号 / 拍号 | ✅ 2 个升号、4/4 |
+| 谱表 | ✅ 双谱表：Vocal 主旋律 + Guitar **TAB**（6 线 + 品位数字 0/4/5） |
+| 和弦符号 | ✅ 在谱表上方（`D` / `A` / `G` / `Asus2`） |
+| 逐字歌词 | ✅ 逐音节挂在符头下方（`we drive / through the quiet / land`） |
+| 段落标记 | ✅「前奏」「间奏」「副歌 1」，**只出现一次**（TAB 谱表无重复） |
+| 速度标记 | ✅ `♩ = 92` 整数，**只出现一次** |
+| 三连音 | ✅ 显示 `3` 括号 |
+
+**这一步抓出了三个此前所有自动校验都测不到的缺陷**（XSD 与自研校验都过，只有真排版才暴露）：
+谱面速度显示小数 `♩=87.591`、速度/段落标记在两个 part 各出一份（MuseScore 里重复显示）、
+逐小节速度抖动堆出 25 个可见 `♩=` 标记。修法与回归测试见 `docs/04-known-issues.md` #21，
+`tests/test_export.py` 新增 4 条测试锁住（四舍五入 + 只显示一次 + 抖动节流 + `direction` 子元素顺序）。
+
+> MuseScore 4 **不能无头导出**（`-o` 返回 exit 40/127 无输出、`--help` 挂起），
+> 所以验证走 GUI + 截图，脚本与坑见 `docs/04-known-issues.md` #22。
 
 ### score.mid
 - `MThd` + 3 个 `MTrk`，format 1 / PPQ 480
@@ -110,6 +135,50 @@ small→medium 的差距（约 0.10–0.14）远大于这个波动，模型结�
 反面：medium 首段出现 `home home` 复读型幻觉，另有整行编造（`Always unequal, let's play it now`）。
 因此**低置信度行必须在质量面板可见**（本次 `lyrics.low_confidence` 告警：平均置信度 0.36）。
 
+## 中文歌实测（第二首素材，验证不是对单曲调参）
+
+| 项 | 值 |
+| --- | --- |
+| 文件 | `K:/Music/221小伙伴 - 遥远的你.flac`（216.5s / 48kHz / 43MB，中文慢歌） |
+| 参考歌词 | 同目录 `.lrc`，33 行正文 / 260 字（含署名行，已剔除） |
+| 运行 | `work/zh-medium2`（命中分轨缓存，全程约 100s） |
+
+产物：**59 小节 / 6 段**（前奏 1–11 / 间奏 12–15 / 副歌1 16–22 / 主歌1 23–32 / 副歌2 33–49 / 主歌2 50–59），
+`score.quality` 分项 `{beats .782, key .57, chords .576, melody .796, lyrics .569, lyric_match 1.0}`，
+旋律 midi **55–66**（男声偏低，属正常），vocal 318 音符 / 270 带词。
+
+BPM 判定 67.0（`beats.tempo_octave` 把 136 → 68 的半拍修正），调性 A 大调 → `key.refined` **D 大调**（conf 0.57，2 升号）。
+
+### 歌词：中文不能套英文的 CER 口径
+
+| 运行 | 行数 | 字数 | lev_cer | recall | precision |
+| --- | --- | --- | --- | --- | --- |
+| medium（清洗前） | 29 | 363 | 0.7731 | 0.731 | 0.523 |
+| small | 26 | 360 | 0.7231 | 0.788 | 0.569 |
+| **medium + 中文清洗**（最终） | 24 | 358 | **0.6692** | **0.835** | **0.606** |
+
+三元组要一起看：`lev_cer` 和英文歌同口径，`recall` 反映漏词，`precision` 反映幻觉。
+**清洗后三项目标全面优于 small，所以保留 medium + 事后清洗，而不是退回 small。**
+
+> 本曲 LRC 与音频不是同一个编曲版本（LRC 首行标 2.08s，但人声从 ~14.8s 才起，
+> 且偏移在 16.5→19→21s 之间漂移），**因此中文歌只做文本比对，不做逐行时间比对**，
+> 也不能把它的 CER 和英文歌的 CER 直接比较。详见 `docs/04-known-issues.md` #20。
+
+### 中文特有的三类缺陷（已修）
+
+| 缺陷 | 清洗前 | 清洗后 |
+| --- | --- | --- |
+| 繁简混排（`淚光/遊蕩/鑰匙/詩句` 与 `阳光/喜欢` 并存） | 8 行含繁体 | **0** |
+| 单字碎行（`去`/`息`/`息`/`底` 各占一行） | 4 行 | **0** |
+| 静音段幻觉署名行（`詞曲李宗盛`，该段 vocals RMS 0.00022 vs 整体 0.1495） | 1 行 | **0** |
+
+修复位置：`aitsm/pipeline/lyrics.py` 的清洗链
+`is_zh_credit_line` → `drop_silent_lines` → `merge_tiny_lines` → `to_simplified_lines`（zhconv）。
+细节与阈值见 `docs/04-known-issues.md` #19，回归测试 `tests/test_lyrics.py` 新增 7 条。
+
+**真实剩余错误是逐字误识**（闪起→神奇、一记→异己、一缕→一地、卑微→美味），不是繁简问题，
+需要更强的 ASR 或用户手工改词（编辑器已支持改歌词）。
+
 ## 网页渲染验收（playwright 实测）
 
 在 `python -m aitsm.cli serve` 下加载同一份真实谱（`work/jobs/accept-medium` 副本），
@@ -154,6 +223,11 @@ small→medium 的差距（约 0.10–0.14）远大于这个波动，模型结�
 19. manifest 被 service 覆盖写、丢可复现性字段 → `_merge_manifests()`
 20. skill 的 `generate.py` 因 `stages.analysis` 变 list 而崩 → `_manifest_engines()` 兼容层
 21. 早期 manifest 不记录歌词模型 → `tools.lyrics.{engine,model,device}`
+22. **中文歌词繁简混排**（8 行）→ `to_simplified_lines()` 用 zhconv 统一为简体（可关）
+23. **中文单字碎行**（去/息/息/底）→ `merge_tiny_lines()` 中文 <3 字并入邻行
+24. **静音段幻觉署名行**（`詞曲李宗盛`）→ `is_zh_credit_line()` + `drop_silent_lines()` 双闸门
+25. **MuseScore 里速度显示小数且两个 part 重复** → 速度取整、只显示一次、抖动节流 15%
+26. **不可见速度写 `direction` 时 XSD 报错** → `<direction-type>` 必须排在 `<sound>` 之前
 
 ### 🟠 仍存在（可接受，已在 UI/报告里标注）
 1. **歌词 CER 0.49–0.54**（medium，英文歌）：术语、连读、和声段仍会错；偶有整行幻觉。**不保证每句都对**，低置信度会标出。
@@ -166,7 +240,7 @@ small→medium 的差距（约 0.10–0.14）远大于这个波动，模型结�
 
 ### 🟡 环境限制
 1. **GPU 未使用**（cu128 wheel 反复下载损坏）：全流程走 CPU，4 分钟歌冷启动约 9 分钟。
-2. **未安装 MuseScore**：MusicXML 过官方 XSD 但未做实际打开验证。
+2. **MuseScore 4 不能无头导出**：`-o` 返回 exit 40/127、`--help` 挂起，实机验证只能走 GUI + 截图（见 `docs/04-known-issues.md` #22）。MuseScore 3 通过 winget 安装失败（jsdelivr `InternetOpenUrl() failed 0x80072eff`）。
 3. **未做主观听感验证**：所有音频结论基于信号分析与 LRC 文本对照。
 4. **安装 skill 必须用非 Low 完整性解释器**：`.venv/Scripts/python.exe` 带 Low 完整性标签，写不了 `%USERPROFILE%\.config\...`，要改用 `D:/WorkSoftware/anaconda3/python.exe plugin/install.py`。
 
@@ -174,7 +248,8 @@ small→medium 的差距（约 0.10–0.14）远大于这个波动，模型结�
 
 **目标达成**：从真实歌曲音频可端到端产出可渲染、可播放、可编辑、可移调、可打印的弹唱谱。
 - `score.json` 通过 schema + 音乐合理性双重校验（0 错误）
-- `score.musicxml` 通过官方 MusicXML 4.0 XSD
+- `score.musicxml` 通过官方 MusicXML 4.0 XSD，并已在 **MuseScore Studio 4.7.5 实机打开核对**（双谱表/和弦/逐字歌词/段落/速度标记全部正确）
+- 第二首真实素材（中文慢歌 216.5s）跑通，中文三类特有缺陷已修（繁简 8→0、碎行 4→0、幻觉署名 1→0）
 - `score.mid` 通过独立 SMF 解析与 ffprobe
 - 网页在 88 小节真实谱上渲染、编辑、撤销、打印全部实测通过
 - 三首合成曲（3/4、4/4 摇滚、无人声）信号层 **85.1/100**，见 `docs/07-synthetic-eval.md`
@@ -185,12 +260,12 @@ small→medium 的差距（约 0.10–0.14）远大于这个波动，模型结�
 - 旋律：**A-**（音域 57–84，量化漂移 0.048s）
 - 歌词：**C+**（CER 0.49–0.54，不编造但会错；漏词留空）
 - 网页呈现：**A-**（31 systems，0 重叠，编辑/撤销/打印实测通过）
-- 工程质量：**A**（505 python tests + 34 node tests 全绿，19 条已知问题文档化）
+- 工程质量：**A**（**516** python tests + 34 node tests 全绿，23 条已知问题文档化）
 
 ## 最终验收命令
 
 ```bash
-# 1. 全部单测（期望 505 passed）
+# 1. 全部单测（期望 516 passed）
 .venv/Scripts/python -m pytest tests/ -q
 node tests/web-editor.test.mjs          # 期望 34 passed, 0 failed
 

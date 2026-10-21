@@ -166,4 +166,6 @@ def check_optional_engines() -> dict[str, bool]:
         "whisper": has("faster_whisper", "whisper"),
         "librosa": has("librosa"),
         "soundfile": has("soundfile"),
+        # 中文歌词繁简统一用；缺失时歌词原样输出（繁体保留）
+        "zhconv": has("zhconv"),
     }

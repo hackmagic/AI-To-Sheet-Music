@@ -200,7 +200,80 @@ whisper 对这种微小差异足够敏感，于是断句与转写结果不同。
 `_transcribe_lyrics()` 把它合并进 payload，`tools.lyrics` 落 `engine / model / device`。
 （`tests/test_manifest_engines.py` 7 条锁住这条链路。）
 
-## 19. 环境自检
+## 19. 中文歌的三类特有缺陷（whisper 普通话输出）
+
+用《遥远的你》（`K:/Music/221小伙伴 - 遥远的你.flac`，216s）跑真实中文歌，
+英文歌从未出现的三类问题一次全冒出来：
+
+| 缺陷 | 现象 | 根因 |
+| --- | --- | --- |
+| 繁简混排 | 同一份谱里「淚光/無邊無際/遊蕩/鑰匙/過去」与「阳光/喜欢/风」并存 | whisper 对普通话常整段输出繁体，且同一首歌里不一致 |
+| 单字碎行 | 「去」「息」「息」「底」各占一行 | 换气处被切成 1 字 segment，谱面上一字一行 |
+| 幻觉署名行 | 第 0 行「詞曲李宗盛」（真实作词是「王明明/李亚然」） | 该段 `vocals.wav` RMS **0.00022**（整体 0.1495，仅 0.15%）→ 纯静音段编造 |
+
+**解法**（`aitsm/pipeline/lyrics.py`，都在 `transcribe_lyrics` 的清洗链里，按顺序执行）：
+
+1. `is_zh_credit_line()` —— 整行是「作词:/作曲:/詞曲:/制作公司:/和声编写:」这类署名就丢；
+   用关键词 + 长度双门限，避免把「我曾经和制作人聊过」这种正片歌词误杀。
+2. `drop_silent_lines(lines, audio_path)` —— 按**相对整体 RMS 中位数**判静音
+   （`threshold = max(3e-4, 0.08 × median)`），低于阈值的行丢弃。
+   用相对阈值而不是绝对阈值，是为了保住「低声真唱」的段落。
+3. `merge_tiny_lines(lines, language=...)` —— 中文 <3 字、拉丁 <2 词的碎行并入相邻行
+   （优先并到前一行，首行则并到后一行），`max_gap=2.5s` 防止跨越间奏乱并。
+4. `to_simplified_lines()` —— 用 `zhconv` 转 `zh-cn`；`AITSM_KEEP_TRADITIONAL=1` 可关闭；
+   日/韩文（有假名、language=ja/ko）跳过，避免把日文汉字改错；没装 zhconv 就原样返回。
+
+**效果**（同一首歌、同一参考 LRC）：繁体行 **8 → 0**、<3 字碎行 **4 → 0**、
+幻觉署名行 **1 → 0**；文本召回率 recall **0.731 → 0.835**、precision **0.523 → 0.606**。
+
+## 20. 中文歌不能用英文歌的 CER 口径
+
+**症状**：中文歌算出来 CER 0.67，比英文歌的 0.50 差一大截，但实际识别质量并不更差。
+
+**原因**：两层
+
+1. **参考歌词版本可能不是同一个编曲**。本曲 LRC 首行标在 2.08s，但音频 `vocals.wav`
+   0–15s RMS 恒为 0.0002（人声从 ~14.8s 起）；按内容对齐算出的偏移还在 16.5s→19s→21s
+   之间漂移，说明不是 uniform shift。→ **中文歌不能做逐行时间比对，只能做文本比对。**
+2. **副歌重复三遍**，Levenshtein 对重复文本敏感，单看 CER 会同时惩罚「漏词」和「多词」。
+
+**解法**：`work/zh-eval.py` 同时报三个数——`lev_cer`（和英文歌同口径，便于横向看）、
+`recall`（参考里有多少字被识别出来 = 漏词）、`precision`（识别出的字里有多少对 = 幻觉）。
+结论要按三元组报，不要只报一个 CER。
+
+## 21. MuseScore 实机打开才发现的速度/段落标记问题
+
+**症状**（只有真的用 MuseScore 打开才看得到，XSD 与自研校验都发现不了）：
+
+1. 谱面速度标记显示小数：`♩= 87.591`；
+2. 速度和段落标记在**两个 part 各出一份**，MuseScore 里重复显示；
+3. 逐小节速度抖动（83/85/86/88/89/90/92/95/97/99/101）会堆出 **25 个可见 ♩= 标记**。
+
+**解法**（`aitsm/score/export/musicxml.py`）：
+
+- `_append_tempo(..., visible=True, label_bpm=None)`：可见时 `<per-minute>` 写 `round()` 的整数，
+  `<sound tempo>` 始终写精确值；`visible=False` 时用 `<metronome print-object="no">` + `<sound>`。
+- `_append_rehearsal` 只写主旋律 part（P1），TAB part 不再重复。
+- 可见性节流：与上次显示的速度差 <15% 就不打印（`<sound tempo>` 仍然每小节写，回放精确）。
+
+**踩坑**：`visible=False` 一开始只写 `<direction><sound/></direction>`，
+XSD 立刻报 `Element 'sound': This element is not expected. Expected is ( direction-type )`
+—— `direction` 里 `<direction-type>` 必须排在 `<sound>` 之前。
+
+**验证**：`artifacts/score.musicxml` 过官方 MusicXML 4.0 XSD，并在 **MuseScore Studio 4.7.5**
+里实际打开：`♩ = 92` 只出现一次且是整数、「前奏」只出现一次、TAB 谱表无速度/段落标记。
+
+## 22. MuseScore 4 不能无头导出
+
+**症状**：想用 CLI 把 MusicXML 转 PDF 做自动校验，`MuseScore4.exe -o out.pdf in.musicxml`
+返回 exit 40/127 且无任何输出；`--help` 直接挂起；`QT_QPA_PLATFORM=offscreen` 也会挂。
+
+**解法**：走 GUI 自动化 + 截图。`work/shot.ps1`（`SystemInformation.VirtualScreen` +
+`Graphics.CopyFromScreen`）截屏；打开文件用 `AppActivate(pid)` + `SendKeys('^o')` +
+剪贴板粘贴路径 + `{ENTER}`。坑：鼠标点击对 MuseScore 无效（键盘有效）；
+缩放快捷键 `^-`/`^+` 在 SendKeys 下无效；打开 454KB / 1170 音符的文件后窗口会短暂「未响应」，等约 45s 恢复。
+
+## 23. 环境自检
 
 ```bash
 .venv/Scripts/python -m aitsm.cli doctor          # 项目自身

@@ -561,3 +561,74 @@ def test_musicxml_note_child_order_is_schema_valid() -> None:
     root = ET.parse(out).getroot()
     bad = [note for note in root.iter("note") if not _music_note_order_ok(note)]
     assert not bad, [ET.tostring(item, encoding="unicode")[:200] for item in bad[:3]]
+
+
+def _visible_metronomes(part: ET.Element) -> list[ET.Element]:
+    return [m for m in part.iter("metronome") if m.get("print-object") != "no"]
+
+
+def test_musicxml_tempo_mark_is_rounded_and_shown_once(tmp_path: Path) -> None:
+    """实机在 MuseScore 里发现：谱面速度是「♩=87.591」小数，且两个 part 各挂一个。
+
+    现在只在一个谱表上显示整数速度，另一谱表只写不可见的 <sound tempo> 供回放。
+    """
+    analysis = make_analysis(bars=8)
+    score = arrange(analysis, {"include_tab": True, "difficulty": "beginner"})
+    score["meta"]["tempo"] = 87.591
+    path = tmp_path / "tempo.musicxml"
+    export_musicxml(score, path)
+    vocal, tab = _parse(path).findall("part")[:2]
+
+    vocal_marks = _visible_metronomes(vocal)
+    assert len(vocal_marks) == 1, [m.findtext("per-minute") for m in vocal_marks]
+    assert vocal_marks[0].findtext("per-minute") == "88"  # 整数，四舍五入
+    assert not _visible_metronomes(tab), "TAB 谱表不该再显示速度标记"
+    # 回放精度保留：两边的 <sound tempo> 都是原值
+    tempos = {el.get("tempo") for el in _parse(path).iter("sound")}
+    assert "87.591" in tempos
+
+
+def test_musicxml_rehearsal_mark_only_on_first_part(tmp_path: Path) -> None:
+    """段落标记只放在主旋律谱表；两行谱各放一个会在 MuseScore 里重复显示。"""
+    analysis = make_analysis(
+        bars=8,
+        sections=[
+            {"start": 0.0, "end": _t(16), "kind": "verse", "label": "主歌", "energy": 0.4, "confidence": 0.8},
+            {"start": _t(16), "end": _t(32), "kind": "chorus", "label": "副歌", "energy": 0.9, "confidence": 0.8},
+        ],
+    )
+    score = arrange(analysis, {"include_tab": True, "difficulty": "beginner"})
+    path = tmp_path / "rehearsal.musicxml"
+    export_musicxml(score, path)
+    vocal, tab = _parse(path).findall("part")[:2]
+    labels = [el.text for el in vocal.iter("rehearsal")]
+    assert labels == ["主歌", "副歌"], labels
+    assert not list(tab.iter("rehearsal"))
+
+
+def test_musicxml_jittery_tempo_is_thinned(tmp_path: Path) -> None:
+    """逐小节速度抖动（83/85/88/92/101）不该在谱面堆出十几个 ♩= 标记。"""
+    analysis = make_analysis(bars=10)
+    score = arrange(analysis, {"include_tab": True, "difficulty": "beginner"})
+    score["meta"]["tempo"] = 92.0
+    for bar, bpm in zip(score["bars"], [83.0, 85.0, 86.0, 88.0, 89.0, 90.0, 92.0, 95.0, 97.0, 99.0]):
+        bar["tempo"] = bpm
+    path = tmp_path / "jitter.musicxml"
+    export_musicxml(score, path)
+    vocal = _parse(path).findall("part")[0]
+    marks = _visible_metronomes(vocal)
+    assert len(marks) <= 3, [m.findtext("per-minute") for m in marks]
+
+
+def test_musicxml_direction_children_follow_schema_order(tmp_path: Path) -> None:
+    """direction 里 <direction-type> 必须在 <sound> 之前（官方 XSD 要求）。"""
+    analysis = make_analysis(bars=6)
+    score = arrange(analysis, {"include_tab": True, "difficulty": "beginner"})
+    score["meta"]["tempo"] = 101.25
+    path = tmp_path / "order.musicxml"
+    export_musicxml(score, path)
+    for direction in _parse(path).iter("direction"):
+        tags = [child.tag for child in direction]
+        if "sound" in tags:
+            assert "direction-type" in tags, tags
+            assert tags.index("direction-type") < tags.index("sound"), tags

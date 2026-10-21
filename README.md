@@ -85,6 +85,8 @@ work/mysong/
 | 三首合成曲（3/4、4/4 摇滚、无人声） | 综合 **85.1/100**（修复前 72.7）；BPM 误差 0%、拍号全对、调性全对、和弦 **100%** | [docs/07-synthetic-eval.md](docs/07-synthetic-eval.md) |
 | 真实歌曲（229s 英文流行） | quality **0.824**、BPM 92.47 / 4/4、D 大调 conf 0.84、**55 个和弦事件**（mean_conf 0.57）、12 段、**326 个旋律音** | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 歌词 | 字符级 CER **0.49–0.54**（medium；small 约 0.64）；同一配置跑三次差 0.05，因为分轨不是比特可复现 | [docs/05-acceptance.md](docs/05-acceptance.md) |
+| 中文歌（216s 慢歌） | 59 小节 / 6 段、D 大调 conf 0.57；歌词 lev_cer **0.669** / recall **0.835** / precision **0.606**（中文专属清洗后） | [docs/05-acceptance.md](docs/05-acceptance.md) |
+| MusicXML 落地 | 过官方 XSD + **MuseScore Studio 4.7.5 实机打开**：双谱表、和弦、逐字歌词、段落、`♩=92` 全部正确 | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 成本 | 4 分钟歌 CPU 冷启动约 9 分钟（分轨 5 分钟 + 歌词 2.5 分钟） | [docs/05-acceptance.md](docs/05-acceptance.md) |
 
 合成曲只用于验证**信号层**（BPM / 拍号 / 调性 / 和弦），合成人声是正弦波所以不评歌词与旋律；真实歌曲的段落边界与歌词仍需人工校对。
@@ -153,7 +155,8 @@ web 渲染 / MusicXML / MIDI
 - **关系大小调**（如 Bm 与 D）在音频证据上常难以区分，默认按关系大调标注。
 - 暂不处理速度/拍号的**中途变化**（会告警），不支持多声部人声。
 - GPU 加速目前非必需：4 分钟歌曲 CPU 全流程约 9–10 分钟（medium 歌词模型占一半以上；`--whisper-model small` 可缩到约 5 分钟）。
-- MusicXML 通过官方 XSD 校验，但**未在 MuseScore 中实际打开验证**（本机未安装）。
+- **中文歌**会额外做三步清洗（去署名幻觉行、合并单字碎行、繁简统一为简体）；未装 `zhconv` 时跳过繁简转换。中文不能用英文的 CER 口径衡量，按 lev_cer / recall / precision 三元组看（实测 0.669 / 0.835 / 0.606）。
+- MusicXML 通过官方 XSD 校验，并已在 **MuseScore Studio 4.7.5 实机打开**核对（双谱表、和弦、逐字歌词、段落、速度标记均正确）。
 
 ## 作为 DSH 插件使用
 
@@ -169,11 +172,11 @@ skill 会把整条管线跑在**独立子进程**里（避免 torch/whisper 影�
 ## 测试
 
 ```bash
-.venv/Scripts/python -m pytest tests/ -q   # 498 条：管线、和弦、指法、导出、service、插件脚本
+.venv/Scripts/python -m pytest tests/ -q   # 516 条：管线、和弦、指法、导出、service、插件脚本
 node tests/web-editor.test.mjs             # 34 条：编辑器纯数据层（独立历史、撤销/重做、段落重编号）
 ```
 
-覆盖：和弦符号解析与等音、指法生成合法性、调性/移调矩阵、小节量化与延音、段落映射、schema 校验、MusicXML 结构（含官方 XSD）、MIDI SMF 往返、歌词清洗与音节对齐、manifest 合并与引擎元信息、插件脚本对旧/新 manifest 的兼容。
+覆盖：和弦符号解析与等音、指法生成合法性、调性/移调矩阵、小节量化与延音、段落映射、schema 校验、MusicXML 结构（含官方 XSD、速度标记取整与去重、`direction` 子元素顺序）、MIDI SMF 往返、歌词清洗（含中文署名行/静音幻觉/碎行/繁简）、音节对齐、manifest 合并与引擎元信息、插件脚本对旧/新 manifest 的兼容。
 
 ## 许可
 

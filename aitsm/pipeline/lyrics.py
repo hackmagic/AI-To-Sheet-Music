@@ -1078,6 +1078,190 @@ def is_meta_lyric_hallucination(text: Any) -> bool:
     return any(pattern.search(value) for pattern in _META_LYRIC_PATTERNS)
 
 
+# 中文歌曲的「署名/元信息」行。实测 whisper 在片头静音段会凭空吐出「詞曲李宗盛」
+# 这类署名（本曲真实作词作曲并不是他）——属于编造内容，必须整行丢弃。
+_ZH_CREDIT_WORDS = (
+    "作词", "作詞", "作曲", "詞曲", "词曲", "编曲", "編曲", "演唱", "原唱", "制作人", "製作人",
+    "出品", "监制", "監製", "混音", "母带", "母帶", "和声", "和聲", "录音", "錄音", "发行", "發行",
+    "策划", "策劃", "制作", "製作", "监棚", "監棚", "配唱",
+)
+_ZH_CREDIT_RE = re.compile(
+    r"^[\s\[【(（]*(?:" + "|".join(_ZH_CREDIT_WORDS) + r")\s*[:：\-—、]?\s*\S*"
+)
+
+
+def is_zh_credit_line(text: Any) -> bool:
+    """判断是否为中文署名/元信息行（不该出现在歌词里）。"""
+    value = clean_lyric_text(text)
+    if not value:
+        return False
+    return bool(_ZH_CREDIT_RE.match(value))
+
+
+
+# ---------------------------------------------------------------------------
+# 静音幻觉闸门 / 碎行合并 / 繁简统一
+# ---------------------------------------------------------------------------
+
+def _load_mono_audio(path: str) -> tuple[Any, int] | None:
+    """读单声道 float32 波形（失败返回 None，闸门自动跳过）。"""
+    try:
+        import soundfile as sf  # type: ignore
+
+        data, sr = sf.read(path, dtype="float32", always_2d=True)
+        return data[:, 0], int(sr)
+    except Exception:  # pragma: no cover - 读不了就放弃闸门，不影响主流程
+        return None
+
+
+def _segment_rms(audio: Any, sr: int, start: float, end: float) -> float:
+    import numpy as np  # type: ignore
+
+    lo = max(0, int(float(start or 0.0) * sr))
+    hi = min(len(audio), int(float(end or 0.0) * sr))
+    if hi <= lo:
+        return 0.0
+    chunk = audio[lo:hi].astype("float64")
+    return float(np.sqrt(np.mean(chunk * chunk)))
+
+
+def drop_silent_lines(
+    lines: Sequence[dict],
+    audio_path: str,
+    *,
+    floor_ratio: float = 0.08,
+    abs_floor: float = 3e-4,
+) -> list[dict]:
+    """丢弃落在「近静音」区间的歌词行。
+
+    whisper 在纯音乐/静音段会凭空生成整行文字（实测中文明明在片头静音处吐出
+    「詞曲李宗盛」，而该段 vocals stem 的 RMS 只有整体均值的 0.15%）。
+    这属于编造歌词，踩到项目红线，必须按能量证据丢掉。
+
+    判据用**相对整体中位数**而不是绝对阈值：不同歌曲响度差很大，
+    安静的真唱（低声段）要保住，静音里的幻觉要丢弃。
+    """
+    if not lines:
+        return list(lines)
+    loaded = _load_mono_audio(audio_path)
+    if loaded is None:
+        return list(lines)
+    audio, sr = loaded
+    if not len(audio):
+        return list(lines)
+
+    rms_values: list[float] = []
+    for line in lines:
+        rms_values.append(_segment_rms(audio, sr, line.get("start"), line.get("end")))
+    ordered = sorted(rms_values)
+    median = ordered[len(ordered) // 2] if ordered else 0.0
+    threshold = max(abs_floor, floor_ratio * median)
+
+    kept: list[dict] = []
+    for line, rms in zip(lines, rms_values):
+        if rms <= threshold:
+            LOGGER.warning(
+                "丢弃静音段歌词行 [%.2f-%.2f]（rms=%.5f ≤ %.5f）：%s",
+                float(line.get("start") or 0.0),
+                float(line.get("end") or 0.0),
+                rms,
+                threshold,
+                (line.get("text") or "")[:40],
+            )
+            continue
+        kept.append(line)
+    return kept
+
+
+def _text_units(text: Any) -> int:
+    """粗略"字数"：中文按字，拉丁按词。"""
+    value = clean_lyric_text(text)
+    if not value:
+        return 0
+    cjk = sum(1 for ch in value if "\u4e00" <= ch <= "\u9fff")
+    if cjk:
+        return cjk
+    return len([chunk for chunk in re.split(r"[\s\-]+", value) if chunk])
+
+
+def merge_tiny_lines(
+    lines: Sequence[dict],
+    *,
+    language: str | None = None,
+    min_units: int | None = None,
+    max_gap: float = 2.5,
+) -> list[dict]:
+    """把只有 1–2 个字/词的碎行并回相邻行。
+
+    whisper 分句时会在换气处切出「去」「息」这种单字行，谱面上会变成
+    孤零零一个字占一整行，可读性很差；时间上紧邻（gap ≤ max_gap）就合并。
+    """
+    items = [dict(line) for line in lines]
+    if not items:
+        return []
+    if min_units is None:
+        # 中文按字（3 字以下算碎），拉丁按词（2 词以下算碎）
+        lang = (language or "").lower()
+        min_units = 2 if lang.startswith(("en", "ja")) else 3
+    merged: list[dict] = []
+    for index, line in enumerate(items):
+        if _text_units(line.get("text")) >= min_units:
+            merged.append(line)
+            continue
+        prev = merged[-1] if merged else None
+        nxt = items[index + 1] if index + 1 < len(items) else None
+        if prev is not None and float(line.get("start") or 0.0) - float(prev.get("end") or 0.0) <= max_gap:
+            prev["text"] = (str(prev.get("text") or "").rstrip() + str(line.get("text") or "").strip())
+            prev["end"] = max(float(prev.get("end") or 0.0), float(line.get("end") or 0.0))
+            continue
+        if nxt is not None and float(nxt.get("start") or 0.0) - float(line.get("end") or 0.0) <= max_gap:
+            nxt["text"] = (str(line.get("text") or "").strip() + str(nxt.get("text") or "").lstrip())
+            nxt["start"] = min(float(nxt.get("start") or 0.0), float(line.get("start") or 0.0))
+            continue
+        merged.append(line)
+    return merged
+
+
+def to_simplified_lines(
+    lines: Sequence[dict], *, language: str | None = None
+) -> tuple[list[dict], bool]:
+    """把歌词里的繁体字统一成简体（中文歌默认行为）。
+
+    whisper 对普通话音频经常整段输出繁体（实测同一首歌里「淚光」与「阳光」混排），
+    大陆用户读起来很别扭。用 zhconv 做逐行转换；装了才转，没装就原样返回
+    （不因为可选依赖缺失改变输出）。需要保留繁体时设 ``AITSM_KEEP_TRADITIONAL=1``。
+
+    日文歌不转：zhconv 会把汉字当成繁体中文一并改掉，日文假名也识别不准。
+    """
+    items = [dict(line) for line in lines]
+    if not items:
+        return items, False
+    if os.environ.get("AITSM_KEEP_TRADITIONAL", "").strip().lower() in {"1", "true", "yes"}:
+        return items, False
+    lang = (language or "").lower()
+    if lang.startswith(("ja", "ko")):
+        return items, False
+    joined = "".join(str(line.get("text") or "") for line in items)
+    if not any("\u4e00" <= ch <= "\u9fff" for ch in joined):
+        return items, False
+    if any("\u3040" <= ch <= "\u30ff" for ch in joined):  # 有假名 → 当日语处理，不转
+        return items, False
+    try:
+        import zhconv  # type: ignore
+    except Exception:
+        return items, False
+    changed = False
+    for line in items:
+        text = str(line.get("text") or "")
+        if not text:
+            continue
+        converted = zhconv.convert(text, "zh-cn")
+        if converted != text:
+            changed = True
+            line["text"] = converted
+    return items, changed
+
+
 def faster_whisper_segments_to_raw(segments: Iterable[Any]) -> list[dict]:
     """把 faster-whisper 的 segment 对象转成与 openai-whisper 同形的 dict。
 
@@ -1398,15 +1582,19 @@ def transcribe_lyrics(
                 line["text"] = stripped
                 stripped_lines.append(line)
         lines = stripped_lines
-        # 红线：不得编造歌词。丢弃“复读 initial_prompt”与“关于歌词的元描述”行
+        # 红线：不得编造歌词。丢弃“复读 initial_prompt”、“关于歌词的元描述”行、
+        # 以及中文署名行（whisper 会在片头静音段凭空吐出「詞曲某某」这类内容）。
         prompt = _initial_prompt(whisper_language)
         kept_lines: list[dict] = []
         for line in lines:
-            if is_prompt_echo(line.get("text"), prompt) or is_meta_lyric_hallucination(
-                line.get("text")
+            text = line.get("text")
+            if (
+                is_prompt_echo(text, prompt)
+                or is_meta_lyric_hallucination(text)
+                or is_zh_credit_line(text)
             ):
                 LOGGER.warning(
-                    "丢弃 prompt 复读/元描述行 [%.2f-%.2f]：%s",
+                    "丢弃 prompt 复读/元描述/署名行 [%.2f-%.2f]：%s",
                     line.get("start") or 0.0,
                     line.get("end") or 0.0,
                     line.get("text"),
@@ -1414,6 +1602,12 @@ def transcribe_lyrics(
                 continue
             kept_lines.append(line)
         lines = kept_lines
+        # 红线：静音段里生成的行一律丢弃（用 vocals 能量做证据）
+        lines = drop_silent_lines(lines, path)
+        # 碎行合并 → 中文统一简体
+        lines = merge_tiny_lines(lines, language=whisper_language)
+        lines, simplified = to_simplified_lines(lines)
+        _LAST_RUN_INFO["text_converted_to_simplified"] = bool(simplified)
         for line in lines:
             line["interjection"] = is_interjection_line(line.get("text"))
     except Exception as exc:  # pragma: no cover - 清洗层异常不应炸掉流水线

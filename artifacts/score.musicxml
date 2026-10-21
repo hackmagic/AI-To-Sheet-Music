@@ -57,7 +57,7 @@
         <direction-type>
           <metronome>
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -145,9 +145,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>94.824</per-minute>
+            <per-minute>95</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="94.824" />
@@ -186,9 +186,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -607,9 +607,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>86.133</per-minute>
+            <per-minute>86</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="86.133" />
@@ -697,9 +697,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>89.103</per-minute>
+            <per-minute>89</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="89.103" />
@@ -770,9 +770,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -1217,9 +1217,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>99.387</per-minute>
+            <per-minute>99</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="99.387" />
@@ -1273,9 +1273,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>99.383</per-minute>
+            <per-minute>99</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="99.383" />
@@ -1380,9 +1380,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -1553,9 +1553,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>87.594</per-minute>
+            <per-minute>88</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="87.594" />
@@ -1622,9 +1622,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>87.591</per-minute>
+            <per-minute>88</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="87.591" />
@@ -1778,9 +1778,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -2234,9 +2234,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>89.878</per-minute>
+            <per-minute>90</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="89.878" />
@@ -2315,9 +2315,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>85.421</per-minute>
+            <per-minute>85</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="85.421" />
@@ -2420,9 +2420,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -2671,9 +2671,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>89.878</per-minute>
+            <per-minute>90</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="89.878" />
@@ -2849,9 +2849,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>85.421</per-minute>
+            <per-minute>85</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="85.421" />
@@ -2901,9 +2901,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -3993,9 +3993,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>82.687</per-minute>
+            <per-minute>83</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="82.687" />
@@ -4145,9 +4145,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -5373,9 +5373,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>96.599</per-minute>
+            <per-minute>97</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="96.599" />
@@ -5477,9 +5477,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>101.334</per-minute>
+            <per-minute>101</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="101.334" />
@@ -5533,9 +5533,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -7287,9 +7287,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>88.342</per-minute>
+            <per-minute>88</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="88.342" />
@@ -7317,9 +7317,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -7398,17 +7398,12 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
-      </direction>
-      <direction placement="above">
-        <direction-type>
-          <rehearsal>前奏</rehearsal>
-        </direction-type>
       </direction>
       <note>
         <pitch>
@@ -7779,9 +7774,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>94.824</per-minute>
+            <per-minute>95</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="94.824" />
@@ -7879,9 +7874,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -8419,11 +8414,6 @@
           <line>5</line>
         </clef>
       </attributes>
-      <direction placement="above">
-        <direction-type>
-          <rehearsal>间奏</rehearsal>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>D</step>
@@ -8606,9 +8596,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>86.133</per-minute>
+            <per-minute>86</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="86.133" />
@@ -8787,9 +8777,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>89.103</per-minute>
+            <per-minute>89</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="89.103" />
@@ -8981,9 +8971,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -9174,11 +9164,6 @@
           <line>5</line>
         </clef>
       </attributes>
-      <direction placement="above">
-        <direction-type>
-          <rehearsal>主歌 1</rehearsal>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>B</step>
@@ -10003,9 +9988,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>99.387</per-minute>
+            <per-minute>99</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="99.387" />
@@ -10102,9 +10087,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>99.383</per-minute>
+            <per-minute>99</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="99.383" />
@@ -10202,9 +10187,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -10391,9 +10376,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>87.594</per-minute>
+            <per-minute>88</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="87.594" />
@@ -10571,17 +10556,12 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>87.591</per-minute>
+            <per-minute>88</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="87.591" />
-      </direction>
-      <direction placement="above">
-        <direction-type>
-          <rehearsal>副歌 1</rehearsal>
-        </direction-type>
       </direction>
       <note>
         <pitch>
@@ -10769,9 +10749,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -11458,9 +11438,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>89.878</per-minute>
+            <per-minute>90</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="89.878" />
@@ -11663,9 +11643,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>85.421</per-minute>
+            <per-minute>85</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="85.421" />
@@ -11858,9 +11838,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -12141,9 +12121,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>89.878</per-minute>
+            <per-minute>90</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="89.878" />
@@ -12336,9 +12316,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>85.421</per-minute>
+            <per-minute>85</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="85.421" />
@@ -12516,9 +12496,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -12709,11 +12689,6 @@
           <line>5</line>
         </clef>
       </attributes>
-      <direction placement="above">
-        <direction-type>
-          <rehearsal>桥段</rehearsal>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>G</step>
@@ -14603,9 +14578,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>82.687</per-minute>
+            <per-minute>83</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="82.687" />
@@ -14799,9 +14774,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -15278,11 +15253,6 @@
           <line>5</line>
         </clef>
       </attributes>
-      <direction placement="above">
-        <direction-type>
-          <rehearsal>副歌 2</rehearsal>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>A</step>
@@ -16975,9 +16945,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>96.599</per-minute>
+            <per-minute>97</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="96.599" />
@@ -17088,9 +17058,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>101.334</per-minute>
+            <per-minute>101</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="101.334" />
@@ -17187,9 +17157,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />
@@ -17737,11 +17707,6 @@
           <line>5</line>
         </clef>
       </attributes>
-      <direction placement="above">
-        <direction-type>
-          <rehearsal>主歌 2</rehearsal>
-        </direction-type>
-      </direction>
       <note>
         <pitch>
           <step>D</step>
@@ -19446,9 +19411,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>88.342</per-minute>
+            <per-minute>88</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="88.342" />
@@ -19545,9 +19510,9 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <metronome>
+          <metronome print-object="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>92.28</per-minute>
+            <per-minute>92</per-minute>
           </metronome>
         </direction-type>
         <sound tempo="92.28" />

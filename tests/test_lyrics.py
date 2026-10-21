@@ -626,3 +626,106 @@ if __name__ == "__main__":
                 print(f"PASS {name}")
     print(f"\n{'OK' if failures == 0 else f'{failures} FAILED'}")
     raise SystemExit(1 if failures else 0)
+
+
+# ---------------------------------------------------------------------------
+# 中文歌词清洗（实机跑《遥远的你》抓到的三类缺陷）
+# ---------------------------------------------------------------------------
+def test_zh_credit_lines_are_dropped_but_real_lyrics_survive() -> None:
+    """幻觉署名行（「詞曲李宗盛」）要丢，但正常歌词不能被误杀。"""
+    assert L.is_zh_credit_line("詞曲李宗盛")
+    assert L.is_zh_credit_line("作曲：王明明")
+    assert L.is_zh_credit_line("和声编写 : 廖国钺")
+    assert L.is_zh_credit_line("制作公司：Hikoon Music")
+    # 正片歌词即便含「作曲」这类字眼也不能丢
+    assert not L.is_zh_credit_line("七月的风八月的雨")
+    assert not L.is_zh_credit_line("我曾经和制作人聊过这件事")
+    assert not L.is_zh_credit_line("")
+
+
+def test_merge_tiny_lines_absorbs_single_char_fragments() -> None:
+    """whisper 在换气处会切出单字行（去/息/底），要并回相邻行。"""
+    lines = [
+        {"start": 0.0, "end": 2.0, "text": "七月的风"},
+        {"start": 2.0, "end": 4.0, "text": "八月的雨"},
+        {"start": 4.0, "end": 5.0, "text": "去"},
+        {"start": 5.0, "end": 9.0, "text": "卑微的我喜欢遥远的你"},
+    ]
+    merged = L.merge_tiny_lines(lines, language="zh")
+    assert all(len(line["text"]) >= 3 for line in merged), merged
+    assert merged[0]["start"] == 0.0
+    assert merged[-1]["end"] == 9.0
+    # 碎行并入前一行的尾部（这里是「八月的雨」+「去」）
+    assert any(text.endswith("去") for text in (line["text"] for line in merged)), merged
+    # 首行是碎行时向后合并
+    head = L.merge_tiny_lines(
+        [{"start": 0.0, "end": 1.0, "text": "去"}, {"start": 1.0, "end": 4.0, "text": "卑微的我喜欢你"}],
+        language="zh",
+    )
+    assert len(head) == 1 and head[0]["start"] == 0.0
+
+
+def test_merge_tiny_lines_latin_uses_word_threshold() -> None:
+    """拉丁语言按「词」计数：单字行（Oh）并掉，两词以上的行保留。"""
+    lines = [
+        {"start": 0.0, "end": 1.0, "text": "Oh"},
+        {"start": 1.0, "end": 3.0, "text": "I stormed the silence"},
+        {"start": 3.0, "end": 5.0, "text": "we drive through"},
+    ]
+    merged = L.merge_tiny_lines(lines, language="en")
+    assert len(merged) == 2, merged
+    assert merged[0]["text"] == "OhI stormed the silence"
+    # 中文模式阈值是 3 字，同样的输入行为不同
+    assert len(L.merge_tiny_lines(lines, language="zh")) == 2
+
+
+def test_to_simplified_lines_converts_traditional_and_keeps_content() -> None:
+    """整段繁体要统一成简体，字符不能丢。"""
+    lines = [
+        {"start": 0.0, "end": 2.0, "text": "眼角的淚光"},
+        {"start": 2.0, "end": 4.0, "text": "無邊無際的遊蕩"},
+    ]
+    converted, did = L.to_simplified_lines(lines, language="zh")
+    import importlib.util
+
+    if importlib.util.find_spec("zhconv") is not None:  # 装了 zhconv 才断言具体字形
+        assert did is True
+        assert converted[0]["text"] == "眼角的泪光"
+        assert converted[1]["text"] == "无边无际的游荡"
+    assert len(converted) == len(lines)
+
+
+def test_to_simplified_lines_is_noop_for_non_chinese() -> None:
+    english = [{"start": 0.0, "end": 1.0, "text": "we drive through the quiet land"}]
+    assert L.to_simplified_lines(english, language="en")[1] is False
+    japanese = [{"start": 0.0, "end": 1.0, "text": "君の涙が"}]
+    assert L.to_simplified_lines(japanese, language="ja")[1] is False
+    # 未知语言但文本里没有中文，也不该动
+    assert L.to_simplified_lines([{"start": 0.0, "end": 1.0, "text": "abc"}], language=None)[1] is False
+
+
+def test_drop_silent_lines_removes_silent_intro_hallucination(tmp_path: Path) -> None:
+    """静音段编造的署名行要丢掉，正常唱歌的行要留下。"""
+    import numpy as np
+
+    # 0-4s 静音，4-8s「唱歌」
+    sr = 8000
+    quiet = np.zeros(sr * 4, dtype="float32")
+    loud = (0.3 * np.sin(2 * np.pi * 220 * np.arange(sr * 4) / sr)).astype("float32")
+    audio = np.concatenate([quiet, loud])
+    path = tmp_path / "vocals.wav"
+    import soundfile as sf
+
+    sf.write(path, audio, sr)
+    lines = [
+        {"start": 0.5, "end": 3.5, "text": "詞曲李宗盛"},
+        {"start": 4.2, "end": 7.5, "text": "七月的风八月的雨"},
+    ]
+    kept = L.drop_silent_lines(lines, path)
+    assert [line["text"] for line in kept] == ["七月的风八月的雨"]
+
+
+def test_drop_silent_lines_without_audio_keeps_everything() -> None:
+    lines = [{"start": 0.0, "end": 1.0, "text": "x"}]
+    assert L.drop_silent_lines(lines, None) == lines
+    assert L.drop_silent_lines(lines, "no/such/file.wav") == lines
