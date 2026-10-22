@@ -19,7 +19,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import __version__
-from .config import SAMPLES_DIR, SETTINGS, WEB_DIR, check_optional_engines
+from .config import REPO_ROOT, SAMPLES_DIR, SETTINGS, WEB_DIR, check_optional_engines
 from .jobs import JOBS, Job
 from .service import run_job_for_job_record
 
@@ -196,12 +196,21 @@ def health() -> JSONResponse:
 
 
 @app.get("/api/demo")
-def demo_score() -> JSONResponse:
-    """示例谱面，供前端在后端任务不可用时自检。"""
-    path = SAMPLES_DIR / "demo-score.json"
-    if not path.is_file():
-        raise HTTPException(status_code=404, detail="示例数据缺失")
-    return JSONResponse(json.loads(path.read_text(encoding="utf-8")))
+def demo_score(sample: bool = False) -> JSONResponse:
+    """示例谱面，供前端在后端任务不可用时自检。
+
+    优先给**真曲交付版**（``artifacts/score.json``：整首 88 小节、真实英文歌词），
+    这样打开首页看到的就是完整成品而不是手写样例。
+    ``?sample=1`` 仍可取回 12 小节的手写样例（离线自检用，不依赖 artifacts）。
+    """
+    candidates: list[Path] = []
+    if not sample:
+        candidates.append(REPO_ROOT / "artifacts" / "score.json")
+    candidates.append(SAMPLES_DIR / "demo-score.json")
+    for path in candidates:
+        if path.is_file():
+            return JSONResponse(json.loads(path.read_text(encoding="utf-8")))
+    raise HTTPException(status_code=404, detail="示例数据缺失")
 
 
 if WEB_DIR.is_dir():
