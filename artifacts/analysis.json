@@ -1,6 +1,6 @@
 {
   "schema": "aitsm.analysis/v1",
-  "created_at": "2026-10-21T07:49:31+0800",
+  "created_at": "2026-10-23T12:41:58+0800",
   "source": {
     "original_name": "小林未郁、HOYO-MiX - 下一站 Beyond This Station.flac",
     "sha256": "9b99e9b943aa948b4cfc24a483760f05b07a6c28f7b8acce503a22958beda224",
@@ -10,9 +10,9 @@
     "start_seconds": 0.0
   },
   "audio": {
-    "analysis_wav": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\analysis.wav",
-    "playback_audio": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\playback.mp3",
-    "mix_wav": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\mix_44k.wav",
+    "analysis_wav": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\analysis.wav",
+    "playback_audio": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\playback.mp3",
+    "mix_wav": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\mix_44k.wav",
     "duration": 229.0322,
     "sample_rate": 22050,
     "channels": 1,
@@ -31,15 +31,15 @@
     "model": "htdemucs",
     "device": "cpu",
     "cached": false,
-    "vocals": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\vocals.wav",
-    "drums": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\drums.wav",
-    "bass": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\bass.wav",
-    "other": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\other.wav",
+    "vocals": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems\\vocals.wav",
+    "drums": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems\\drums.wav",
+    "bass": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems\\bass.wav",
+    "other": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems\\other.wav",
     "hq_stems": {
-      "vocals": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems_hq\\vocals.wav",
-      "drums": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems_hq\\drums.wav",
-      "bass": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems_hq\\bass.wav",
-      "other": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems_hq\\other.wav"
+      "vocals": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems_hq\\vocals.wav",
+      "drums": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems_hq\\drums.wav",
+      "bass": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems_hq\\bass.wav",
+      "other": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems_hq\\other.wav"
     }
   },
   "beats": {
@@ -875,10 +875,10 @@
   "key": {
     "tonic": "D",
     "mode": "major",
-    "confidence": 0.843,
+    "confidence": 0.811,
     "score": 0.9792,
     "num_sharps_flats": 2,
-    "relative_major_swap": false,
+    "relative_major_swap": true,
     "tonic_pc": 2,
     "name": "D 大调",
     "display_name": "D",
@@ -888,41 +888,43 @@
         "tonic": "B",
         "tonic_pc": 11,
         "mode": "minor",
-        "score": 0.9528,
-        "delta": 0.0264
+        "score": 0.982,
+        "delta": -0.0028
       },
       {
         "tonic": "G",
         "tonic_pc": 7,
         "mode": "major",
-        "score": 0.8277,
-        "delta": 0.1515
-      },
-      {
-        "tonic": "F#",
-        "tonic_pc": 6,
-        "mode": "minor",
-        "score": 0.8141,
-        "delta": 0.1651
+        "score": 0.8426,
+        "delta": 0.1366
       },
       {
         "tonic": "E",
         "tonic_pc": 4,
         "mode": "minor",
-        "score": 0.7858,
-        "delta": 0.1933
+        "score": 0.8138,
+        "delta": 0.1654
+      },
+      {
+        "tonic": "F#",
+        "tonic_pc": 6,
+        "mode": "minor",
+        "score": 0.8059,
+        "delta": 0.1732
       }
     ],
-    "warnings": []
+    "warnings": [
+      "关系大小调歧义（B 小调 vs D 大调，delta=0.003），按行业惯例按大调标注。"
+    ]
   },
   "chords": [
     {
       "start": 0.0,
       "end": 2.6239,
       "symbol": "G",
-      "confidence": 0.534,
-      "slot_confidence": 0.473,
-      "score": 0.35877616515981536,
+      "confidence": 0.539,
+      "slot_confidence": 0.4779,
+      "score": 0.37935617547238554,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -935,125 +937,142 @@
     },
     {
       "start": 2.6239,
-      "end": 5.2243,
+      "end": 3.9241,
       "symbol": "D",
-      "confidence": 0.559,
-      "slot_confidence": 0.49875,
-      "score": 0.370258075484621,
+      "confidence": 0.513,
+      "slot_confidence": 0.4827,
+      "score": 0.4186586559878043,
       "root_pc": 2,
       "bass_pc": 2,
       "quality": "",
-      "duration": 2.6004,
-      "slot_count": 2,
+      "duration": 1.3002,
+      "slot_count": 1,
       "source": "chroma-template+bass-stem+viterbi",
       "simplified_from": "6",
-      "bars": 1.0,
+      "bars": 0.5,
       "bar_aligned": true
     },
     {
-      "start": 5.2243,
+      "start": 3.9241,
       "end": 7.8247,
-      "symbol": "Asus2",
-      "confidence": 0.717,
-      "slot_confidence": 0.6574,
-      "score": 0.5093443721369382,
+      "symbol": "A",
+      "confidence": 0.685,
+      "slot_confidence": 0.5945333333333332,
+      "score": 0.5120693961331607,
       "root_pc": 9,
       "bass_pc": 9,
-      "quality": "sus2",
-      "duration": 2.6004,
-      "slot_count": 2,
-      "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
-      "bar_aligned": true
-    },
-    {
-      "start": 7.8247,
-      "end": 11.7253,
-      "symbol": "Bm",
-      "confidence": 0.567,
-      "slot_confidence": 0.47690000000000005,
-      "score": 0.3298299942858018,
-      "root_pc": 11,
-      "bass_pc": 11,
-      "quality": "m",
+      "quality": "",
       "duration": 3.9006,
       "slot_count": 3,
       "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
       "bars": 1.5,
-      "bar_aligned": true
-    },
-    {
-      "start": 11.7253,
-      "end": 18.2263,
-      "symbol": "D",
-      "confidence": 0.634,
-      "slot_confidence": 0.48398,
-      "score": 0.45648874273229756,
-      "root_pc": 2,
-      "bass_pc": 2,
-      "quality": "",
-      "duration": 6.501,
-      "slot_count": 5,
-      "source": "chroma-template+bass-stem+viterbi",
-      "bars": 2.5,
       "bar_aligned": false
     },
     {
-      "start": 18.2263,
-      "end": 20.8267,
-      "symbol": "A",
-      "confidence": 0.564,
-      "slot_confidence": 0.50405,
-      "score": 0.30123347141886436,
-      "root_pc": 9,
-      "bass_pc": 9,
+      "start": 7.8247,
+      "end": 13.0255,
+      "symbol": "Bm",
+      "confidence": 0.637,
+      "slot_confidence": 0.5167499999999999,
+      "score": 0.3848241519252493,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 5.2008,
+      "slot_count": 4,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 2.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 13.0255,
+      "end": 15.6259,
+      "symbol": "D",
+      "confidence": 0.574,
+      "slot_confidence": 0.5135000000000001,
+      "score": 0.438033838803908,
+      "root_pc": 2,
+      "bass_pc": 2,
       "quality": "",
       "duration": 2.6004,
       "slot_count": 2,
       "source": "chroma-template+bass-stem+viterbi",
-      "simplified_from": "sus2",
       "bars": 1.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 15.6259,
+      "end": 20.8267,
+      "symbol": "Bm",
+      "confidence": 0.629,
+      "slot_confidence": 0.5091249999999999,
+      "score": 0.4269778682975401,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 5.2008,
+      "slot_count": 4,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "m7",
+      "bars": 2.0,
       "bar_aligned": true
     },
     {
       "start": 20.8267,
-      "end": 29.9281,
-      "symbol": "D",
-      "confidence": 0.687,
-      "slot_confidence": 0.5072,
-      "score": 0.2541630497244518,
-      "root_pc": 2,
-      "bass_pc": 2,
-      "quality": "",
-      "duration": 9.1014,
-      "slot_count": 7,
+      "end": 22.1269,
+      "symbol": "C#m7b5",
+      "confidence": 0.553,
+      "slot_confidence": 0.5228,
+      "score": 0.2607571487901362,
+      "root_pc": 1,
+      "bass_pc": 1,
+      "quality": "m7b5",
+      "duration": 1.3002,
+      "slot_count": 1,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 3.5,
+      "bars": 0.5,
       "bar_aligned": true
     },
     {
-      "start": 29.9281,
-      "end": 33.8287,
-      "symbol": "Bm",
-      "confidence": 0.58,
-      "slot_confidence": 0.4900666666666667,
-      "score": 0.19382467530198197,
-      "root_pc": 11,
-      "bass_pc": 11,
+      "start": 22.1269,
+      "end": 26.0275,
+      "symbol": "F#m",
+      "confidence": 0.598,
+      "slot_confidence": 0.5076666666666666,
+      "score": 0.20132415931198372,
+      "root_pc": 6,
+      "bass_pc": 6,
       "quality": "m",
       "duration": 3.9006,
       "slot_count": 3,
       "source": "chroma-template+bass-stem+viterbi",
       "bars": 1.5,
       "bar_aligned": false
+    },
+    {
+      "start": 26.0275,
+      "end": 33.8287,
+      "symbol": "Bm",
+      "confidence": 0.677,
+      "slot_confidence": 0.49748333333333344,
+      "score": 0.20480064982002258,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 7.8012,
+      "slot_count": 6,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 3.0,
+      "bar_aligned": true
     },
     {
       "start": 33.8287,
       "end": 36.4291,
       "symbol": "G",
-      "confidence": 0.541,
-      "slot_confidence": 0.48135,
-      "score": 0.2446702966593582,
+      "confidence": 0.542,
+      "slot_confidence": 0.48160000000000003,
+      "score": 0.2552794866600264,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -1068,9 +1087,9 @@
       "start": 36.4291,
       "end": 39.0295,
       "symbol": "Bm",
-      "confidence": 0.545,
-      "slot_confidence": 0.4854,
-      "score": 0.21449343441728633,
+      "confidence": 0.57,
+      "slot_confidence": 0.51025,
+      "score": 0.23449771098043146,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1082,94 +1101,95 @@
     },
     {
       "start": 39.0295,
-      "end": 41.6299,
-      "symbol": "D",
-      "confidence": 0.53,
-      "slot_confidence": 0.4699,
-      "score": 0.1776067986804353,
-      "root_pc": 2,
-      "bass_pc": 2,
+      "end": 40.3297,
+      "symbol": "G",
+      "confidence": 0.514,
+      "slot_confidence": 0.4844,
+      "score": 0.1899645629040183,
+      "root_pc": 7,
+      "bass_pc": 7,
       "quality": "",
-      "duration": 2.6004,
-      "slot_count": 2,
+      "duration": 1.3002,
+      "slot_count": 1,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
+      "simplified_from": "maj7",
+      "bars": 0.5,
       "bar_aligned": true
     },
     {
-      "start": 41.6299,
+      "start": 40.3297,
       "end": 44.2303,
       "symbol": "F#m",
-      "confidence": 0.612,
-      "slot_confidence": 0.5519499999999999,
-      "score": 0.21451206671022313,
+      "confidence": 0.626,
+      "slot_confidence": 0.5359666666666666,
+      "score": 0.18746300341067396,
       "root_pc": 6,
       "bass_pc": 6,
       "quality": "m",
-      "duration": 2.6004,
-      "slot_count": 2,
+      "duration": 3.9006,
+      "slot_count": 3,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
-      "bar_aligned": true
+      "bars": 1.5,
+      "bar_aligned": false
     },
     {
       "start": 44.2303,
-      "end": 46.8307,
+      "end": 49.4311,
       "symbol": "Bm",
-      "confidence": 0.542,
-      "slot_confidence": 0.48195,
-      "score": 0.19491109707486157,
+      "confidence": 0.615,
+      "slot_confidence": 0.49505,
+      "score": 0.20052674297353626,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
-      "duration": 2.6004,
-      "slot_count": 2,
-      "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
-      "bar_aligned": true
-    },
-    {
-      "start": 46.8307,
-      "end": 52.0315,
-      "symbol": "D",
-      "confidence": 0.595,
-      "slot_confidence": 0.474875,
-      "score": 0.22531340072214262,
-      "root_pc": 2,
-      "bass_pc": 2,
-      "quality": "",
       "duration": 5.2008,
       "slot_count": 4,
       "source": "chroma-template+bass-stem+viterbi",
-      "simplified_from": "6",
       "bars": 2.0,
       "bar_aligned": true
     },
     {
-      "start": 52.0315,
-      "end": 62.4331,
-      "symbol": "Bm",
-      "confidence": 0.66,
-      "slot_confidence": 0.48042500000000005,
-      "score": 0.19554889454092295,
-      "root_pc": 11,
-      "bass_pc": 11,
-      "quality": "m",
-      "duration": 10.4016,
-      "slot_count": 8,
+      "start": 49.4311,
+      "end": 52.0315,
+      "symbol": "D",
+      "confidence": 0.542,
+      "slot_confidence": 0.48245000000000005,
+      "score": 0.25027075044950275,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 4.0,
+      "simplified_from": "6",
+      "bars": 1.0,
       "bar_aligned": true
     },
     {
-      "start": 62.4331,
-      "end": 65.0335,
-      "symbol": "A",
-      "confidence": 0.563,
-      "slot_confidence": 0.5031,
-      "score": 0.18293058250338284,
-      "root_pc": 9,
-      "bass_pc": 9,
+      "start": 52.0315,
+      "end": 59.8327,
+      "symbol": "Bm",
+      "confidence": 0.674,
+      "slot_confidence": 0.4941,
+      "score": 0.2104706183328306,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 7.8012,
+      "slot_count": 6,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 3.0,
+      "bar_aligned": true
+    },
+    {
+      "start": 59.8327,
+      "end": 62.4331,
+      "symbol": "D",
+      "confidence": 0.536,
+      "slot_confidence": 0.4757,
+      "score": 0.2074448747780187,
+      "root_pc": 2,
+      "bass_pc": 2,
       "quality": "",
       "duration": 2.6004,
       "slot_count": 2,
@@ -1179,12 +1199,28 @@
       "bar_aligned": false
     },
     {
+      "start": 62.4331,
+      "end": 65.0335,
+      "symbol": "F#m",
+      "confidence": 0.574,
+      "slot_confidence": 0.5143,
+      "score": 0.20311232874457702,
+      "root_pc": 6,
+      "bass_pc": 6,
+      "quality": "m",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
       "start": 65.0335,
       "end": 71.5345,
       "symbol": "G",
-      "confidence": 0.662,
-      "slot_confidence": 0.51194,
-      "score": 0.23276208498830153,
+      "confidence": 0.66,
+      "slot_confidence": 0.5095000000000001,
+      "score": 0.2534626572395926,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -1199,9 +1235,9 @@
       "start": 71.5345,
       "end": 75.4351,
       "symbol": "Bm",
-      "confidence": 0.645,
-      "slot_confidence": 0.5555,
-      "score": 0.26971564644182383,
+      "confidence": 0.654,
+      "slot_confidence": 0.5637666666666666,
+      "score": 0.2918211417282374,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1215,42 +1251,59 @@
       "start": 75.4351,
       "end": 81.9361,
       "symbol": "G",
-      "confidence": 0.613,
-      "slot_confidence": 0.46265999999999996,
-      "score": 0.22929434944277666,
+      "confidence": 0.639,
+      "slot_confidence": 0.48948,
+      "score": 0.23145305604691593,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
       "duration": 6.501,
       "slot_count": 5,
       "source": "chroma-template+bass-stem+viterbi",
-      "simplified_from": "6",
       "bars": 2.5,
       "bar_aligned": false
     },
     {
       "start": 81.9361,
+      "end": 83.2363,
+      "symbol": "A",
+      "confidence": 0.501,
+      "slot_confidence": 0.4715,
+      "score": 0.21569065085414207,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "7",
+      "bars": 0.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 83.2363,
       "end": 85.8367,
       "symbol": "D",
-      "confidence": 0.565,
-      "slot_confidence": 0.4753,
-      "score": 0.25251282626976435,
+      "confidence": 0.555,
+      "slot_confidence": 0.4946,
+      "score": 0.17758085227391707,
       "root_pc": 2,
       "bass_pc": 2,
       "quality": "",
-      "duration": 3.9006,
-      "slot_count": 3,
+      "duration": 2.6004,
+      "slot_count": 2,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.5,
-      "bar_aligned": false
+      "simplified_from": "maj7",
+      "bars": 1.0,
+      "bar_aligned": true
     },
     {
       "start": 85.8367,
       "end": 87.1369,
       "symbol": "G",
-      "confidence": 0.564,
-      "slot_confidence": 0.5338,
-      "score": 0.2899902771129758,
+      "confidence": 0.545,
+      "slot_confidence": 0.5153,
+      "score": 0.33107742486967295,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -1264,9 +1317,9 @@
       "start": 87.1369,
       "end": 88.4371,
       "symbol": "A",
-      "confidence": 0.585,
-      "slot_confidence": 0.5555,
-      "score": 0.2488518540212244,
+      "confidence": 0.62,
+      "slot_confidence": 0.5895,
+      "score": 0.27875115058245936,
       "root_pc": 9,
       "bass_pc": 9,
       "quality": "",
@@ -1281,9 +1334,9 @@
       "start": 88.4371,
       "end": 91.0375,
       "symbol": "Bm",
-      "confidence": 0.542,
-      "slot_confidence": 0.48214999999999997,
-      "score": 0.3053818853159764,
+      "confidence": 0.526,
+      "slot_confidence": 0.4658,
+      "score": 0.32427163803368086,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1295,59 +1348,44 @@
     },
     {
       "start": 91.0375,
-      "end": 92.3377,
+      "end": 93.6379,
       "symbol": "G",
-      "confidence": 0.501,
-      "slot_confidence": 0.4708,
-      "score": 0.2727464618571473,
+      "confidence": 0.534,
+      "slot_confidence": 0.47375,
+      "score": 0.28504430840738787,
       "root_pc": 7,
       "bass_pc": 7,
-      "quality": "",
-      "duration": 1.3002,
-      "slot_count": 1,
-      "source": "chroma-template+bass-stem+viterbi",
-      "bars": 0.5,
-      "bar_aligned": true
-    },
-    {
-      "start": 92.3377,
-      "end": 94.9381,
-      "symbol": "D",
-      "confidence": 0.569,
-      "slot_confidence": 0.50915,
-      "score": 0.24515965289539116,
-      "root_pc": 2,
-      "bass_pc": 2,
       "quality": "",
       "duration": 2.6004,
       "slot_count": 2,
       "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
       "bars": 1.0,
-      "bar_aligned": false
+      "bar_aligned": true
     },
     {
-      "start": 94.9381,
+      "start": 93.6379,
       "end": 98.8387,
       "symbol": "Bm",
-      "confidence": 0.632,
-      "slot_confidence": 0.5417,
-      "score": 0.24108394502423391,
+      "confidence": 0.663,
+      "slot_confidence": 0.543175,
+      "score": 0.24018140424813111,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
-      "duration": 3.9006,
-      "slot_count": 3,
+      "duration": 5.2008,
+      "slot_count": 4,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.5,
-      "bar_aligned": false
+      "bars": 2.0,
+      "bar_aligned": true
     },
     {
       "start": 98.8387,
       "end": 101.4391,
       "symbol": "G",
-      "confidence": 0.579,
-      "slot_confidence": 0.51915,
-      "score": 0.2874483028603481,
+      "confidence": 0.586,
+      "slot_confidence": 0.5264500000000001,
+      "score": 0.2929610873082368,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -1362,9 +1400,9 @@
       "start": 101.4391,
       "end": 104.0395,
       "symbol": "Bm",
-      "confidence": 0.554,
-      "slot_confidence": 0.49445000000000006,
-      "score": 0.25325955635933495,
+      "confidence": 0.571,
+      "slot_confidence": 0.5115,
+      "score": 0.25785962552770963,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1376,44 +1414,59 @@
     },
     {
       "start": 104.0395,
-      "end": 115.7413,
-      "symbol": "D",
-      "confidence": 0.652,
-      "slot_confidence": 0.47161111111111115,
-      "score": 0.16907890017176253,
-      "root_pc": 2,
-      "bass_pc": 2,
-      "quality": "",
-      "duration": 11.7018,
-      "slot_count": 9,
-      "source": "chroma-template+bass-stem+viterbi",
-      "bars": 4.5,
-      "bar_aligned": true
-    },
-    {
-      "start": 115.7413,
-      "end": 117.0415,
-      "symbol": "A",
-      "confidence": 0.514,
-      "slot_confidence": 0.4845,
-      "score": 0.21175213088700445,
-      "root_pc": 9,
-      "bass_pc": 9,
+      "end": 105.3397,
+      "symbol": "G",
+      "confidence": 0.492,
+      "slot_confidence": 0.462,
+      "score": 0.21024465409623236,
+      "root_pc": 7,
+      "bass_pc": 7,
       "quality": "",
       "duration": 1.3002,
       "slot_count": 1,
       "source": "chroma-template+bass-stem+viterbi",
-      "simplified_from": "sus2",
       "bars": 0.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 105.3397,
+      "end": 114.4411,
+      "symbol": "D",
+      "confidence": 0.652,
+      "slot_confidence": 0.4724,
+      "score": 0.17465881058187935,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 9.1014,
+      "slot_count": 7,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 3.5,
       "bar_aligned": false
+    },
+    {
+      "start": 114.4411,
+      "end": 117.0415,
+      "symbol": "A",
+      "confidence": 0.542,
+      "slot_confidence": 0.482,
+      "score": 0.2595709522434861,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": true
     },
     {
       "start": 117.0415,
       "end": 119.6419,
       "symbol": "Bm",
-      "confidence": 0.576,
-      "slot_confidence": 0.51615,
-      "score": 0.2615012518081535,
+      "confidence": 0.561,
+      "slot_confidence": 0.50105,
+      "score": 0.2564089195024812,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1427,9 +1480,9 @@
       "start": 119.6419,
       "end": 122.2423,
       "symbol": "G",
-      "confidence": 0.543,
-      "slot_confidence": 0.4828,
-      "score": 0.2775475238232583,
+      "confidence": 0.547,
+      "slot_confidence": 0.48695,
+      "score": 0.29559734598650794,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -1443,16 +1496,15 @@
       "start": 122.2423,
       "end": 124.8427,
       "symbol": "D",
-      "confidence": 0.522,
-      "slot_confidence": 0.4616,
-      "score": 0.2908006732664233,
+      "confidence": 0.523,
+      "slot_confidence": 0.46295,
+      "score": 0.29884798698715626,
       "root_pc": 2,
       "bass_pc": 2,
       "quality": "",
       "duration": 2.6004,
       "slot_count": 2,
       "source": "chroma-template+bass-stem+viterbi",
-      "simplified_from": "maj7",
       "bars": 1.0,
       "bar_aligned": true
     },
@@ -1460,9 +1512,9 @@
       "start": 124.8427,
       "end": 127.4431,
       "symbol": "A",
-      "confidence": 0.557,
-      "slot_confidence": 0.49735,
-      "score": 0.27078775594233884,
+      "confidence": 0.555,
+      "slot_confidence": 0.49539999999999995,
+      "score": 0.28734747590550364,
       "root_pc": 9,
       "bass_pc": 9,
       "quality": "",
@@ -1476,9 +1528,9 @@
       "start": 127.4431,
       "end": 128.7433,
       "symbol": "G",
-      "confidence": 0.499,
-      "slot_confidence": 0.4689,
-      "score": 0.2220454957204991,
+      "confidence": 0.51,
+      "slot_confidence": 0.4798,
+      "score": 0.2527763171220765,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -1492,17 +1544,17 @@
     {
       "start": 128.7433,
       "end": 130.0435,
-      "symbol": "D",
-      "confidence": 0.492,
-      "slot_confidence": 0.4619,
-      "score": 0.19328582408555772,
-      "root_pc": 2,
-      "bass_pc": 2,
+      "symbol": "A",
+      "confidence": 0.504,
+      "slot_confidence": 0.4736,
+      "score": 0.1981849080365033,
+      "root_pc": 9,
+      "bass_pc": 9,
       "quality": "",
       "duration": 1.3002,
       "slot_count": 1,
       "source": "chroma-template+bass-stem+viterbi",
-      "simplified_from": "6",
+      "simplified_from": "sus2",
       "bars": 0.5,
       "bar_aligned": false
     },
@@ -1510,9 +1562,9 @@
       "start": 130.0435,
       "end": 131.3437,
       "symbol": "Bm",
-      "confidence": 0.535,
-      "slot_confidence": 0.5055,
-      "score": 0.2600372741663499,
+      "confidence": 0.545,
+      "slot_confidence": 0.5149,
+      "score": 0.2797579834472249,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1524,91 +1576,60 @@
     },
     {
       "start": 131.3437,
-      "end": 133.9441,
+      "end": 132.6439,
       "symbol": "C#m7b5",
-      "confidence": 0.608,
-      "slot_confidence": 0.5480499999999999,
-      "score": 0.22228579616487126,
+      "confidence": 0.71,
+      "slot_confidence": 0.6797,
+      "score": 0.2336178329998272,
       "root_pc": 1,
       "bass_pc": 1,
       "quality": "m7b5",
-      "duration": 2.6004,
-      "slot_count": 2,
+      "duration": 1.3002,
+      "slot_count": 1,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
+      "bars": 0.5,
       "bar_aligned": false
     },
     {
-      "start": 133.9441,
+      "start": 132.6439,
       "end": 140.4451,
-      "symbol": "D",
-      "confidence": 0.643,
-      "slot_confidence": 0.4925400000000001,
-      "score": 0.17939559027313018,
-      "root_pc": 2,
-      "bass_pc": 2,
+      "symbol": "G",
+      "confidence": 0.672,
+      "slot_confidence": 0.49151666666666666,
+      "score": 0.2125717609518228,
+      "root_pc": 7,
+      "bass_pc": 7,
       "quality": "",
-      "duration": 6.501,
-      "slot_count": 5,
+      "duration": 7.8012,
+      "slot_count": 6,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 2.5,
+      "bars": 3.0,
       "bar_aligned": false
     },
     {
       "start": 140.4451,
       "end": 143.0455,
       "symbol": "A",
-      "confidence": 0.53,
-      "slot_confidence": 0.47,
-      "score": 0.24297550540343224,
+      "confidence": 0.52,
+      "slot_confidence": 0.46045,
+      "score": 0.1942423597061409,
       "root_pc": 9,
       "bass_pc": 9,
       "quality": "",
       "duration": 2.6004,
       "slot_count": 2,
       "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "7",
       "bars": 1.0,
       "bar_aligned": false
     },
     {
       "start": 143.0455,
       "end": 145.6459,
-      "symbol": "D",
-      "confidence": 0.548,
-      "slot_confidence": 0.48845000000000005,
-      "score": 0.2659843147457795,
-      "root_pc": 2,
-      "bass_pc": 2,
-      "quality": "",
-      "duration": 2.6004,
-      "slot_count": 2,
-      "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
-      "bar_aligned": false
-    },
-    {
-      "start": 145.6459,
-      "end": 148.2463,
-      "symbol": "F#m",
-      "confidence": 0.523,
-      "slot_confidence": 0.46299999999999997,
-      "score": 0.24583417394711554,
-      "root_pc": 6,
-      "bass_pc": 6,
-      "quality": "m",
-      "duration": 2.6004,
-      "slot_count": 2,
-      "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
-      "bar_aligned": true
-    },
-    {
-      "start": 148.2463,
-      "end": 150.8467,
       "symbol": "G",
-      "confidence": 0.556,
-      "slot_confidence": 0.49585,
-      "score": 0.29271694844887536,
+      "confidence": 0.569,
+      "slot_confidence": 0.5088,
+      "score": 0.23276728605475439,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -1617,15 +1638,48 @@
       "source": "chroma-template+bass-stem+viterbi",
       "simplified_from": "maj7",
       "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 145.6459,
+      "end": 146.9461,
+      "symbol": "A",
+      "confidence": 0.519,
+      "slot_confidence": 0.4893,
+      "score": 0.23338978169678448,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "6",
+      "bars": 0.5,
       "bar_aligned": true
+    },
+    {
+      "start": 146.9461,
+      "end": 150.8467,
+      "symbol": "Em",
+      "confidence": 0.62,
+      "slot_confidence": 0.5297,
+      "score": 0.32469181759540106,
+      "root_pc": 4,
+      "bass_pc": 4,
+      "quality": "m",
+      "duration": 3.9006,
+      "slot_count": 3,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.5,
+      "bar_aligned": false
     },
     {
       "start": 150.8467,
       "end": 153.4471,
       "symbol": "Bm",
-      "confidence": 0.54,
-      "slot_confidence": 0.4802,
-      "score": 0.28682740008747065,
+      "confidence": 0.539,
+      "slot_confidence": 0.47895,
+      "score": 0.31322768927065847,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1639,9 +1693,9 @@
       "start": 153.4471,
       "end": 156.0475,
       "symbol": "G",
-      "confidence": 0.555,
-      "slot_confidence": 0.4948,
-      "score": 0.28784641536532796,
+      "confidence": 0.54,
+      "slot_confidence": 0.47950000000000004,
+      "score": 0.3309226639688057,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
@@ -1653,43 +1707,44 @@
     },
     {
       "start": 156.0475,
-      "end": 158.6479,
-      "symbol": "Bm",
-      "confidence": 0.542,
-      "slot_confidence": 0.4817,
-      "score": 0.26142309283184434,
-      "root_pc": 11,
-      "bass_pc": 11,
-      "quality": "m",
-      "duration": 2.6004,
-      "slot_count": 2,
+      "end": 157.3477,
+      "symbol": "A",
+      "confidence": 0.509,
+      "slot_confidence": 0.4793,
+      "score": 0.2596211424580392,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
+      "simplified_from": "sus2",
+      "bars": 0.5,
       "bar_aligned": true
     },
     {
-      "start": 158.6479,
+      "start": 157.3477,
       "end": 161.2483,
       "symbol": "G",
-      "confidence": 0.538,
-      "slot_confidence": 0.4783,
-      "score": 0.2551403324835048,
+      "confidence": 0.573,
+      "slot_confidence": 0.4834333333333334,
+      "score": 0.22870855174847068,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
-      "duration": 2.6004,
-      "slot_count": 2,
+      "duration": 3.9006,
+      "slot_count": 3,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 1.0,
-      "bar_aligned": true
+      "bars": 1.5,
+      "bar_aligned": false
     },
     {
       "start": 161.2483,
       "end": 163.8487,
       "symbol": "Bm",
       "confidence": 0.544,
-      "slot_confidence": 0.48445000000000005,
-      "score": 0.266386623386592,
+      "slot_confidence": 0.48425,
+      "score": 0.2755582684229491,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1701,44 +1756,110 @@
     },
     {
       "start": 163.8487,
-      "end": 166.4491,
+      "end": 165.1489,
       "symbol": "G",
-      "confidence": 0.534,
-      "slot_confidence": 0.47425,
-      "score": 0.24857483242751865,
+      "confidence": 0.509,
+      "slot_confidence": 0.4791,
+      "score": 0.29948107546407976,
+      "root_pc": 7,
+      "bass_pc": 7,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
+      "bars": 0.5,
+      "bar_aligned": true
+    },
+    {
+      "start": 165.1489,
+      "end": 167.7493,
+      "symbol": "A",
+      "confidence": 0.54,
+      "slot_confidence": 0.48,
+      "score": 0.2625772620992124,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 167.7493,
+      "end": 184.6519,
+      "symbol": "D",
+      "confidence": 0.668,
+      "slot_confidence": 0.4881153846153846,
+      "score": 0.1653927096947562,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 16.9026,
+      "slot_count": 13,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 6.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 184.6519,
+      "end": 185.9521,
+      "symbol": "Bm",
+      "confidence": 0.481,
+      "slot_confidence": 0.4505,
+      "score": 0.28101167833171475,
+      "root_pc": 11,
+      "bass_pc": 11,
+      "quality": "m",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "m7",
+      "bars": 0.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 185.9521,
+      "end": 188.5525,
+      "symbol": "G",
+      "confidence": 0.554,
+      "slot_confidence": 0.49350000000000005,
+      "score": 0.2557672741875617,
       "root_pc": 7,
       "bass_pc": 7,
       "quality": "",
       "duration": 2.6004,
       "slot_count": 2,
       "source": "chroma-template+bass-stem+viterbi",
-      "simplified_from": "sus2",
       "bars": 1.0,
-      "bar_aligned": true
+      "bar_aligned": false
     },
     {
-      "start": 166.4491,
-      "end": 184.6519,
-      "symbol": "D",
-      "confidence": 0.664,
-      "slot_confidence": 0.4840571428571429,
-      "score": 0.22197453424935612,
-      "root_pc": 2,
-      "bass_pc": 2,
+      "start": 188.5525,
+      "end": 189.8527,
+      "symbol": "A",
+      "confidence": 0.602,
+      "slot_confidence": 0.5724,
+      "score": 0.26680913509143706,
+      "root_pc": 9,
+      "bass_pc": 9,
       "quality": "",
-      "duration": 18.2028,
-      "slot_count": 14,
+      "duration": 1.3002,
+      "slot_count": 1,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 7.0,
-      "bar_aligned": true
+      "simplified_from": "sus2",
+      "bars": 0.5,
+      "bar_aligned": false
     },
     {
-      "start": 184.6519,
-      "end": 187.2523,
+      "start": 189.8527,
+      "end": 192.4531,
       "symbol": "Bm",
-      "confidence": 0.528,
-      "slot_confidence": 0.4683,
-      "score": 0.2778663132479143,
+      "confidence": 0.529,
+      "slot_confidence": 0.46925,
+      "score": 0.29785360726891374,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
@@ -1750,14 +1871,64 @@
       "bar_aligned": false
     },
     {
-      "start": 187.2523,
-      "end": 188.5525,
-      "symbol": "G",
-      "confidence": 0.539,
-      "slot_confidence": 0.5091,
-      "score": 0.2609354255975886,
-      "root_pc": 7,
-      "bass_pc": 7,
+      "start": 192.4531,
+      "end": 193.7533,
+      "symbol": "D",
+      "confidence": 0.484,
+      "slot_confidence": 0.4541,
+      "score": 0.2873465716314069,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 1.3002,
+      "slot_count": 1,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus4",
+      "bars": 0.5,
+      "bar_aligned": false
+    },
+    {
+      "start": 193.7533,
+      "end": 196.3537,
+      "symbol": "A",
+      "confidence": 0.545,
+      "slot_confidence": 0.48485,
+      "score": 0.28224202607671084,
+      "root_pc": 9,
+      "bass_pc": 9,
+      "quality": "",
+      "duration": 2.6004,
+      "slot_count": 2,
+      "source": "chroma-template+bass-stem+viterbi",
+      "simplified_from": "sus2",
+      "bars": 1.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 196.3537,
+      "end": 204.1549,
+      "symbol": "D",
+      "confidence": 0.654,
+      "slot_confidence": 0.4740166666666667,
+      "score": 0.2475398018617677,
+      "root_pc": 2,
+      "bass_pc": 2,
+      "quality": "",
+      "duration": 7.8012,
+      "slot_count": 6,
+      "source": "chroma-template+bass-stem+viterbi",
+      "bars": 3.0,
+      "bar_aligned": false
+    },
+    {
+      "start": 204.1549,
+      "end": 205.4551,
+      "symbol": "A",
+      "confidence": 0.511,
+      "slot_confidence": 0.4808,
+      "score": 0.22394039851640177,
+      "root_pc": 9,
+      "bass_pc": 9,
       "quality": "",
       "duration": 1.3002,
       "slot_count": 1,
@@ -1766,45 +1937,45 @@
       "bar_aligned": false
     },
     {
-      "start": 188.5525,
-      "end": 222.3577,
+      "start": 205.4551,
+      "end": 221.0575,
       "symbol": "D",
-      "confidence": 0.672,
-      "slot_confidence": 0.4920153846153846,
-      "score": 0.25822321727849884,
+      "confidence": 0.65,
+      "slot_confidence": 0.4701583333333333,
+      "score": 0.21586166929288658,
       "root_pc": 2,
       "bass_pc": 2,
       "quality": "",
-      "duration": 33.8052,
-      "slot_count": 26,
+      "duration": 15.6024,
+      "slot_count": 12,
       "source": "chroma-template+bass-stem+viterbi",
       "simplified_from": "6",
-      "bars": 13.0,
+      "bars": 6.0,
       "bar_aligned": false
     },
     {
-      "start": 222.3577,
+      "start": 221.0575,
       "end": 227.5585,
       "symbol": "Bm",
-      "confidence": 0.668,
-      "slot_confidence": 0.5479499999999999,
-      "score": 0.3640647332306893,
+      "confidence": 0.713,
+      "slot_confidence": 0.56332,
+      "score": 0.24811603445319028,
       "root_pc": 11,
       "bass_pc": 11,
       "quality": "m",
-      "duration": 5.2008,
-      "slot_count": 4,
+      "duration": 6.501,
+      "slot_count": 5,
       "source": "chroma-template+bass-stem+viterbi",
-      "bars": 2.0,
+      "bars": 2.5,
       "bar_aligned": false
     },
     {
       "start": 227.5585,
       "end": 229.0322,
       "symbol": "C#m7b5",
-      "confidence": 0.526,
-      "slot_confidence": 0.49205,
-      "score": 0.23072717351138322,
+      "confidence": 0.511,
+      "slot_confidence": 0.4772,
+      "score": 0.18898420013536227,
       "root_pc": 1,
       "bass_pc": 1,
       "quality": "m7b5",
@@ -1827,124 +1998,205 @@
     },
     {
       "start": 23.2664,
-      "end": 36.4785,
+      "end": 33.9011,
       "kind": "interlude",
       "label": "间奏 1",
-      "energy": 0.921,
+      "energy": 0.926,
       "repeat_of": null,
-      "confidence": 0.744
+      "confidence": 0.72
     },
     {
-      "start": 36.4785,
-      "end": 46.8114,
+      "start": 33.9011,
+      "end": 44.234,
       "kind": "verse",
       "label": "主歌 1",
-      "energy": 0.548,
+      "energy": 0.759,
       "repeat_of": null,
-      "confidence": 0.77
+      "confidence": 0.704
     },
     {
-      "start": 46.8114,
+      "start": 44.234,
       "end": 64.714,
       "kind": "verse",
       "label": "主歌 2",
-      "energy": 0.289,
+      "energy": 0.304,
       "repeat_of": null,
-      "confidence": 0.722
+      "confidence": 0.713
     },
     {
       "start": 64.714,
-      "end": 77.7868,
+      "end": 88.4216,
       "kind": "chorus",
       "label": "副歌 1",
       "energy": 1.0,
       "repeat_of": null,
-      "confidence": 0.711
-    },
-    {
-      "start": 77.7868,
-      "end": 88.4216,
-      "kind": "chorus",
-      "label": "副歌 2",
-      "energy": 0.982,
-      "repeat_of": null,
-      "confidence": 0.64
+      "confidence": 0.703
     },
     {
       "start": 88.4216,
       "end": 99.0563,
       "kind": "chorus",
-      "label": "副歌 3",
-      "energy": 0.945,
+      "label": "副歌 2",
+      "energy": 0.966,
       "repeat_of": null,
-      "confidence": 0.642
+      "confidence": 0.624
     },
     {
       "start": 99.0563,
       "end": 140.6897,
-      "kind": "bridge",
-      "label": "桥段 1",
-      "energy": 0.915,
+      "kind": "chorus",
+      "label": "副歌 3",
+      "energy": 0.936,
       "repeat_of": null,
-      "confidence": 0.586
+      "confidence": 0.576
     },
     {
       "start": 140.6897,
       "end": 173.8942,
       "kind": "chorus",
       "label": "副歌 4",
-      "energy": 0.952,
-      "repeat_of": "副歌 3",
-      "confidence": 0.646
+      "energy": 0.974,
+      "repeat_of": null,
+      "confidence": 0.595
     },
     {
       "start": 173.8942,
       "end": 184.2271,
       "kind": "chorus",
       "label": "副歌 5",
-      "energy": 0.925,
+      "energy": 0.947,
       "repeat_of": null,
-      "confidence": 0.724
+      "confidence": 0.727
     },
     {
       "start": 184.2271,
-      "end": 197.1374,
+      "end": 199.7148,
       "kind": "verse",
       "label": "主歌 3",
-      "energy": 0.401,
+      "energy": 0.461,
       "repeat_of": null,
       "confidence": 0.8
     },
     {
-      "start": 197.1374,
+      "start": 199.7148,
       "end": 229.0322,
-      "kind": "verse",
-      "label": "主歌 4",
-      "energy": 0.828,
+      "kind": "bridge",
+      "label": "桥段 1",
+      "energy": 0.868,
       "repeat_of": null,
-      "confidence": 0.635
+      "confidence": 0.652
     }
   ],
   "lyrics": [
     {
-      "start": 30.0,
-      "end": 32.0,
-      "text": "Let's get it up!",
+      "start": 9.5,
+      "end": 15.6,
+      "text": "Let's bring it out home.",
       "words": [
         {
-          "start": 30.0,
-          "end": 31.1,
+          "start": 9.5,
+          "end": 10.5,
           "text": "Let's",
           "space_before": true
         },
         {
-          "start": 31.1,
-          "end": 31.28,
+          "start": 10.5,
+          "end": 10.62,
+          "text": "bring",
+          "space_before": true
+        },
+        {
+          "start": 10.62,
+          "end": 10.92,
+          "text": "it",
+          "space_before": true
+        },
+        {
+          "start": 10.92,
+          "end": 11.64,
+          "text": "out",
+          "space_before": true
+        },
+        {
+          "start": 11.64,
+          "end": 15.6,
+          "text": "home",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.298,
+      "interjection": false
+    },
+    {
+      "start": 19.76,
+      "end": 29.92,
+      "text": "Let's bring it out home Oh oh",
+      "words": [
+        {
+          "start": 19.76,
+          "end": 20.76,
+          "text": "Let's",
+          "space_before": true
+        },
+        {
+          "start": 20.76,
+          "end": 20.96,
+          "text": "bring",
+          "space_before": true
+        },
+        {
+          "start": 20.96,
+          "end": 21.28,
+          "text": "it",
+          "space_before": true
+        },
+        {
+          "start": 21.28,
+          "end": 21.94,
+          "text": "out",
+          "space_before": true
+        },
+        {
+          "start": 21.94,
+          "end": 26.0,
+          "text": "home",
+          "space_before": true
+        },
+        {
+          "start": 26.0,
+          "end": 28.28,
+          "text": "Oh",
+          "space_before": true
+        },
+        {
+          "start": 28.28,
+          "end": 29.92,
+          "text": "oh",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.298,
+      "interjection": false
+    },
+    {
+      "start": 29.92,
+      "end": 32.0,
+      "text": "let's get it out",
+      "words": [
+        {
+          "start": 29.92,
+          "end": 31.12,
+          "text": "let's",
+          "space_before": true
+        },
+        {
+          "start": 31.12,
+          "end": 31.24,
           "text": "get",
           "space_before": true
         },
         {
-          "start": 31.28,
+          "start": 31.24,
           "end": 31.56,
           "text": "it",
           "space_before": true
@@ -1952,149 +2204,140 @@
         {
           "start": 31.56,
           "end": 32.0,
-          "text": "up",
+          "text": "out",
           "space_before": true
         }
       ],
-      "confidence": 0.307,
+      "confidence": 0.298,
       "interjection": false
     },
     {
-      "start": 45.52,
-      "end": 50.0,
-      "text": "What's stretching so far along?",
+      "start": 45.06,
+      "end": 52.76,
+      "text": "Was dressed chance so far along Oh",
       "words": [
         {
-          "start": 45.52,
-          "end": 46.92,
-          "text": "What's",
+          "start": 45.06,
+          "end": 46.46,
+          "text": "Was",
           "space_before": true
         },
         {
-          "start": 46.92,
-          "end": 47.26,
-          "text": "stret",
+          "start": 46.46,
+          "end": 46.79,
+          "text": "dres",
           "space_before": true
         },
         {
-          "start": 47.26,
-          "end": 47.6,
-          "text": "ching",
+          "start": 46.79,
+          "end": 47.12,
+          "text": "sed",
           "space_before": false
         },
         {
-          "start": 47.6,
-          "end": 48.54,
+          "start": 47.12,
+          "end": 47.8,
+          "text": "chance",
+          "space_before": true
+        },
+        {
+          "start": 47.8,
+          "end": 48.6,
           "text": "so",
           "space_before": true
         },
         {
-          "start": 48.54,
-          "end": 49.38,
+          "start": 48.6,
+          "end": 49.34,
           "text": "far",
           "space_before": true
         },
         {
-          "start": 49.38,
-          "end": 49.73,
+          "start": 49.34,
+          "end": 50.39,
           "text": "al",
           "space_before": true
         },
         {
-          "start": 49.73,
-          "end": 50.0,
+          "start": 50.39,
+          "end": 51.44,
           "text": "ong",
           "space_before": false
+        },
+        {
+          "start": 51.44,
+          "end": 52.76,
+          "text": "Oh",
+          "space_before": true
         }
       ],
-      "confidence": 0.307,
+      "confidence": 0.36,
       "interjection": false
     },
     {
-      "start": 50.08,
-      "end": 61.08,
-      "text": "Oh, the rays of our mutual bond",
+      "start": 54.3,
+      "end": 63.34,
+      "text": "the rays of our mutual bondWhoa",
       "words": [
         {
-          "start": 50.08,
-          "end": 51.34,
-          "text": "Oh",
-          "space_before": true
-        },
-        {
-          "start": 51.34,
-          "end": 54.84,
+          "start": 54.3,
+          "end": 54.98,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 54.84,
+          "start": 54.98,
           "end": 56.74,
           "text": "rays",
           "space_before": true
         },
         {
           "start": 56.74,
-          "end": 57.62,
+          "end": 57.6,
           "text": "of",
           "space_before": true
         },
         {
-          "start": 57.62,
+          "start": 57.6,
           "end": 58.72,
           "text": "our",
           "space_before": true
         },
         {
           "start": 58.72,
-          "end": 59.16,
+          "end": 59.15,
           "text": "mut",
           "space_before": true
         },
         {
-          "start": 59.16,
-          "end": 59.6,
+          "start": 59.15,
+          "end": 59.58,
           "text": "ual",
           "space_before": false
         },
         {
-          "start": 59.6,
-          "end": 61.08,
+          "start": 59.58,
+          "end": 61.78,
           "text": "bond",
           "space_before": true
         }
       ],
-      "confidence": 0.304,
+      "confidence": 0.36,
       "interjection": false
     },
     {
-      "start": 62.3,
-      "end": 63.28,
-      "text": "Whoa",
+      "start": 64.96,
+      "end": 70.6,
+      "text": "we drive through the quiet and precarious Across the sight you see",
       "words": [
         {
-          "start": 62.3,
-          "end": 63.28,
-          "text": "Whoa",
-          "space_before": true
-        }
-      ],
-      "confidence": 0.304,
-      "interjection": true
-    },
-    {
-      "start": 64.94,
-      "end": 73.06,
-      "text": "we drive through the quiet land to carry us Across the sky, can't see when they're away, far away",
-      "words": [
-        {
-          "start": 64.94,
-          "end": 65.22,
+          "start": 64.96,
+          "end": 65.24,
           "text": "we",
           "space_before": true
         },
         {
-          "start": 65.22,
+          "start": 65.24,
           "end": 65.78,
           "text": "drive",
           "space_before": true
@@ -2107,333 +2350,291 @@
         },
         {
           "start": 66.32,
-          "end": 66.64,
+          "end": 66.62,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 66.64,
-          "end": 66.98,
+          "start": 66.62,
+          "end": 66.96,
           "text": "quiet",
           "space_before": true
         },
         {
-          "start": 66.98,
-          "end": 67.4,
-          "text": "land",
+          "start": 66.96,
+          "end": 67.42,
+          "text": "and",
           "space_before": true
         },
         {
-          "start": 67.4,
-          "end": 67.76,
-          "text": "to",
+          "start": 67.42,
+          "end": 67.853,
+          "text": "prec",
           "space_before": true
         },
         {
-          "start": 67.76,
-          "end": 68.07,
-          "text": "car",
-          "space_before": true
-        },
-        {
-          "start": 68.07,
-          "end": 68.38,
-          "text": "ry",
+          "start": 67.853,
+          "end": 68.287,
+          "text": "ar",
           "space_before": false
         },
         {
-          "start": 68.38,
-          "end": 68.8,
-          "text": "us",
-          "space_before": true
+          "start": 68.287,
+          "end": 68.72,
+          "text": "ious",
+          "space_before": false
         },
         {
-          "start": 68.8,
-          "end": 69.07,
+          "start": 68.72,
+          "end": 69.03,
           "text": "Ac",
           "space_before": true
         },
         {
-          "start": 69.07,
+          "start": 69.03,
           "end": 69.34,
           "text": "ross",
           "space_before": false
         },
         {
           "start": 69.34,
-          "end": 69.68,
+          "end": 69.7,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 69.68,
+          "start": 69.7,
           "end": 69.9,
-          "text": "sky",
+          "text": "sight",
           "space_before": true
         },
         {
-          "start": 70.0,
-          "end": 70.3,
-          "text": "can't",
+          "start": 69.9,
+          "end": 70.28,
+          "text": "you",
           "space_before": true
         },
         {
-          "start": 70.3,
+          "start": 70.28,
           "end": 70.6,
           "text": "see",
           "space_before": true
-        },
+        }
+      ],
+      "confidence": 0.36,
+      "interjection": false
+    },
+    {
+      "start": 71.1,
+      "end": 73.12,
+      "text": "one day oh where to fall away",
+      "words": [
         {
-          "start": 70.6,
-          "end": 71.14,
-          "text": "when",
+          "start": 71.1,
+          "end": 71.12,
+          "text": "one",
           "space_before": true
         },
         {
-          "start": 71.14,
-          "end": 71.58,
-          "text": "they're",
+          "start": 71.12,
+          "end": 71.42,
+          "text": "day",
           "space_before": true
         },
         {
-          "start": 71.58,
-          "end": 71.78,
+          "start": 71.6,
+          "end": 71.8,
+          "text": "oh",
+          "space_before": true
+        },
+        {
+          "start": 71.8,
+          "end": 72.02,
+          "text": "where",
+          "space_before": true
+        },
+        {
+          "start": 72.02,
+          "end": 72.3,
+          "text": "to",
+          "space_before": true
+        },
+        {
+          "start": 72.3,
+          "end": 72.5,
+          "text": "fall",
+          "space_before": true
+        },
+        {
+          "start": 72.5,
+          "end": 72.81,
           "text": "aw",
           "space_before": true
         },
         {
-          "start": 71.78,
-          "end": 71.98,
-          "text": "ay",
-          "space_before": false
-        },
-        {
-          "start": 72.24,
-          "end": 72.42,
-          "text": "far",
-          "space_before": true
-        },
-        {
-          "start": 72.42,
-          "end": 72.74,
-          "text": "aw",
-          "space_before": true
-        },
-        {
-          "start": 72.74,
-          "end": 73.06,
+          "start": 72.81,
+          "end": 73.12,
           "text": "ay",
           "space_before": false
         }
       ],
-      "confidence": 0.304,
+      "confidence": 0.36,
       "interjection": false
     },
     {
-      "start": 73.06,
-      "end": 75.58,
-      "text": "Look at why I don't believe the way",
+      "start": 73.36,
+      "end": 75.48,
+      "text": "Look out, right over here, lead the way",
       "words": [
         {
-          "start": 73.06,
+          "start": 73.36,
           "end": 73.62,
           "text": "Look",
           "space_before": true
         },
         {
           "start": 73.62,
-          "end": 73.98,
-          "text": "at",
+          "end": 73.94,
+          "text": "out",
           "space_before": true
         },
         {
-          "start": 73.98,
-          "end": 74.24,
-          "text": "why",
+          "start": 74.08,
+          "end": 74.28,
+          "text": "right",
           "space_before": true
         },
         {
-          "start": 74.24,
-          "end": 74.58,
-          "text": "I",
+          "start": 74.28,
+          "end": 74.49,
+          "text": "ov",
           "space_before": true
         },
         {
-          "start": 74.58,
-          "end": 74.66,
-          "text": "don't",
-          "space_before": true
-        },
-        {
-          "start": 74.66,
-          "end": 74.84,
-          "text": "bel",
-          "space_before": true
-        },
-        {
-          "start": 74.84,
-          "end": 75.02,
-          "text": "ieve",
+          "start": 74.49,
+          "end": 74.7,
+          "text": "er",
           "space_before": false
         },
         {
-          "start": 75.02,
+          "start": 74.7,
+          "end": 75.02,
+          "text": "here",
+          "space_before": true
+        },
+        {
+          "start": 75.08,
+          "end": 75.2,
+          "text": "lead",
+          "space_before": true
+        },
+        {
+          "start": 75.2,
           "end": 75.32,
           "text": "the",
           "space_before": true
         },
         {
           "start": 75.32,
-          "end": 75.58,
+          "end": 75.48,
           "text": "way",
           "space_before": true
         }
       ],
-      "confidence": 0.537,
+      "confidence": 0.36,
       "interjection": false
     },
     {
-      "start": 76.7,
-      "end": 86.84,
-      "text": "I stand in promise with",
+      "start": 83.58,
+      "end": 94.98,
+      "text": "Ohhhhhhhhhhh I stand in promise with my whole unshamed No as we're called in vain, they say my name",
       "words": [
         {
-          "start": 76.7,
-          "end": 77.54,
-          "text": "Oh",
+          "start": 83.58,
+          "end": 84.54,
+          "text": "Ohhhhhhhhhhh",
           "space_before": true
         },
         {
-          "start": 77.54,
-          "end": 78.38,
-          "text": "oh",
-          "space_before": true
-        },
-        {
-          "start": 78.38,
-          "end": 78.42,
-          "text": "oh",
-          "space_before": true
-        },
-        {
-          "start": 78.42,
-          "end": 80.6,
-          "text": "oh",
-          "space_before": true
-        },
-        {
-          "start": 80.6,
-          "end": 80.78,
-          "text": "oh",
-          "space_before": true
-        },
-        {
-          "start": 80.78,
-          "end": 80.98,
-          "text": "Oh",
-          "space_before": true
-        },
-        {
-          "start": 80.98,
-          "end": 82.8,
-          "text": "oh",
-          "space_before": true
-        },
-        {
-          "start": 82.8,
-          "end": 83.5,
-          "text": "oh",
-          "space_before": true
-        },
-        {
-          "start": 83.5,
-          "end": 84.36,
-          "text": "oh",
-          "space_before": true
-        },
-        {
-          "start": 84.36,
-          "end": 84.58,
-          "text": "oh",
-          "space_before": true
-        },
-        {
-          "start": 84.58,
-          "end": 85.1,
+          "start": 84.54,
+          "end": 85.06,
           "text": "I",
           "space_before": true
         },
         {
-          "start": 85.1,
+          "start": 85.06,
           "end": 85.62,
           "text": "stand",
           "space_before": true
         },
         {
           "start": 85.62,
-          "end": 85.96,
+          "end": 85.94,
           "text": "in",
           "space_before": true
         },
         {
-          "start": 85.96,
-          "end": 86.19,
+          "start": 85.94,
+          "end": 86.18,
           "text": "prom",
           "space_before": true
         },
         {
-          "start": 86.19,
+          "start": 86.18,
           "end": 86.42,
           "text": "ise",
           "space_before": false
         },
         {
           "start": 86.42,
-          "end": 86.84,
+          "end": 86.86,
           "text": "with",
           "space_before": true
-        }
-      ],
-      "confidence": 0.537,
-      "interjection": false
-    },
-    {
-      "start": 86.84,
-      "end": 94.98,
-      "text": "my heart and shame No as we're caught in vain to say my name",
-      "words": [
+        },
         {
-          "start": 86.84,
-          "end": 87.34,
+          "start": 86.86,
+          "end": 87.4,
           "text": "my",
           "space_before": true
         },
         {
-          "start": 87.34,
-          "end": 87.8,
-          "text": "heart",
+          "start": 87.4,
+          "end": 87.59,
+          "text": "whol",
           "space_before": true
         },
         {
-          "start": 87.8,
-          "end": 88.22,
-          "text": "and",
+          "start": 87.59,
+          "end": 87.78,
+          "text": "e",
+          "space_before": false
+        },
+        {
+          "start": 87.78,
+          "end": 88.42,
+          "text": "un",
           "space_before": true
         },
         {
-          "start": 88.22,
-          "end": 89.62,
-          "text": "shame",
-          "space_before": true
+          "start": 88.42,
+          "end": 89.06,
+          "text": "sham",
+          "space_before": false
         },
         {
-          "start": 89.62,
-          "end": 90.38,
+          "start": 89.06,
+          "end": 89.7,
+          "text": "ed",
+          "space_before": false
+        },
+        {
+          "start": 89.7,
+          "end": 90.4,
           "text": "No",
           "space_before": true
         },
         {
-          "start": 90.38,
+          "start": 90.4,
           "end": 90.74,
           "text": "as",
           "space_before": true
@@ -2446,18 +2647,24 @@
         },
         {
           "start": 91.32,
-          "end": 91.42,
-          "text": "caught",
+          "end": 91.37,
+          "text": "cal",
           "space_before": true
         },
         {
+          "start": 91.37,
+          "end": 91.42,
+          "text": "led",
+          "space_before": false
+        },
+        {
           "start": 91.42,
-          "end": 91.76,
+          "end": 91.8,
           "text": "in",
           "space_before": true
         },
         {
-          "start": 91.76,
+          "start": 91.8,
           "end": 91.98,
           "text": "vain",
           "space_before": true
@@ -2465,373 +2672,349 @@
         {
           "start": 91.98,
           "end": 92.46,
-          "text": "to",
+          "text": "they",
           "space_before": true
         },
         {
           "start": 92.46,
-          "end": 92.8,
+          "end": 92.78,
           "text": "say",
           "space_before": true
         },
         {
-          "start": 92.8,
-          "end": 93.5,
+          "start": 92.78,
+          "end": 93.48,
           "text": "my",
           "space_before": true
         },
         {
-          "start": 93.5,
+          "start": 93.48,
           "end": 94.98,
           "text": "name",
           "space_before": true
         }
       ],
-      "confidence": 0.537,
+      "confidence": 0.281,
       "interjection": false
     },
     {
-      "start": 106.82,
-      "end": 113.2,
-      "text": "Just let the safe options come",
+      "start": 107.48,
+      "end": 112.48,
+      "text": "Just let the safe options go",
       "words": [
         {
-          "start": 106.82,
-          "end": 108.22,
+          "start": 107.48,
+          "end": 108.28,
           "text": "Just",
           "space_before": true
         },
         {
-          "start": 108.22,
-          "end": 109.06,
+          "start": 108.28,
+          "end": 109.08,
           "text": "let",
           "space_before": true
         },
         {
-          "start": 109.06,
-          "end": 109.58,
+          "start": 109.08,
+          "end": 109.6,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 109.58,
-          "end": 110.44,
+          "start": 109.6,
+          "end": 110.4,
           "text": "safe",
           "space_before": true
         },
         {
-          "start": 110.44,
-          "end": 110.82,
+          "start": 110.4,
+          "end": 110.79,
           "text": "op",
           "space_before": true
         },
         {
-          "start": 110.82,
-          "end": 111.2,
+          "start": 110.79,
+          "end": 111.18,
           "text": "tions",
           "space_before": false
         },
         {
-          "start": 111.2,
-          "end": 113.2,
-          "text": "come",
+          "start": 111.18,
+          "end": 112.48,
+          "text": "go",
           "space_before": true
         }
       ],
-      "confidence": 0.322,
+      "confidence": 0.311,
       "interjection": false
     },
     {
-      "start": 115.1,
-      "end": 122.96,
-      "text": "Oh, no real issues as fate's outcome",
+      "start": 116.0,
+      "end": 122.6,
+      "text": "Oh, no way we choose a space outcome",
       "words": [
         {
-          "start": 115.1,
-          "end": 116.5,
+          "start": 116.0,
+          "end": 116.8,
           "text": "Oh",
           "space_before": true
         },
         {
-          "start": 116.74,
-          "end": 117.02,
+          "start": 116.8,
+          "end": 116.96,
           "text": "no",
           "space_before": true
         },
         {
-          "start": 117.02,
-          "end": 118.72,
-          "text": "real",
+          "start": 116.96,
+          "end": 118.6,
+          "text": "way",
           "space_before": true
         },
         {
-          "start": 118.72,
-          "end": 119.27,
-          "text": "is",
+          "start": 118.6,
+          "end": 119.38,
+          "text": "we",
           "space_before": true
         },
         {
-          "start": 119.27,
-          "end": 119.82,
-          "text": "sues",
-          "space_before": false
-        },
-        {
-          "start": 119.82,
-          "end": 120.8,
-          "text": "as",
+          "start": 119.38,
+          "end": 120.02,
+          "text": "choose",
           "space_before": true
         },
         {
-          "start": 120.8,
-          "end": 121.28,
-          "text": "fat",
+          "start": 120.02,
+          "end": 120.72,
+          "text": "a",
           "space_before": true
         },
         {
-          "start": 121.28,
-          "end": 121.76,
-          "text": "e's",
-          "space_before": false
+          "start": 120.72,
+          "end": 121.16,
+          "text": "space",
+          "space_before": true
         },
         {
-          "start": 121.76,
-          "end": 122.36,
+          "start": 121.16,
+          "end": 121.88,
           "text": "out",
           "space_before": true
         },
         {
-          "start": 122.36,
-          "end": 122.96,
+          "start": 121.88,
+          "end": 122.6,
           "text": "come",
           "space_before": false
         }
       ],
-      "confidence": 0.322,
+      "confidence": 0.311,
       "interjection": false
     },
     {
-      "start": 124.92,
-      "end": 134.54,
-      "text": "Oh, what we'll do when we're done To set the soul's billet above my soul And we're gone, in your mind, we won't leave",
+      "start": 125.52,
+      "end": 132.12,
+      "text": "Oh, what we'll do when we've got time To set the soul speed, let the blood flow",
       "words": [
         {
-          "start": 124.92,
+          "start": 125.52,
           "end": 126.32,
           "text": "Oh",
           "space_before": true
         },
         {
-          "start": 126.72,
-          "end": 127.18,
+          "start": 126.7,
+          "end": 127.1,
           "text": "what",
           "space_before": true
         },
         {
-          "start": 127.18,
-          "end": 127.9,
+          "start": 127.1,
+          "end": 127.86,
           "text": "we'll",
           "space_before": true
         },
         {
-          "start": 127.9,
-          "end": 128.24,
+          "start": 127.86,
+          "end": 128.26,
           "text": "do",
           "space_before": true
         },
         {
-          "start": 128.24,
-          "end": 128.6,
+          "start": 128.26,
+          "end": 128.58,
           "text": "when",
           "space_before": true
         },
         {
-          "start": 128.6,
-          "end": 128.92,
-          "text": "we're",
+          "start": 128.58,
+          "end": 128.96,
+          "text": "we've",
           "space_before": true
         },
         {
-          "start": 128.92,
-          "end": 129.28,
-          "text": "done",
+          "start": 128.96,
+          "end": 129.08,
+          "text": "got",
           "space_before": true
         },
         {
-          "start": 129.28,
-          "end": 129.5,
+          "start": 129.08,
+          "end": 129.32,
+          "text": "time",
+          "space_before": true
+        },
+        {
+          "start": 129.32,
+          "end": 129.64,
           "text": "To",
           "space_before": true
         },
         {
-          "start": 129.5,
+          "start": 129.64,
           "end": 129.98,
           "text": "set",
           "space_before": true
         },
         {
           "start": 129.98,
-          "end": 130.42,
+          "end": 130.38,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 130.42,
-          "end": 130.84,
-          "text": "soul's",
-          "space_before": true
-        },
-        {
-          "start": 130.84,
-          "end": 131.11,
-          "text": "bil",
-          "space_before": true
-        },
-        {
-          "start": 131.11,
-          "end": 131.38,
-          "text": "let",
-          "space_before": false
-        },
-        {
-          "start": 131.38,
-          "end": 131.59,
-          "text": "ab",
-          "space_before": true
-        },
-        {
-          "start": 131.59,
-          "end": 131.8,
-          "text": "ove",
-          "space_before": false
-        },
-        {
-          "start": 131.8,
-          "end": 132.2,
-          "text": "my",
-          "space_before": true
-        },
-        {
-          "start": 132.2,
-          "end": 132.52,
+          "start": 130.38,
+          "end": 130.62,
           "text": "soul",
           "space_before": true
         },
         {
-          "start": 132.52,
-          "end": 132.82,
+          "start": 130.62,
+          "end": 131.02,
+          "text": "speed",
+          "space_before": true
+        },
+        {
+          "start": 131.22,
+          "end": 131.4,
+          "text": "let",
+          "space_before": true
+        },
+        {
+          "start": 131.4,
+          "end": 131.62,
+          "text": "the",
+          "space_before": true
+        },
+        {
+          "start": 131.62,
+          "end": 131.9,
+          "text": "blood",
+          "space_before": true
+        },
+        {
+          "start": 131.9,
+          "end": 132.12,
+          "text": "flow",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.311,
+      "interjection": false
+    },
+    {
+      "start": 132.12,
+      "end": 138.9,
+      "text": "And we got it in mind, we won't leave, I'm always on your side Let's play it now",
+      "words": [
+        {
+          "start": 132.12,
+          "end": 132.78,
           "text": "And",
           "space_before": true
         },
         {
-          "start": 132.82,
-          "end": 133.18,
-          "text": "we're",
+          "start": 132.78,
+          "end": 133.0,
+          "text": "we",
           "space_before": true
         },
         {
-          "start": 133.18,
-          "end": 133.24,
-          "text": "gone",
+          "start": 133.0,
+          "end": 133.22,
+          "text": "got",
           "space_before": true
         },
         {
-          "start": 133.44,
-          "end": 133.48,
+          "start": 133.22,
+          "end": 133.54,
+          "text": "it",
+          "space_before": true
+        },
+        {
+          "start": 133.54,
+          "end": 133.74,
           "text": "in",
           "space_before": true
         },
         {
-          "start": 133.48,
-          "end": 133.76,
-          "text": "your",
-          "space_before": true
-        },
-        {
-          "start": 133.76,
+          "start": 133.74,
           "end": 133.86,
           "text": "mind",
           "space_before": true
         },
         {
-          "start": 133.98,
+          "start": 133.96,
           "end": 134.1,
           "text": "we",
           "space_before": true
         },
         {
           "start": 134.1,
-          "end": 134.38,
+          "end": 134.44,
           "text": "won't",
           "space_before": true
         },
         {
-          "start": 134.38,
-          "end": 134.54,
+          "start": 134.44,
+          "end": 134.58,
           "text": "leave",
           "space_before": true
-        }
-      ],
-      "confidence": 0.322,
-      "interjection": false
-    },
-    {
-      "start": 134.54,
-      "end": 138.0,
-      "text": "I'm behind, I'm a waste, I'll be quiet Let's play me now",
-      "words": [
+        },
         {
-          "start": 134.54,
-          "end": 134.78,
+          "start": 134.9,
+          "end": 135.02,
           "text": "I'm",
           "space_before": true
         },
         {
-          "start": 134.78,
-          "end": 134.94,
-          "text": "beh",
+          "start": 135.02,
+          "end": 135.32,
+          "text": "al",
           "space_before": true
         },
         {
-          "start": 134.94,
-          "end": 135.1,
-          "text": "ind",
+          "start": 135.32,
+          "end": 135.74,
+          "text": "ways",
           "space_before": false
         },
         {
-          "start": 135.42,
-          "end": 135.52,
-          "text": "I'm",
-          "space_before": true
-        },
-        {
-          "start": 135.52,
-          "end": 135.64,
-          "text": "a",
-          "space_before": true
-        },
-        {
-          "start": 135.64,
-          "end": 135.88,
-          "text": "waste",
-          "space_before": true
-        },
-        {
-          "start": 135.96,
+          "start": 135.74,
           "end": 136.1,
-          "text": "I'll",
+          "text": "on",
           "space_before": true
         },
         {
           "start": 136.1,
-          "end": 136.3,
-          "text": "be",
+          "end": 136.28,
+          "text": "your",
           "space_before": true
         },
         {
-          "start": 136.3,
+          "start": 136.28,
           "end": 136.4,
-          "text": "quiet",
+          "text": "side",
           "space_before": true
         },
         {
@@ -2842,39 +3025,39 @@
         },
         {
           "start": 136.9,
-          "end": 137.02,
+          "end": 137.04,
           "text": "play",
           "space_before": true
         },
         {
-          "start": 137.02,
-          "end": 137.22,
-          "text": "me",
+          "start": 137.04,
+          "end": 137.2,
+          "text": "it",
           "space_before": true
         },
         {
-          "start": 137.22,
-          "end": 138.0,
+          "start": 137.2,
+          "end": 138.9,
           "text": "now",
           "space_before": true
         }
       ],
-      "confidence": 0.356,
+      "confidence": 0.327,
       "interjection": false
     },
     {
-      "start": 146.92,
-      "end": 157.2,
+      "start": 146.76,
+      "end": 157.26,
       "text": "I stand in promise with my heart and chain No as we go in vain to say my name",
       "words": [
         {
-          "start": 146.92,
-          "end": 147.56,
+          "start": 146.76,
+          "end": 147.48,
           "text": "I",
           "space_before": true
         },
         {
-          "start": 147.56,
+          "start": 147.48,
           "end": 148.2,
           "text": "stand",
           "space_before": true
@@ -2899,18 +3082,18 @@
         },
         {
           "start": 149.0,
-          "end": 149.44,
+          "end": 149.48,
           "text": "with",
           "space_before": true
         },
         {
-          "start": 149.44,
-          "end": 149.96,
+          "start": 149.48,
+          "end": 149.98,
           "text": "my",
           "space_before": true
         },
         {
-          "start": 149.96,
+          "start": 149.98,
           "end": 150.34,
           "text": "heart",
           "space_before": true
@@ -2923,12 +3106,12 @@
         },
         {
           "start": 150.8,
-          "end": 152.18,
+          "end": 152.2,
           "text": "chain",
           "space_before": true
         },
         {
-          "start": 152.18,
+          "start": 152.2,
           "end": 153.0,
           "text": "No",
           "space_before": true
@@ -2947,69 +3130,69 @@
         },
         {
           "start": 153.72,
-          "end": 154.0,
+          "end": 154.02,
           "text": "go",
           "space_before": true
         },
         {
-          "start": 154.0,
-          "end": 154.38,
+          "start": 154.02,
+          "end": 154.4,
           "text": "in",
           "space_before": true
         },
         {
-          "start": 154.38,
+          "start": 154.4,
           "end": 154.5,
           "text": "vain",
           "space_before": true
         },
         {
           "start": 154.5,
-          "end": 155.02,
+          "end": 155.04,
           "text": "to",
           "space_before": true
         },
         {
-          "start": 155.02,
-          "end": 155.36,
+          "start": 155.04,
+          "end": 155.38,
           "text": "say",
           "space_before": true
         },
         {
-          "start": 155.36,
-          "end": 156.0,
+          "start": 155.38,
+          "end": 155.98,
           "text": "my",
           "space_before": true
         },
         {
-          "start": 156.0,
-          "end": 157.2,
+          "start": 155.98,
+          "end": 157.26,
           "text": "name",
           "space_before": true
         }
       ],
-      "confidence": 0.356,
+      "confidence": 0.327,
       "interjection": false
     },
     {
-      "start": 157.2,
+      "start": 157.26,
       "end": 162.34,
       "text": "I storm the silence with her hands away",
       "words": [
         {
-          "start": 157.2,
+          "start": 157.26,
           "end": 157.98,
           "text": "I",
           "space_before": true
         },
         {
           "start": 157.98,
-          "end": 158.36,
+          "end": 158.38,
           "text": "storm",
           "space_before": true
         },
         {
-          "start": 158.36,
+          "start": 158.38,
           "end": 158.84,
           "text": "the",
           "space_before": true
@@ -3028,18 +3211,18 @@
         },
         {
           "start": 159.3,
-          "end": 159.86,
+          "end": 159.84,
           "text": "with",
           "space_before": true
         },
         {
-          "start": 159.86,
-          "end": 160.28,
+          "start": 159.84,
+          "end": 160.26,
           "text": "her",
           "space_before": true
         },
         {
-          "start": 160.28,
+          "start": 160.26,
           "end": 160.74,
           "text": "hands",
           "space_before": true
@@ -3057,12 +3240,12 @@
           "space_before": false
         }
       ],
-      "confidence": 0.356,
+      "confidence": 0.327,
       "interjection": false
     },
     {
       "start": 162.34,
-      "end": 168.52,
+      "end": 168.48,
       "text": "I save the life from every past regret",
       "words": [
         {
@@ -3073,12 +3256,12 @@
         },
         {
           "start": 163.34,
-          "end": 163.56,
+          "end": 163.58,
           "text": "save",
           "space_before": true
         },
         {
-          "start": 163.56,
+          "start": 163.58,
           "end": 163.98,
           "text": "the",
           "space_before": true
@@ -3097,51 +3280,51 @@
         },
         {
           "start": 164.68,
-          "end": 164.887,
+          "end": 164.893,
           "text": "ev",
           "space_before": true
         },
         {
-          "start": 164.887,
-          "end": 165.093,
+          "start": 164.893,
+          "end": 165.107,
           "text": "er",
           "space_before": false
         },
         {
-          "start": 165.093,
-          "end": 165.3,
+          "start": 165.107,
+          "end": 165.32,
           "text": "y",
           "space_before": false
         },
         {
-          "start": 165.3,
-          "end": 165.84,
+          "start": 165.32,
+          "end": 165.86,
           "text": "past",
           "space_before": true
         },
         {
-          "start": 165.84,
-          "end": 167.18,
+          "start": 165.86,
+          "end": 167.17,
           "text": "reg",
           "space_before": true
         },
         {
-          "start": 167.18,
-          "end": 168.52,
+          "start": 167.17,
+          "end": 168.48,
           "text": "ret",
           "space_before": false
         }
       ],
-      "confidence": 0.535,
+      "confidence": 0.545,
       "interjection": false
     },
     {
-      "start": 180.2,
-      "end": 190.66,
-      "text": "So I won't turn away, I won't let go I count the heavens through the fading wires",
+      "start": 180.24,
+      "end": 190.68,
+      "text": "So I won't turn away, I won't let go I turn the heavens through the fading waters",
       "words": [
         {
-          "start": 180.2,
+          "start": 180.24,
           "end": 181.2,
           "text": "So",
           "space_before": true
@@ -3154,78 +3337,78 @@
         },
         {
           "start": 181.76,
-          "end": 182.2,
+          "end": 182.22,
           "text": "won't",
           "space_before": true
         },
         {
-          "start": 182.2,
-          "end": 182.48,
+          "start": 182.22,
+          "end": 182.5,
           "text": "turn",
           "space_before": true
         },
         {
-          "start": 182.48,
-          "end": 182.72,
+          "start": 182.5,
+          "end": 182.73,
           "text": "aw",
           "space_before": true
         },
         {
-          "start": 182.72,
+          "start": 182.73,
           "end": 182.96,
           "text": "ay",
           "space_before": false
         },
         {
           "start": 182.96,
-          "end": 183.46,
+          "end": 183.44,
           "text": "I",
           "space_before": true
         },
         {
-          "start": 183.46,
-          "end": 184.0,
+          "start": 183.44,
+          "end": 183.98,
           "text": "won't",
           "space_before": true
         },
         {
-          "start": 184.0,
+          "start": 183.98,
           "end": 184.46,
           "text": "let",
           "space_before": true
         },
         {
           "start": 184.46,
-          "end": 185.58,
+          "end": 185.6,
           "text": "go",
           "space_before": true
         },
         {
-          "start": 185.58,
-          "end": 186.5,
+          "start": 185.6,
+          "end": 186.48,
           "text": "I",
           "space_before": true
         },
         {
-          "start": 186.5,
+          "start": 186.48,
           "end": 186.74,
-          "text": "count",
+          "text": "turn",
           "space_before": true
         },
         {
           "start": 186.74,
-          "end": 187.26,
+          "end": 187.24,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 187.26,
-          "end": 187.48,
+          "start": 187.24,
+          "end": 187.47,
           "text": "heav",
           "space_before": true
         },
         {
-          "start": 187.48,
+          "start": 187.47,
           "end": 187.7,
           "text": "ens",
           "space_before": false
@@ -3238,45 +3421,45 @@
         },
         {
           "start": 188.22,
-          "end": 188.6,
+          "end": 188.58,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 188.6,
-          "end": 188.96,
+          "start": 188.58,
+          "end": 188.95,
           "text": "fad",
           "space_before": true
         },
         {
-          "start": 188.96,
+          "start": 188.95,
           "end": 189.32,
           "text": "ing",
           "space_before": false
         },
         {
           "start": 189.32,
-          "end": 189.99,
-          "text": "wir",
+          "end": 190.0,
+          "text": "wat",
           "space_before": true
         },
         {
-          "start": 189.99,
-          "end": 190.66,
-          "text": "es",
+          "start": 190.0,
+          "end": 190.68,
+          "text": "ers",
           "space_before": false
         }
       ],
-      "confidence": 0.462,
+      "confidence": 0.437,
       "interjection": false
     },
     {
-      "start": 190.66,
-      "end": 201.52,
-      "text": "I strike the fire until the stars align Until the silence from the ancient time",
+      "start": 190.68,
+      "end": 201.54,
+      "text": "I strike the fire until the stars align Until the silence from the ancient times",
       "words": [
         {
-          "start": 190.66,
+          "start": 190.68,
           "end": 191.58,
           "text": "I",
           "space_before": true
@@ -3313,231 +3496,285 @@
         },
         {
           "start": 193.24,
-          "end": 193.7,
+          "end": 193.64,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 193.7,
-          "end": 194.2,
+          "start": 193.64,
+          "end": 194.24,
           "text": "stars",
           "space_before": true
         },
         {
-          "start": 194.2,
-          "end": 195.01,
+          "start": 194.24,
+          "end": 195.02,
           "text": "al",
           "space_before": true
         },
         {
-          "start": 195.01,
-          "end": 195.82,
+          "start": 195.02,
+          "end": 195.8,
           "text": "ign",
           "space_before": false
         },
         {
-          "start": 195.82,
-          "end": 196.43,
+          "start": 195.8,
+          "end": 196.42,
           "text": "Un",
           "space_before": true
         },
         {
-          "start": 196.43,
+          "start": 196.42,
           "end": 197.04,
           "text": "til",
           "space_before": false
         },
         {
           "start": 197.04,
-          "end": 197.58,
+          "end": 197.6,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 197.58,
-          "end": 197.79,
+          "start": 197.6,
+          "end": 197.8,
           "text": "sil",
           "space_before": true
         },
         {
-          "start": 197.79,
+          "start": 197.8,
           "end": 198.0,
           "text": "ence",
           "space_before": false
         },
         {
           "start": 198.0,
-          "end": 198.52,
+          "end": 198.5,
           "text": "from",
           "space_before": true
         },
         {
-          "start": 198.52,
-          "end": 199.12,
+          "start": 198.5,
+          "end": 198.98,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 199.12,
-          "end": 199.41,
+          "start": 198.98,
+          "end": 199.33,
           "text": "an",
           "space_before": true
         },
         {
-          "start": 199.41,
-          "end": 199.7,
+          "start": 199.33,
+          "end": 199.68,
           "text": "cient",
           "space_before": false
         },
         {
-          "start": 199.7,
-          "end": 201.52,
-          "text": "time",
+          "start": 199.68,
+          "end": 200.61,
+          "text": "tim",
           "space_before": true
+        },
+        {
+          "start": 200.61,
+          "end": 201.54,
+          "text": "es",
+          "space_before": false
         }
       ],
-      "confidence": 0.462,
+      "confidence": 0.437,
       "interjection": false
     },
     {
-      "start": 211.66,
-      "end": 221.5,
-      "text": "Together we will stop the cosmos We will shop the cosmos, Tuck into the cosmos, hey!",
+      "start": 201.54,
+      "end": 206.44,
+      "text": "Let's bring it on",
       "words": [
         {
-          "start": 211.66,
-          "end": 212.007,
-          "text": "Tog",
+          "start": 201.54,
+          "end": 202.1,
+          "text": "Let's",
           "space_before": true
         },
         {
-          "start": 212.007,
-          "end": 212.353,
-          "text": "et",
-          "space_before": false
-        },
-        {
-          "start": 212.353,
-          "end": 212.7,
-          "text": "her",
-          "space_before": false
-        },
-        {
-          "start": 212.7,
-          "end": 213.44,
-          "text": "we",
+          "start": 202.1,
+          "end": 202.2,
+          "text": "bring",
           "space_before": true
         },
         {
-          "start": 213.44,
-          "end": 213.68,
+          "start": 202.2,
+          "end": 204.02,
+          "text": "it",
+          "space_before": true
+        },
+        {
+          "start": 204.02,
+          "end": 206.44,
+          "text": "on",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.437,
+      "interjection": false
+    },
+    {
+      "start": 206.88,
+      "end": 207.92,
+      "text": "Let's bring it on!",
+      "words": [
+        {
+          "start": 206.88,
+          "end": 207.16,
+          "text": "Let's",
+          "space_before": true
+        },
+        {
+          "start": 207.16,
+          "end": 207.38,
+          "text": "bring",
+          "space_before": true
+        },
+        {
+          "start": 207.38,
+          "end": 207.64,
+          "text": "it",
+          "space_before": true
+        },
+        {
+          "start": 207.64,
+          "end": 207.92,
+          "text": "on",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.494,
+      "interjection": false
+    },
+    {
+      "start": 208.84,
+      "end": 211.6,
+      "text": "Let's bring it on!",
+      "words": [
+        {
+          "start": 208.84,
+          "end": 208.92,
+          "text": "Let's",
+          "space_before": true
+        },
+        {
+          "start": 208.92,
+          "end": 209.0,
+          "text": "bring",
+          "space_before": true
+        },
+        {
+          "start": 209.0,
+          "end": 209.12,
+          "text": "it",
+          "space_before": true
+        },
+        {
+          "start": 209.12,
+          "end": 211.6,
+          "text": "on",
+          "space_before": true
+        }
+      ],
+      "confidence": 0.494,
+      "interjection": false
+    },
+    {
+      "start": 213.22,
+      "end": 215.16,
+      "text": "We will stop the cosmos!",
+      "words": [
+        {
+          "start": 213.22,
+          "end": 213.38,
+          "text": "We",
+          "space_before": true
+        },
+        {
+          "start": 213.38,
+          "end": 213.72,
           "text": "will",
           "space_before": true
         },
         {
-          "start": 213.68,
+          "start": 213.72,
           "end": 213.86,
           "text": "stop",
           "space_before": true
         },
         {
           "start": 213.86,
-          "end": 214.4,
+          "end": 214.36,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 214.4,
-          "end": 214.58,
+          "start": 214.36,
+          "end": 214.76,
           "text": "cos",
           "space_before": true
         },
         {
-          "start": 214.66,
-          "end": 214.68,
+          "start": 214.76,
+          "end": 215.16,
           "text": "mos",
           "space_before": false
-        },
+        }
+      ],
+      "confidence": 0.494,
+      "interjection": false
+    },
+    {
+      "start": 218.26,
+      "end": 220.32,
+      "text": "Talk into the cosmos!",
+      "words": [
         {
-          "start": 214.92,
-          "end": 215.9,
-          "text": "We",
+          "start": 218.26,
+          "end": 218.5,
+          "text": "Talk",
           "space_before": true
         },
         {
-          "start": 215.9,
-          "end": 216.3,
-          "text": "will",
-          "space_before": true
-        },
-        {
-          "start": 216.3,
-          "end": 216.46,
-          "text": "shop",
-          "space_before": true
-        },
-        {
-          "start": 216.46,
-          "end": 216.88,
-          "text": "the",
-          "space_before": true
-        },
-        {
-          "start": 216.88,
-          "end": 217.33,
-          "text": "cos",
-          "space_before": true
-        },
-        {
-          "start": 217.33,
-          "end": 217.78,
-          "text": "mos",
-          "space_before": false
-        },
-        {
-          "start": 217.78,
-          "end": 218.52,
-          "text": "Tuck",
-          "space_before": true
-        },
-        {
-          "start": 218.52,
-          "end": 218.8,
+          "start": 218.5,
+          "end": 218.78,
           "text": "in",
           "space_before": true
         },
         {
-          "start": 218.8,
-          "end": 219.08,
+          "start": 218.78,
+          "end": 219.06,
           "text": "to",
           "space_before": false
         },
         {
-          "start": 219.08,
-          "end": 219.42,
+          "start": 219.06,
+          "end": 219.4,
           "text": "the",
           "space_before": true
         },
         {
-          "start": 219.42,
-          "end": 219.9,
+          "start": 219.4,
+          "end": 219.86,
           "text": "cos",
           "space_before": true
         },
         {
-          "start": 219.9,
-          "end": 220.38,
+          "start": 219.86,
+          "end": 220.32,
           "text": "mos",
           "space_before": false
-        },
-        {
-          "start": 220.58,
-          "end": 221.5,
-          "text": "hey",
-          "space_before": true
         }
       ],
-      "confidence": 0.343,
+      "confidence": 0.494,
       "interjection": false
     }
   ],
@@ -3547,67 +3784,80 @@
         "start": 9.729,
         "end": 10.333,
         "midi": 57,
-        "confidence": 0.727,
+        "confidence": 0.729,
         "onset": 9.88,
         "start_raw": 9.88,
         "end_raw": 10.217,
-        "lyric": null
+        "lyric": "Let's"
       },
       {
         "start": 10.333,
         "end": 10.423,
         "midi": 66,
-        "confidence": 0.766,
+        "confidence": 0.768,
         "onset": 10.298,
         "start_raw": 10.298,
         "end_raw": 10.484,
-        "lyric": null
+        "lyric": "bring"
       },
       {
         "start": 10.67,
         "end": 11.006,
         "midi": 64,
-        "confidence": 0.74,
+        "confidence": 0.742,
         "onset": 10.507,
         "start_raw": 10.507,
-        "end_raw": 10.948,
-        "lyric": null
+        "end_raw": 10.925,
+        "lyric": "it"
       },
       {
         "start": 11.006,
         "end": 12.957,
         "midi": 62,
-        "confidence": 0.83,
+        "confidence": 0.827,
         "onset": 11.006,
         "start_raw": 11.006,
         "end_raw": 13.073,
-        "lyric": null
+        "lyric": "out"
+      },
+      {
+        "start": 12.957,
+        "end": 13.282,
+        "midi": 64,
+        "confidence": 0.738,
+        "onset": 13.084,
+        "start_raw": 13.084,
+        "end_raw": 13.224,
+        "lyric": "home",
+        "tie": "start"
       },
       {
         "start": 13.282,
         "end": 13.372,
         "midi": 66,
-        "confidence": 0.724,
+        "confidence": 0.725,
         "onset": 13.224,
         "start_raw": 13.224,
         "end_raw": 13.363,
-        "lyric": null
+        "lyric": null,
+        "tie": "continue"
       },
       {
         "start": 13.375,
         "end": 15.848,
         "midi": 69,
-        "confidence": 0.835,
+        "confidence": 0.841,
         "onset": 13.375,
         "start_raw": 13.375,
         "end_raw": 15.871,
-        "lyric": null
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 16.161,
         "end": 18.112,
         "midi": 62,
-        "confidence": 0.799,
+        "confidence": 0.8,
         "onset": 16.173,
         "start_raw": 16.173,
         "end_raw": 18.228,
@@ -3617,7 +3867,7 @@
         "start": 18.437,
         "end": 18.527,
         "midi": 66,
-        "confidence": 0.727,
+        "confidence": 0.73,
         "onset": 18.379,
         "start_raw": 18.379,
         "end_raw": 18.564,
@@ -3627,7 +3877,7 @@
         "start": 18.576,
         "end": 20.039,
         "midi": 64,
-        "confidence": 0.766,
+        "confidence": 0.768,
         "onset": 18.576,
         "start_raw": 18.576,
         "end_raw": 20.097,
@@ -3637,121 +3887,129 @@
         "start": 20.352,
         "end": 20.666,
         "midi": 57,
-        "confidence": 0.733,
+        "confidence": 0.735,
         "onset": 20.248,
         "start_raw": 20.248,
-        "end_raw": 20.55,
-        "lyric": null
+        "end_raw": 20.538,
+        "lyric": "Let's"
       },
       {
         "start": 20.666,
         "end": 20.756,
         "midi": 66,
-        "confidence": 0.817,
+        "confidence": 0.82,
         "onset": 20.643,
         "start_raw": 20.643,
         "end_raw": 20.805,
-        "lyric": null
+        "lyric": "bring"
       },
       {
         "start": 20.991,
         "end": 21.316,
         "midi": 62,
-        "confidence": 0.823,
+        "confidence": 0.822,
         "onset": 20.991,
         "start_raw": 20.991,
-        "end_raw": 21.235,
-        "lyric": null
+        "end_raw": 21.246,
+        "lyric": "it"
       },
       {
         "start": 21.316,
         "end": 21.641,
         "midi": 62,
         "confidence": 0.81,
-        "onset": 21.397,
-        "start_raw": 21.397,
-        "end_raw": 21.699,
-        "lyric": null
+        "onset": 21.362,
+        "start_raw": 21.362,
+        "end_raw": 21.722,
+        "lyric": "out"
       },
       {
         "start": 21.966,
         "end": 23.266,
         "midi": 62,
-        "confidence": 0.846,
+        "confidence": 0.852,
         "onset": 21.815,
         "start_raw": 21.815,
         "end_raw": 23.417,
-        "lyric": null
+        "lyric": "home",
+        "tie": "start"
       },
       {
         "start": 23.591,
         "end": 23.681,
         "midi": 64,
-        "confidence": 0.851,
+        "confidence": 0.853,
         "onset": 23.441,
         "start_raw": 23.441,
         "end_raw": 23.719,
-        "lyric": null
+        "lyric": null,
+        "tie": "continue"
       },
       {
         "start": 23.742,
         "end": 26.169,
         "midi": 69,
-        "confidence": 0.866,
+        "confidence": 0.864,
         "onset": 23.742,
         "start_raw": 23.742,
-        "end_raw": 26.169,
-        "lyric": null
+        "end_raw": 26.215,
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 26.169,
         "end": 26.259,
         "midi": 67,
-        "confidence": 0.565,
+        "confidence": 0.528,
         "onset": 26.215,
         "start_raw": 26.215,
         "end_raw": 26.32,
-        "lyric": null
+        "lyric": "Oh",
+        "tie": "start"
       },
       {
         "start": 26.494,
         "end": 26.584,
         "midi": 61,
-        "confidence": 0.788,
+        "confidence": 0.789,
         "onset": 26.482,
         "start_raw": 26.482,
         "end_raw": 26.598,
-        "lyric": null
+        "lyric": null,
+        "tie": "continue"
       },
       {
         "start": 26.598,
         "end": 28.421,
         "midi": 62,
-        "confidence": 0.841,
+        "confidence": 0.842,
         "onset": 26.598,
         "start_raw": 26.598,
         "end_raw": 28.514,
-        "lyric": null
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 28.421,
         "end": 28.758,
         "midi": 57,
-        "confidence": 0.679,
+        "confidence": 0.682,
         "onset": 28.514,
         "start_raw": 28.514,
         "end_raw": 28.723,
-        "lyric": null
+        "lyric": "oh",
+        "tie": "start"
       },
       {
         "start": 28.758,
         "end": 28.848,
         "midi": 66,
-        "confidence": 0.867,
+        "confidence": 0.879,
         "onset": 28.758,
         "start_raw": 28.758,
         "end_raw": 28.92,
-        "lyric": null
+        "lyric": null,
+        "tie": "continue"
       },
       {
         "start": 28.92,
@@ -3761,17 +4019,18 @@
         "onset": 28.92,
         "start_raw": 28.92,
         "end_raw": 30.348,
-        "lyric": null
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 30.511,
         "end": 30.859,
         "midi": 57,
-        "confidence": 0.841,
+        "confidence": 0.85,
         "onset": 30.674,
-        "start_raw": 30.557,
-        "end_raw": 30.824,
-        "lyric": "Let's"
+        "start_raw": 30.674,
+        "end_raw": 30.801,
+        "lyric": "let's"
       },
       {
         "start": 30.859,
@@ -3781,45 +4040,35 @@
         "onset": 30.941,
         "start_raw": 30.941,
         "end_raw": 31.092,
-        "lyric": "get",
-        "tie": "start"
+        "lyric": "get"
       },
       {
         "start": 31.208,
         "end": 31.298,
         "midi": 64,
-        "confidence": 0.895,
+        "confidence": 0.9,
         "onset": 31.161,
         "start_raw": 31.161,
         "end_raw": 31.277,
-        "lyric": null,
-        "tie": "stop"
+        "lyric": "it",
+        "tie": "start"
       },
       {
-        "start": 31.324,
+        "start": 31.312,
         "end": 31.567,
         "midi": 62,
         "confidence": 0.906,
-        "onset": 31.324,
-        "start_raw": 31.324,
+        "onset": 31.312,
+        "start_raw": 31.312,
         "end_raw": 31.556,
-        "lyric": "it"
-      },
-      {
-        "start": 44.234,
-        "end": 44.324,
-        "midi": 66,
-        "confidence": 0.699,
-        "onset": 44.153,
-        "start_raw": 44.153,
-        "end_raw": 44.257,
-        "lyric": null
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 44.559,
         "end": 44.649,
         "midi": 64,
-        "confidence": 0.973,
+        "confidence": 0.975,
         "onset": 44.571,
         "start_raw": 44.466,
         "end_raw": 44.71,
@@ -3829,7 +4078,7 @@
         "start": 44.71,
         "end": 45.198,
         "midi": 66,
-        "confidence": 0.805,
+        "confidence": 0.807,
         "onset": 44.71,
         "start_raw": 44.71,
         "end_raw": 45.082,
@@ -3839,12 +4088,11 @@
         "start": 45.198,
         "end": 46.161,
         "midi": 66,
-        "confidence": 0.806,
+        "confidence": 0.807,
         "onset": 45.198,
         "start_raw": 45.198,
         "end_raw": 46.254,
-        "lyric": "What's",
-        "tie": "start"
+        "lyric": "Was"
       },
       {
         "start": 46.486,
@@ -3854,28 +4102,27 @@
         "onset": 46.405,
         "start_raw": 46.405,
         "end_raw": 46.591,
-        "lyric": null,
-        "tie": "stop"
+        "lyric": "dres"
       },
       {
         "start": 46.602,
-        "end": 47.136,
+        "end": 46.811,
         "midi": 69,
-        "confidence": 0.921,
+        "confidence": 0.939,
         "onset": 46.602,
         "start_raw": 46.602,
-        "end_raw": 46.986,
-        "lyric": "stret",
+        "end_raw": 46.962,
+        "lyric": "sed",
         "tie": "start"
       },
       {
         "start": 47.136,
         "end": 47.227,
         "midi": 62,
-        "confidence": 0.791,
+        "confidence": 0.797,
         "onset": 47.148,
         "start_raw": 47.148,
-        "end_raw": 47.241,
+        "end_raw": 47.253,
         "lyric": null,
         "tie": "stop"
       },
@@ -3883,18 +4130,18 @@
         "start": 47.276,
         "end": 47.462,
         "midi": 64,
-        "confidence": 0.858,
+        "confidence": 0.859,
         "onset": 47.276,
         "start_raw": 47.276,
         "end_raw": 47.485,
-        "lyric": "ching",
+        "lyric": "chance",
         "tie": "start"
       },
       {
         "start": 47.462,
         "end": 47.552,
         "midi": 62,
-        "confidence": 0.598,
+        "confidence": 0.599,
         "onset": 47.485,
         "start_raw": 47.485,
         "end_raw": 47.589,
@@ -3905,7 +4152,7 @@
         "start": 47.787,
         "end": 48.112,
         "midi": 62,
-        "confidence": 0.696,
+        "confidence": 0.698,
         "onset": 47.798,
         "start_raw": 47.798,
         "end_raw": 48.193,
@@ -3916,7 +4163,7 @@
         "start": 48.425,
         "end": 48.515,
         "midi": 61,
-        "confidence": 0.652,
+        "confidence": 0.653,
         "onset": 48.483,
         "start_raw": 48.402,
         "end_raw": 48.576,
@@ -3927,7 +4174,7 @@
         "start": 48.576,
         "end": 49.064,
         "midi": 62,
-        "confidence": 0.898,
+        "confidence": 0.9,
         "onset": 48.576,
         "start_raw": 48.576,
         "end_raw": 49.052,
@@ -3938,7 +4185,7 @@
         "start": 49.064,
         "end": 49.389,
         "midi": 64,
-        "confidence": 0.837,
+        "confidence": 0.838,
         "onset": 49.052,
         "start_raw": 49.052,
         "end_raw": 49.319,
@@ -3949,94 +4196,95 @@
         "start": 49.389,
         "end": 49.714,
         "midi": 66,
-        "confidence": 0.85,
+        "confidence": 0.852,
         "onset": 49.366,
         "start_raw": 49.366,
         "end_raw": 49.876,
-        "lyric": "al"
+        "lyric": "al",
+        "tie": "start"
       },
       {
         "start": 50.039,
         "end": 50.364,
         "midi": 66,
-        "confidence": 0.748,
+        "confidence": 0.749,
         "onset": 49.923,
         "start_raw": 49.923,
-        "end_raw": 50.248,
-        "lyric": "Oh",
-        "tie": "start"
-      },
-      {
-        "start": 51.966,
-        "end": 52.257,
-        "midi": 76,
-        "confidence": 0.784,
-        "onset": 51.943,
-        "start_raw": 51.943,
-        "end_raw": 52.117,
+        "end_raw": 50.202,
         "lyric": null,
         "tie": "stop"
       },
       {
+        "start": 51.966,
+        "end": 52.257,
+        "midi": 64,
+        "confidence": 0.784,
+        "onset": 51.943,
+        "start_raw": 51.943,
+        "end_raw": 52.117,
+        "lyric": "Oh",
+        "tie": "start"
+      },
+      {
         "start": 52.257,
-        "end": 53.127,
-        "midi": 76,
-        "confidence": 0.839,
+        "end": 52.837,
+        "midi": 64,
+        "confidence": 0.85,
         "onset": 52.117,
         "start_raw": 52.117,
-        "end_raw": 53.058,
-        "lyric": "the",
-        "tie": "start"
+        "end_raw": 52.976,
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 54.381,
         "end": 54.471,
-        "midi": 72,
-        "confidence": 0.826,
+        "midi": 60,
+        "confidence": 0.829,
         "onset": 54.404,
         "start_raw": 54.404,
         "end_raw": 54.497,
-        "lyric": null,
-        "tie": "continue"
+        "lyric": "the",
+        "tie": "start"
       },
       {
         "start": 54.509,
         "end": 54.671,
         "midi": 62,
-        "confidence": 0.944,
+        "confidence": 0.946,
         "onset": 54.509,
         "start_raw": 54.509,
         "end_raw": 54.753,
         "lyric": null,
-        "tie": "stop"
+        "tie": "continue"
       },
       {
         "start": 54.962,
         "end": 55.052,
         "midi": 64,
-        "confidence": 0.718,
-        "onset": 54.869,
-        "start_raw": 54.869,
+        "confidence": 0.719,
+        "onset": 54.88,
+        "start_raw": 54.88,
         "end_raw": 55.066,
-        "lyric": "rays",
-        "tie": "start"
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 55.24,
         "end": 56.169,
         "midi": 66,
-        "confidence": 0.827,
+        "confidence": 0.828,
         "onset": 55.101,
         "start_raw": 55.101,
         "end_raw": 56.065,
-        "lyric": null,
-        "tie": "continue"
+        "lyric": "rays",
+        "tie": "start"
       },
       {
         "start": 56.169,
         "end": 56.483,
         "midi": 66,
-        "confidence": 0.845,
+        "confidence": 0.846,
         "onset": 56.099,
         "start_raw": 56.099,
         "end_raw": 56.61,
@@ -4047,9 +4295,9 @@
         "start": 56.796,
         "end": 56.886,
         "midi": 67,
-        "confidence": 0.89,
-        "onset": 56.808,
-        "start_raw": 56.808,
+        "confidence": 0.874,
+        "onset": 56.784,
+        "start_raw": 56.784,
         "end_raw": 56.924,
         "lyric": "of",
         "tie": "start"
@@ -4058,7 +4306,7 @@
         "start": 56.935,
         "end": 57.446,
         "midi": 69,
-        "confidence": 0.959,
+        "confidence": 0.961,
         "onset": 56.935,
         "start_raw": 56.935,
         "end_raw": 57.342,
@@ -4069,7 +4317,7 @@
         "start": 57.446,
         "end": 57.536,
         "midi": 62,
-        "confidence": 0.662,
+        "confidence": 0.664,
         "onset": 57.446,
         "start_raw": 57.446,
         "end_raw": 57.585,
@@ -4080,7 +4328,7 @@
         "start": 57.585,
         "end": 57.771,
         "midi": 64,
-        "confidence": 0.868,
+        "confidence": 0.869,
         "onset": 57.585,
         "start_raw": 57.585,
         "end_raw": 57.899,
@@ -4089,22 +4337,22 @@
       },
       {
         "start": 57.771,
-        "end": 58.421,
+        "end": 58.096,
         "midi": 61,
-        "confidence": 0.684,
+        "confidence": 0.683,
         "onset": 57.899,
         "start_raw": 57.899,
-        "end_raw": 58.305,
+        "end_raw": 58.061,
         "lyric": null,
         "tie": "continue"
       },
       {
-        "start": 58.421,
+        "start": 58.096,
         "end": 58.746,
         "midi": 62,
-        "confidence": 0.774,
+        "confidence": 0.775,
         "onset": 58.363,
-        "start_raw": 58.363,
+        "start_raw": 58.201,
         "end_raw": 58.607,
         "lyric": null,
         "tie": "stop"
@@ -4113,7 +4361,7 @@
         "start": 58.746,
         "end": 59.373,
         "midi": 62,
-        "confidence": 0.847,
+        "confidence": 0.849,
         "onset": 58.746,
         "start_raw": 58.746,
         "end_raw": 59.246,
@@ -4123,7 +4371,7 @@
         "start": 59.373,
         "end": 59.699,
         "midi": 64,
-        "confidence": 0.853,
+        "confidence": 0.854,
         "onset": 59.315,
         "start_raw": 59.315,
         "end_raw": 59.559,
@@ -4133,7 +4381,7 @@
         "start": 59.699,
         "end": 60.349,
         "midi": 66,
-        "confidence": 0.862,
+        "confidence": 0.864,
         "onset": 59.699,
         "start_raw": 59.699,
         "end_raw": 60.36,
@@ -4144,23 +4392,34 @@
         "start": 60.349,
         "end": 60.674,
         "midi": 66,
-        "confidence": 0.772,
+        "confidence": 0.781,
         "onset": 60.43,
         "start_raw": 60.43,
-        "end_raw": 60.639,
+        "end_raw": 60.604,
         "lyric": null,
-        "tie": "stop"
+        "tie": "continue"
+      },
+      {
+        "start": 61.974,
+        "end": 62.299,
+        "midi": 55,
+        "confidence": 0.72,
+        "onset": 62.09,
+        "start_raw": 62.09,
+        "end_raw": 62.183,
+        "lyric": null,
+        "tie": "continue"
       },
       {
         "start": 62.299,
         "end": 62.389,
-        "midi": 69,
+        "midi": 57,
         "confidence": 0.959,
         "onset": 62.288,
-        "start_raw": 62.171,
+        "start_raw": 62.288,
         "end_raw": 62.392,
-        "lyric": "Whoa",
-        "tie": "start"
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 62.392,
@@ -4170,14 +4429,13 @@
         "onset": 62.485,
         "start_raw": 62.392,
         "end_raw": 63.251,
-        "lyric": null,
-        "tie": "stop"
+        "lyric": null
       },
       {
         "start": 64.714,
         "end": 65.109,
         "midi": 66,
-        "confidence": 0.869,
+        "confidence": 0.886,
         "onset": 64.853,
         "start_raw": 64.853,
         "end_raw": 65.109,
@@ -4187,7 +4445,7 @@
         "start": 65.109,
         "end": 65.306,
         "midi": 67,
-        "confidence": 0.89,
+        "confidence": 0.829,
         "onset": 65.109,
         "start_raw": 65.109,
         "end_raw": 65.306,
@@ -4198,10 +4456,10 @@
         "start": 65.504,
         "end": 65.829,
         "midi": 69,
-        "confidence": 0.845,
+        "confidence": 0.868,
         "onset": 65.318,
         "start_raw": 65.318,
-        "end_raw": 65.759,
+        "end_raw": 65.701,
         "lyric": null,
         "tie": "stop"
       },
@@ -4209,7 +4467,7 @@
         "start": 65.829,
         "end": 66.154,
         "midi": 65,
-        "confidence": 0.711,
+        "confidence": 0.712,
         "onset": 65.887,
         "start_raw": 65.829,
         "end_raw": 66.212,
@@ -4219,7 +4477,7 @@
         "start": 66.154,
         "end": 66.479,
         "midi": 66,
-        "confidence": 0.756,
+        "confidence": 0.754,
         "onset": 66.281,
         "start_raw": 66.281,
         "end_raw": 66.409,
@@ -4229,7 +4487,7 @@
         "start": 66.479,
         "end": 66.804,
         "midi": 69,
-        "confidence": 0.941,
+        "confidence": 0.942,
         "onset": 66.444,
         "start_raw": 66.444,
         "end_raw": 66.92,
@@ -4255,17 +4513,17 @@
         "onset": 67.233,
         "start_raw": 67.233,
         "end_raw": 67.361,
-        "lyric": "land"
+        "lyric": "and"
       },
       {
         "start": 67.454,
         "end": 67.544,
         "midi": 66,
-        "confidence": 0.799,
-        "onset": 67.408,
-        "start_raw": 67.408,
+        "confidence": 0.803,
+        "onset": 67.431,
+        "start_raw": 67.431,
         "end_raw": 67.57,
-        "lyric": "to",
+        "lyric": "prec",
         "tie": "start"
       },
       {
@@ -4283,32 +4541,27 @@
         "start": 67.779,
         "end": 68.418,
         "midi": 69,
-        "confidence": 0.954,
+        "confidence": 0.955,
         "onset": 67.744,
         "start_raw": 67.744,
         "end_raw": 68.348,
-        "lyric": "car-ry",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "car",
-          "ry"
-        ]
+        "lyric": "ar"
       },
       {
         "start": 68.418,
         "end": 68.731,
         "midi": 66,
-        "confidence": 0.849,
+        "confidence": 0.851,
         "onset": 68.348,
         "start_raw": 68.348,
         "end_raw": 68.615,
-        "lyric": "us"
+        "lyric": "ious"
       },
       {
         "start": 68.731,
         "end": 69.056,
         "midi": 66,
-        "confidence": 0.624,
+        "confidence": 0.549,
         "onset": 68.766,
         "start_raw": 68.766,
         "end_raw": 68.952,
@@ -4318,36 +4571,36 @@
         "start": 69.056,
         "end": 69.381,
         "midi": 69,
-        "confidence": 0.818,
+        "confidence": 0.819,
         "onset": 69.01,
         "start_raw": 69.01,
-        "end_raw": 69.462,
+        "end_raw": 69.474,
         "lyric": "ross"
       },
       {
         "start": 69.381,
         "end": 70.031,
         "midi": 71,
-        "confidence": 0.952,
+        "confidence": 0.949,
         "onset": 69.532,
         "start_raw": 69.532,
         "end_raw": 69.939,
-        "lyric": "the-sky-can't",
+        "lyric": "the-sight-you",
         "lyric_extend": true,
         "lyric_syllables": [
           "the",
-          "sky",
-          "can't"
+          "sight",
+          "you"
         ]
       },
       {
         "start": 70.356,
         "end": 70.446,
         "midi": 73,
-        "confidence": 0.893,
+        "confidence": 0.906,
         "onset": 70.24,
         "start_raw": 70.24,
-        "end_raw": 70.438,
+        "end_raw": 70.426,
         "lyric": "see"
       },
       {
@@ -4358,54 +4611,55 @@
         "onset": 70.763,
         "start_raw": 70.763,
         "end_raw": 71.262,
-        "lyric": "when"
+        "lyric": "one"
       },
       {
         "start": 71.332,
         "end": 71.645,
         "midi": 64,
-        "confidence": 0.761,
+        "confidence": 0.762,
         "onset": 71.32,
         "start_raw": 71.32,
         "end_raw": 71.634,
-        "lyric": "they're"
+        "lyric": "day-oh",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "day",
+          "oh"
+        ]
       },
       {
         "start": 71.645,
         "end": 71.959,
         "midi": 62,
-        "confidence": 0.869,
+        "confidence": 0.872,
         "onset": 71.645,
         "start_raw": 71.645,
         "end_raw": 71.877,
-        "lyric": "aw"
+        "lyric": "where"
       },
       {
         "start": 71.959,
         "end": 72.284,
         "midi": 62,
-        "confidence": 0.549,
+        "confidence": 0.551,
         "onset": 71.877,
         "start_raw": 71.877,
         "end_raw": 72.191,
-        "lyric": "ay-far",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "ay",
-          "far"
-        ]
+        "lyric": "to"
       },
       {
         "start": 72.284,
         "end": 72.609,
         "midi": 64,
-        "confidence": 0.761,
+        "confidence": 0.762,
         "onset": 72.191,
         "start_raw": 72.191,
         "end_raw": 72.528,
-        "lyric": "aw-ay",
+        "lyric": "fall-aw-ay",
         "lyric_extend": true,
         "lyric_syllables": [
+          "fall",
           "aw",
           "ay"
         ]
@@ -4414,7 +4668,7 @@
         "start": 73.259,
         "end": 73.349,
         "midi": 62,
-        "confidence": 0.824,
+        "confidence": 0.828,
         "onset": 73.201,
         "start_raw": 73.201,
         "end_raw": 73.363,
@@ -4424,25 +4678,25 @@
         "start": 73.363,
         "end": 73.909,
         "midi": 61,
-        "confidence": 0.852,
+        "confidence": 0.874,
         "onset": 73.503,
         "start_raw": 73.363,
         "end_raw": 73.77,
-        "lyric": "at"
+        "lyric": "out"
       },
       {
         "start": 73.909,
         "end": 74.559,
         "midi": 64,
-        "confidence": 0.856,
+        "confidence": 0.858,
         "onset": 73.979,
         "start_raw": 73.979,
         "end_raw": 74.408,
-        "lyric": "why-I",
+        "lyric": "right-ov",
         "lyric_extend": true,
         "lyric_syllables": [
-          "why",
-          "I"
+          "right",
+          "ov"
         ]
       },
       {
@@ -4453,27 +4707,22 @@
         "onset": 74.408,
         "start_raw": 74.408,
         "end_raw": 74.989,
-        "lyric": "don't-bel",
+        "lyric": "er-here",
         "lyric_extend": true,
         "lyric_syllables": [
-          "don't",
-          "bel"
+          "er",
+          "here"
         ]
       },
       {
         "start": 74.884,
         "end": 75.209,
         "midi": 62,
-        "confidence": 0.763,
+        "confidence": 0.764,
         "onset": 75.012,
         "start_raw": 75.012,
         "end_raw": 75.163,
-        "lyric": "ieve-the",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "ieve",
-          "the"
-        ]
+        "lyric": "lead"
       },
       {
         "start": 75.523,
@@ -4483,79 +4732,72 @@
         "onset": 75.523,
         "start_raw": 75.523,
         "end_raw": 75.674,
-        "lyric": "way"
+        "lyric": "the-way",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "the",
+          "way"
+        ]
       },
       {
         "start": 75.674,
         "end": 77.462,
         "midi": 62,
-        "confidence": 0.941,
+        "confidence": 0.94,
         "onset": 75.674,
         "start_raw": 75.674,
         "end_raw": 77.531,
-        "lyric": "Oh"
+        "lyric": null
       },
       {
         "start": 77.462,
         "end": 77.787,
         "midi": 64,
         "confidence": 0.917,
-        "onset": 77.578,
-        "start_raw": 77.578,
-        "end_raw": 77.706,
-        "lyric": "oh",
-        "tie": "start"
+        "onset": 77.566,
+        "start_raw": 77.566,
+        "end_raw": 77.729,
+        "lyric": null
       },
       {
         "start": 77.787,
         "end": 77.877,
         "midi": 66,
-        "confidence": 0.845,
-        "onset": 77.706,
-        "start_raw": 77.706,
+        "confidence": 0.873,
+        "onset": 77.729,
+        "start_raw": 77.729,
         "end_raw": 77.926,
-        "lyric": null,
-        "tie": "stop"
+        "lyric": null
       },
       {
         "start": 77.926,
         "end": 80.364,
         "midi": 64,
-        "confidence": 0.939,
+        "confidence": 0.937,
         "onset": 77.926,
         "start_raw": 77.926,
-        "end_raw": 80.364,
-        "lyric": "oh-oh",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "oh",
-          "oh"
-        ]
+        "end_raw": 80.376,
+        "lyric": null
       },
       {
         "start": 80.689,
         "end": 80.779,
         "midi": 61,
-        "confidence": 0.942,
+        "confidence": 0.941,
         "onset": 80.655,
         "start_raw": 80.655,
         "end_raw": 80.829,
-        "lyric": "oh"
+        "lyric": null
       },
       {
         "start": 80.829,
         "end": 82.675,
         "midi": 62,
-        "confidence": 0.982,
+        "confidence": 0.978,
         "onset": 80.829,
         "start_raw": 80.829,
         "end_raw": 82.744,
-        "lyric": "Oh-oh",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "Oh",
-          "oh"
-        ]
+        "lyric": null
       },
       {
         "start": 82.675,
@@ -4565,8 +4807,7 @@
         "onset": 82.744,
         "start_raw": 82.744,
         "end_raw": 82.884,
-        "lyric": "oh",
-        "tie": "start"
+        "lyric": null
       },
       {
         "start": 83.035,
@@ -4576,29 +4817,23 @@
         "onset": 82.884,
         "start_raw": 82.884,
         "end_raw": 83.081,
-        "lyric": null,
-        "tie": "stop"
+        "lyric": null
       },
       {
         "start": 83.151,
         "end": 84.776,
         "midi": 69,
-        "confidence": 0.897,
+        "confidence": 0.895,
         "onset": 83.151,
         "start_raw": 83.151,
         "end_raw": 84.66,
-        "lyric": "oh-oh",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "oh",
-          "oh"
-        ]
+        "lyric": "Ohhhhhhhhhhh"
       },
       {
         "start": 84.776,
         "end": 84.866,
         "midi": 64,
-        "confidence": 0.877,
+        "confidence": 0.879,
         "onset": 84.706,
         "start_raw": 84.706,
         "end_raw": 84.869,
@@ -4608,7 +4843,7 @@
         "start": 84.869,
         "end": 85.124,
         "midi": 66,
-        "confidence": 0.846,
+        "confidence": 0.85,
         "onset": 84.869,
         "start_raw": 84.869,
         "end_raw": 85.055,
@@ -4619,10 +4854,10 @@
         "start": 85.484,
         "end": 85.844,
         "midi": 59,
-        "confidence": 0.923,
+        "confidence": 0.898,
         "onset": 85.357,
         "start_raw": 85.357,
-        "end_raw": 85.786,
+        "end_raw": 85.798,
         "lyric": null,
         "tie": "stop"
       },
@@ -4630,7 +4865,7 @@
         "start": 85.844,
         "end": 85.934,
         "midi": 57,
-        "confidence": 0.846,
+        "confidence": 0.838,
         "onset": 85.844,
         "start_raw": 85.844,
         "end_raw": 85.937,
@@ -4640,7 +4875,7 @@
         "start": 85.96,
         "end": 86.169,
         "midi": 59,
-        "confidence": 0.851,
+        "confidence": 0.856,
         "onset": 85.96,
         "start_raw": 85.96,
         "end_raw": 86.146,
@@ -4650,7 +4885,7 @@
         "start": 86.169,
         "end": 86.494,
         "midi": 61,
-        "confidence": 0.931,
+        "confidence": 0.927,
         "onset": 86.169,
         "start_raw": 86.169,
         "end_raw": 86.343,
@@ -4660,7 +4895,7 @@
         "start": 86.494,
         "end": 86.819,
         "midi": 62,
-        "confidence": 0.892,
+        "confidence": 0.895,
         "onset": 86.494,
         "start_raw": 86.494,
         "end_raw": 86.761,
@@ -4670,7 +4905,7 @@
         "start": 86.819,
         "end": 87.144,
         "midi": 66,
-        "confidence": 0.914,
+        "confidence": 0.912,
         "onset": 86.808,
         "start_raw": 86.808,
         "end_raw": 87.052,
@@ -4681,39 +4916,44 @@
         "start": 87.144,
         "end": 87.234,
         "midi": 71,
-        "confidence": 0.888,
+        "confidence": 0.889,
         "onset": 87.121,
         "start_raw": 87.121,
-        "end_raw": 87.237,
+        "end_raw": 87.284,
         "lyric": null,
         "tie": "stop"
       },
       {
-        "start": 87.237,
+        "start": 87.284,
         "end": 87.458,
         "midi": 73,
-        "confidence": 0.851,
-        "onset": 87.237,
-        "start_raw": 87.237,
+        "confidence": 0.93,
+        "onset": 87.284,
+        "start_raw": 87.284,
         "end_raw": 87.574,
-        "lyric": "heart"
+        "lyric": "whol-e",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "whol",
+          "e"
+        ]
       },
       {
         "start": 87.771,
         "end": 88.097,
         "midi": 69,
-        "confidence": 0.891,
+        "confidence": 0.894,
         "onset": 87.655,
         "start_raw": 87.655,
         "end_raw": 87.98,
-        "lyric": "and",
+        "lyric": "un",
         "tie": "start"
       },
       {
         "start": 88.097,
         "end": 88.422,
         "midi": 67,
-        "confidence": 0.806,
+        "confidence": 0.752,
         "onset": 88.201,
         "start_raw": 88.131,
         "end_raw": 88.305,
@@ -4728,36 +4968,35 @@
         "onset": 88.433,
         "start_raw": 88.433,
         "end_raw": 88.526,
-        "lyric": "shame",
+        "lyric": "sham",
         "tie": "start"
       },
       {
         "start": 88.526,
         "end": 88.747,
         "midi": 67,
-        "confidence": 0.815,
+        "confidence": 0.816,
         "onset": 88.526,
         "start_raw": 88.526,
         "end_raw": 88.619,
         "lyric": null,
-        "tie": "continue"
+        "tie": "stop"
       },
       {
         "start": 89.072,
         "end": 89.699,
         "midi": 66,
-        "confidence": 0.763,
+        "confidence": 0.76,
         "onset": 89.153,
         "start_raw": 89.153,
-        "end_raw": 89.548,
-        "lyric": null,
-        "tie": "stop"
+        "end_raw": 89.559,
+        "lyric": "ed"
       },
       {
         "start": 89.699,
         "end": 90.024,
         "midi": 64,
-        "confidence": 0.91,
+        "confidence": 0.902,
         "onset": 89.78,
         "start_raw": 89.78,
         "end_raw": 89.954,
@@ -4768,7 +5007,7 @@
         "start": 90.024,
         "end": 90.349,
         "midi": 66,
-        "confidence": 0.82,
+        "confidence": 0.824,
         "onset": 89.954,
         "start_raw": 89.954,
         "end_raw": 90.256,
@@ -4779,17 +5018,17 @@
         "start": 90.349,
         "end": 90.999,
         "midi": 59,
-        "confidence": 0.824,
+        "confidence": 0.828,
         "onset": 90.349,
         "start_raw": 90.349,
-        "end_raw": 90.953,
+        "end_raw": 90.976,
         "lyric": "as"
       },
       {
         "start": 90.999,
         "end": 91.324,
         "midi": 59,
-        "confidence": 0.815,
+        "confidence": 0.818,
         "onset": 91.115,
         "start_raw": 91.115,
         "end_raw": 91.312,
@@ -4799,17 +5038,22 @@
         "start": 91.324,
         "end": 91.414,
         "midi": 61,
-        "confidence": 0.544,
+        "confidence": 0.546,
         "onset": 91.371,
         "start_raw": 91.371,
         "end_raw": 91.463,
-        "lyric": "caught"
+        "lyric": "cal-led",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "cal",
+          "led"
+        ]
       },
       {
         "start": 91.649,
         "end": 91.974,
         "midi": 62,
-        "confidence": 0.897,
+        "confidence": 0.9,
         "onset": 91.638,
         "start_raw": 91.638,
         "end_raw": 91.881,
@@ -4823,13 +5067,13 @@
         "onset": 91.951,
         "start_raw": 91.951,
         "end_raw": 92.183,
-        "lyric": "to"
+        "lyric": "they"
       },
       {
         "start": 92.299,
         "end": 92.389,
         "midi": 71,
-        "confidence": 0.863,
+        "confidence": 0.865,
         "onset": 92.299,
         "start_raw": 92.299,
         "end_raw": 92.45,
@@ -4840,7 +5084,7 @@
         "start": 92.624,
         "end": 92.714,
         "midi": 73,
-        "confidence": 0.906,
+        "confidence": 0.907,
         "onset": 92.485,
         "start_raw": 92.485,
         "end_raw": 92.729,
@@ -4862,7 +5106,7 @@
         "start": 93.309,
         "end": 93.399,
         "midi": 73,
-        "confidence": 0.881,
+        "confidence": 0.884,
         "onset": 93.263,
         "start_raw": 93.263,
         "end_raw": 93.425,
@@ -4873,7 +5117,7 @@
         "start": 93.425,
         "end": 95.062,
         "midi": 74,
-        "confidence": 0.932,
+        "confidence": 0.934,
         "onset": 93.425,
         "start_raw": 93.425,
         "end_raw": 94.912,
@@ -4886,36 +5130,35 @@
         "confidence": 0.912,
         "onset": 106.463,
         "start_raw": 106.463,
-        "end_raw": 106.707,
+        "end_raw": 106.684,
         "lyric": null
       },
       {
         "start": 106.812,
         "end": 107.148,
         "midi": 66,
-        "confidence": 0.767,
-        "onset": 106.742,
-        "start_raw": 106.742,
+        "confidence": 0.662,
+        "onset": 106.684,
+        "start_raw": 106.684,
         "end_raw": 107.032,
-        "lyric": "Just",
-        "tie": "start"
+        "lyric": null
       },
       {
         "start": 107.148,
         "end": 107.485,
         "midi": 66,
-        "confidence": 0.858,
+        "confidence": 0.856,
         "onset": 107.241,
         "start_raw": 107.079,
         "end_raw": 107.601,
-        "lyric": null,
-        "tie": "continue"
+        "lyric": "Just",
+        "tie": "start"
       },
       {
         "start": 107.81,
         "end": 108.449,
         "midi": 66,
-        "confidence": 0.817,
+        "confidence": 0.815,
         "onset": 107.648,
         "start_raw": 107.648,
         "end_raw": 108.368,
@@ -4937,10 +5180,10 @@
         "start": 108.762,
         "end": 109.076,
         "midi": 71,
-        "confidence": 0.732,
+        "confidence": 0.727,
         "onset": 108.739,
         "start_raw": 108.739,
-        "end_raw": 108.936,
+        "end_raw": 108.948,
         "lyric": null,
         "tie": "stop"
       },
@@ -4948,7 +5191,7 @@
         "start": 109.076,
         "end": 109.166,
         "midi": 62,
-        "confidence": 0.822,
+        "confidence": 0.823,
         "onset": 109.076,
         "start_raw": 109.076,
         "end_raw": 109.192,
@@ -4970,7 +5213,7 @@
         "start": 109.703,
         "end": 109.793,
         "midi": 62,
-        "confidence": 0.734,
+        "confidence": 0.732,
         "onset": 109.679,
         "start_raw": 109.679,
         "end_raw": 109.772,
@@ -5002,7 +5245,7 @@
         "start": 110.666,
         "end": 111.317,
         "midi": 64,
-        "confidence": 0.945,
+        "confidence": 0.946,
         "onset": 110.806,
         "start_raw": 110.806,
         "end_raw": 111.154,
@@ -5012,17 +5255,17 @@
         "start": 111.317,
         "end": 111.967,
         "midi": 66,
-        "confidence": 0.891,
+        "confidence": 0.895,
         "onset": 111.328,
         "start_raw": 111.328,
-        "end_raw": 111.967,
-        "lyric": "come"
+        "end_raw": 111.955,
+        "lyric": "go"
       },
       {
         "start": 113.894,
         "end": 113.984,
         "midi": 64,
-        "confidence": 0.762,
+        "confidence": 0.764,
         "onset": 113.905,
         "start_raw": 113.905,
         "end_raw": 113.998,
@@ -5042,7 +5285,7 @@
         "start": 114.219,
         "end": 114.544,
         "midi": 64,
-        "confidence": 0.819,
+        "confidence": 0.825,
         "onset": 114.08,
         "start_raw": 114.08,
         "end_raw": 114.579,
@@ -5052,29 +5295,37 @@
         "start": 114.544,
         "end": 114.869,
         "midi": 66,
-        "confidence": 0.664,
+        "confidence": 0.633,
         "onset": 114.579,
         "start_raw": 114.579,
-        "end_raw": 114.858,
-        "lyric": "Oh",
-        "tie": "start"
+        "end_raw": 114.846,
+        "lyric": null
+      },
+      {
+        "start": 115.519,
+        "end": 115.609,
+        "midi": 65,
+        "confidence": 0.66,
+        "onset": 115.392,
+        "start_raw": 115.392,
+        "end_raw": 115.496,
+        "lyric": null
       },
       {
         "start": 116.495,
         "end": 116.82,
         "midi": 62,
-        "confidence": 0.903,
+        "confidence": 0.902,
         "onset": 116.483,
         "start_raw": 116.483,
         "end_raw": 116.703,
-        "lyric": null,
-        "tie": "stop"
+        "lyric": "Oh"
       },
       {
         "start": 116.82,
         "end": 117.145,
         "midi": 64,
-        "confidence": 0.885,
+        "confidence": 0.887,
         "onset": 116.808,
         "start_raw": 116.808,
         "end_raw": 116.994,
@@ -5084,18 +5335,18 @@
         "start": 117.145,
         "end": 117.772,
         "midi": 66,
-        "confidence": 0.871,
+        "confidence": 0.873,
         "onset": 117.005,
         "start_raw": 117.005,
         "end_raw": 117.76,
-        "lyric": "real",
+        "lyric": "way",
         "tie": "start"
       },
       {
         "start": 117.772,
         "end": 118.747,
         "midi": 66,
-        "confidence": 0.943,
+        "confidence": 0.944,
         "onset": 117.83,
         "start_raw": 117.83,
         "end_raw": 118.735,
@@ -5106,11 +5357,11 @@
         "start": 118.747,
         "end": 118.837,
         "midi": 67,
-        "confidence": 0.933,
+        "confidence": 0.93,
         "onset": 118.747,
         "start_raw": 118.747,
         "end_raw": 118.886,
-        "lyric": "is",
+        "lyric": "we",
         "tie": "start"
       },
       {
@@ -5120,7 +5371,7 @@
         "confidence": 0.94,
         "onset": 118.909,
         "start_raw": 118.909,
-        "end_raw": 119.258,
+        "end_raw": 119.246,
         "lyric": null,
         "tie": "stop"
       },
@@ -5128,18 +5379,18 @@
         "start": 119.385,
         "end": 119.475,
         "midi": 62,
-        "confidence": 0.816,
+        "confidence": 0.815,
         "onset": 119.327,
         "start_raw": 119.327,
         "end_raw": 119.49,
-        "lyric": "sues",
+        "lyric": "choose",
         "tie": "start"
       },
       {
         "start": 119.513,
         "end": 119.699,
         "midi": 64,
-        "confidence": 0.881,
+        "confidence": 0.898,
         "onset": 119.513,
         "start_raw": 119.513,
         "end_raw": 119.815,
@@ -5154,14 +5405,14 @@
         "onset": 119.943,
         "start_raw": 119.943,
         "end_raw": 120.036,
-        "lyric": "as",
+        "lyric": "a",
         "tie": "start"
       },
       {
         "start": 120.349,
         "end": 120.439,
         "midi": 62,
-        "confidence": 0.833,
+        "confidence": 0.835,
         "onset": 120.303,
         "start_raw": 120.303,
         "end_raw": 120.5,
@@ -5172,18 +5423,18 @@
         "start": 120.674,
         "end": 120.764,
         "midi": 60,
-        "confidence": 0.8,
+        "confidence": 0.802,
         "onset": 120.686,
         "start_raw": 120.686,
         "end_raw": 120.779,
-        "lyric": "fat",
+        "lyric": "space",
         "tie": "start"
       },
       {
         "start": 120.999,
         "end": 121.089,
         "midi": 62,
-        "confidence": 0.874,
+        "confidence": 0.875,
         "onset": 120.871,
         "start_raw": 120.871,
         "end_raw": 121.08,
@@ -5194,37 +5445,39 @@
         "start": 121.324,
         "end": 121.649,
         "midi": 64,
-        "confidence": 0.87,
+        "confidence": 0.889,
         "onset": 121.197,
         "start_raw": 121.197,
-        "end_raw": 121.615,
-        "lyric": "e's"
+        "end_raw": 121.603,
+        "lyric": "out"
       },
       {
         "start": 121.649,
         "end": 121.974,
         "midi": 66,
-        "confidence": 0.869,
+        "confidence": 0.871,
         "onset": 121.847,
         "start_raw": 121.684,
         "end_raw": 122.102,
-        "lyric": "out"
+        "lyric": "come",
+        "tie": "start"
       },
       {
         "start": 122.299,
         "end": 122.389,
         "midi": 66,
-        "confidence": 0.849,
+        "confidence": 0.852,
         "onset": 122.149,
         "start_raw": 122.149,
         "end_raw": 122.416,
-        "lyric": "come"
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 123.577,
         "end": 123.667,
         "midi": 69,
-        "confidence": 0.663,
+        "confidence": 0.662,
         "onset": 123.484,
         "start_raw": 123.484,
         "end_raw": 123.739,
@@ -5234,7 +5487,7 @@
         "start": 123.902,
         "end": 123.992,
         "midi": 68,
-        "confidence": 0.724,
+        "confidence": 0.725,
         "onset": 123.774,
         "start_raw": 123.774,
         "end_raw": 123.983,
@@ -5244,9 +5497,9 @@
         "start": 124.227,
         "end": 124.317,
         "midi": 69,
-        "confidence": 0.926,
-        "onset": 124.215,
-        "start_raw": 124.215,
+        "confidence": 0.932,
+        "onset": 124.285,
+        "start_raw": 124.285,
         "end_raw": 124.389,
         "lyric": null
       },
@@ -5254,43 +5507,42 @@
         "start": 124.552,
         "end": 125.527,
         "midi": 64,
-        "confidence": 0.926,
+        "confidence": 0.928,
         "onset": 124.401,
         "start_raw": 124.401,
         "end_raw": 125.469,
-        "lyric": "Oh",
-        "tie": "start"
+        "lyric": null
       },
       {
         "start": 125.527,
         "end": 125.617,
         "midi": 62,
-        "confidence": 0.715,
+        "confidence": 0.717,
         "onset": 125.469,
         "start_raw": 125.469,
         "end_raw": 125.62,
-        "lyric": null,
-        "tie": "continue"
+        "lyric": "Oh",
+        "tie": "start"
       },
       {
         "start": 125.62,
         "end": 125.841,
         "midi": 61,
-        "confidence": 0.801,
+        "confidence": 0.803,
         "onset": 125.62,
         "start_raw": 125.62,
-        "end_raw": 125.899,
+        "end_raw": 125.887,
         "lyric": null,
         "tie": "continue"
       },
       {
         "start": 126.154,
-        "end": 126.479,
+        "end": 126.244,
         "midi": 61,
-        "confidence": 0.778,
+        "confidence": 0.688,
         "onset": 126.038,
         "start_raw": 126.038,
-        "end_raw": 126.421,
+        "end_raw": 126.235,
         "lyric": null,
         "tie": "stop"
       },
@@ -5298,7 +5550,7 @@
         "start": 126.804,
         "end": 127.129,
         "midi": 66,
-        "confidence": 0.854,
+        "confidence": 0.856,
         "onset": 126.746,
         "start_raw": 126.746,
         "end_raw": 127.234,
@@ -5319,7 +5571,7 @@
         "start": 127.454,
         "end": 127.779,
         "midi": 69,
-        "confidence": 0.789,
+        "confidence": 0.792,
         "onset": 127.489,
         "start_raw": 127.489,
         "end_raw": 127.733,
@@ -5330,7 +5582,7 @@
         "start": 127.779,
         "end": 128.105,
         "midi": 66,
-        "confidence": 0.951,
+        "confidence": 0.953,
         "onset": 127.745,
         "start_raw": 127.745,
         "end_raw": 128.255,
@@ -5340,7 +5592,7 @@
         "start": 128.105,
         "end": 128.43,
         "midi": 65,
-        "confidence": 0.611,
+        "confidence": 0.612,
         "onset": 128.255,
         "start_raw": 128.255,
         "end_raw": 128.395,
@@ -5350,11 +5602,11 @@
         "start": 128.43,
         "end": 128.755,
         "midi": 69,
-        "confidence": 0.876,
+        "confidence": 0.877,
         "onset": 128.418,
         "start_raw": 128.418,
         "end_raw": 128.836,
-        "lyric": "we're"
+        "lyric": "we've"
       },
       {
         "start": 129.068,
@@ -5364,10 +5616,11 @@
         "onset": 129.01,
         "start_raw": 129.01,
         "end_raw": 129.138,
-        "lyric": "done-To",
+        "lyric": "got-time-To",
         "lyric_extend": true,
         "lyric_syllables": [
-          "done",
+          "got",
+          "time",
           "To"
         ]
       },
@@ -5375,7 +5628,7 @@
         "start": 129.707,
         "end": 130.426,
         "midi": 69,
-        "confidence": 0.837,
+        "confidence": 0.836,
         "onset": 129.649,
         "start_raw": 129.649,
         "end_raw": 130.241,
@@ -5390,56 +5643,51 @@
         "start": 130.426,
         "end": 130.821,
         "midi": 66,
-        "confidence": 0.813,
+        "confidence": 0.819,
         "onset": 130.322,
         "start_raw": 130.322,
         "end_raw": 130.937,
-        "lyric": "soul's"
+        "lyric": "soul"
       },
       {
         "start": 130.821,
         "end": 131.158,
         "midi": 69,
-        "confidence": 0.919,
+        "confidence": 0.916,
         "onset": 130.972,
         "start_raw": 130.972,
         "end_raw": 131.204,
-        "lyric": "bil"
-      },
-      {
-        "start": 131.158,
-        "end": 131.495,
-        "midi": 70,
-        "confidence": 0.487,
-        "onset": 131.286,
-        "start_raw": 131.286,
-        "end_raw": 131.425,
-        "lyric": "let-ab",
+        "lyric": "speed-let",
         "lyric_extend": true,
         "lyric_syllables": [
-          "let",
-          "ab"
+          "speed",
+          "let"
         ]
       },
       {
         "start": 131.495,
         "end": 131.855,
         "midi": 71,
-        "confidence": 0.882,
+        "confidence": 0.883,
         "onset": 131.448,
         "start_raw": 131.448,
         "end_raw": 131.704,
-        "lyric": "ove"
+        "lyric": "the-blood",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "the",
+          "blood"
+        ]
       },
       {
         "start": 131.855,
         "end": 131.945,
         "midi": 74,
-        "confidence": 0.787,
+        "confidence": 0.788,
         "onset": 131.773,
         "start_raw": 131.773,
         "end_raw": 132.005,
-        "lyric": "my"
+        "lyric": "flow"
       },
       {
         "start": 132.214,
@@ -5449,37 +5697,36 @@
         "onset": 132.098,
         "start_raw": 132.098,
         "end_raw": 132.505,
-        "lyric": "soul"
+        "lyric": "And"
       },
       {
         "start": 132.574,
         "end": 133.259,
         "midi": 66,
-        "confidence": 0.815,
+        "confidence": 0.818,
         "onset": 132.563,
         "start_raw": 132.563,
         "end_raw": 133.248,
-        "lyric": "And-we're-gone",
+        "lyric": "we-got",
         "lyric_extend": true,
         "lyric_syllables": [
-          "And",
-          "we're",
-          "gone"
+          "we",
+          "got"
         ]
       },
       {
         "start": 133.259,
         "end": 133.91,
         "midi": 69,
-        "confidence": 0.902,
+        "confidence": 0.905,
         "onset": 133.248,
         "start_raw": 133.248,
         "end_raw": 133.805,
-        "lyric": "in-your-mind",
+        "lyric": "it-in-mind",
         "lyric_extend": true,
         "lyric_syllables": [
+          "it",
           "in",
-          "your",
           "mind"
         ]
       },
@@ -5487,73 +5734,66 @@
         "start": 133.91,
         "end": 134.56,
         "midi": 66,
-        "confidence": 0.817,
+        "confidence": 0.816,
         "onset": 133.805,
         "start_raw": 133.805,
         "end_raw": 134.502,
-        "lyric": "we-won't-leave",
+        "lyric": "we-won't",
         "lyric_extend": true,
         "lyric_syllables": [
           "we",
-          "won't",
-          "leave"
+          "won't"
         ]
       },
       {
         "start": 134.56,
         "end": 134.885,
         "midi": 69,
-        "confidence": 0.814,
+        "confidence": 0.816,
         "onset": 134.502,
         "start_raw": 134.502,
         "end_raw": 134.757,
-        "lyric": "I'm-beh",
+        "lyric": "leave-I'm",
         "lyric_extend": true,
         "lyric_syllables": [
-          "I'm",
-          "beh"
+          "leave",
+          "I'm"
         ]
       },
       {
         "start": 134.885,
         "end": 135.198,
         "midi": 69,
-        "confidence": 0.967,
+        "confidence": 0.968,
         "onset": 134.873,
         "start_raw": 134.873,
         "end_raw": 135.117,
-        "lyric": "ind"
+        "lyric": "al"
       },
       {
         "start": 135.198,
         "end": 135.837,
         "midi": 66,
-        "confidence": 0.96,
+        "confidence": 0.966,
         "onset": 135.117,
         "start_raw": 135.117,
         "end_raw": 135.837,
-        "lyric": "I'm-a-waste",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "I'm",
-          "a",
-          "waste"
-        ]
+        "lyric": "ways"
       },
       {
         "start": 135.837,
         "end": 136.487,
         "midi": 69,
-        "confidence": 0.799,
+        "confidence": 0.8,
         "onset": 135.895,
         "start_raw": 135.895,
         "end_raw": 136.382,
-        "lyric": "I'll-be-quiet",
+        "lyric": "on-your-side",
         "lyric_extend": true,
         "lyric_syllables": [
-          "I'll",
-          "be",
-          "quiet"
+          "on",
+          "your",
+          "side"
         ]
       },
       {
@@ -5574,11 +5814,11 @@
         "onset": 136.951,
         "start_raw": 136.951,
         "end_raw": 137.288,
-        "lyric": "play-me",
+        "lyric": "play-it",
         "lyric_extend": true,
         "lyric_syllables": [
           "play",
-          "me"
+          "it"
         ]
       },
       {
@@ -5615,10 +5855,10 @@
         "start": 141.317,
         "end": 141.967,
         "midi": 64,
-        "confidence": 0.728,
+        "confidence": 0.727,
         "onset": 141.328,
         "start_raw": 141.328,
-        "end_raw": 142.118,
+        "end_raw": 142.106,
         "lyric": null
       },
       {
@@ -5628,16 +5868,16 @@
         "confidence": 0.73,
         "onset": 142.315,
         "start_raw": 142.199,
-        "end_raw": 142.478,
+        "end_raw": 142.489,
         "lyric": null
       },
       {
-        "start": 142.617,
+        "start": 142.942,
         "end": 143.917,
         "midi": 62,
         "confidence": 0.907,
-        "onset": 142.721,
-        "start_raw": 142.721,
+        "onset": 142.78,
+        "start_raw": 142.78,
         "end_raw": 143.778,
         "lyric": null
       },
@@ -5645,9 +5885,9 @@
         "start": 143.917,
         "end": 144.544,
         "midi": 62,
-        "confidence": 0.916,
-        "onset": 143.859,
-        "start_raw": 143.859,
+        "confidence": 0.917,
+        "onset": 143.894,
+        "start_raw": 143.894,
         "end_raw": 144.66,
         "lyric": null
       },
@@ -5675,7 +5915,7 @@
         "start": 146.797,
         "end": 146.887,
         "midi": 64,
-        "confidence": 0.943,
+        "confidence": 0.944,
         "onset": 146.669,
         "start_raw": 146.669,
         "end_raw": 146.808,
@@ -5697,7 +5937,7 @@
         "start": 147.795,
         "end": 147.885,
         "midi": 57,
-        "confidence": 0.53,
+        "confidence": 0.532,
         "onset": 147.76,
         "start_raw": 147.76,
         "end_raw": 147.876,
@@ -5707,7 +5947,7 @@
         "start": 147.946,
         "end": 148.422,
         "midi": 59,
-        "confidence": 0.876,
+        "confidence": 0.877,
         "onset": 147.946,
         "start_raw": 147.946,
         "end_raw": 148.352,
@@ -5718,7 +5958,7 @@
         "start": 148.422,
         "end": 148.512,
         "midi": 57,
-        "confidence": 0.765,
+        "confidence": 0.76,
         "onset": 148.399,
         "start_raw": 148.399,
         "end_raw": 148.503,
@@ -5729,17 +5969,17 @@
         "start": 148.55,
         "end": 148.747,
         "midi": 59,
-        "confidence": 0.91,
+        "confidence": 0.936,
         "onset": 148.55,
         "start_raw": 148.55,
-        "end_raw": 148.724,
+        "end_raw": 148.712,
         "lyric": "prom"
       },
       {
         "start": 148.747,
         "end": 149.072,
         "midi": 61,
-        "confidence": 0.993,
+        "confidence": 0.991,
         "onset": 148.747,
         "start_raw": 148.747,
         "end_raw": 148.921,
@@ -5749,7 +5989,7 @@
         "start": 149.072,
         "end": 149.397,
         "midi": 62,
-        "confidence": 0.871,
+        "confidence": 0.87,
         "onset": 149.06,
         "start_raw": 149.06,
         "end_raw": 149.304,
@@ -5759,7 +5999,7 @@
         "start": 149.397,
         "end": 149.722,
         "midi": 66,
-        "confidence": 0.997,
+        "confidence": 0.975,
         "onset": 149.362,
         "start_raw": 149.362,
         "end_raw": 149.653,
@@ -5770,7 +6010,7 @@
         "start": 149.722,
         "end": 149.812,
         "midi": 71,
-        "confidence": 0.878,
+        "confidence": 0.847,
         "onset": 149.676,
         "start_raw": 149.676,
         "end_raw": 149.838,
@@ -5781,10 +6021,10 @@
         "start": 149.862,
         "end": 150.036,
         "midi": 73,
-        "confidence": 0.909,
+        "confidence": 0.926,
         "onset": 149.862,
         "start_raw": 149.862,
-        "end_raw": 150.152,
+        "end_raw": 150.14,
         "lyric": null,
         "tie": "stop"
       },
@@ -5792,7 +6032,7 @@
         "start": 150.036,
         "end": 150.349,
         "midi": 69,
-        "confidence": 0.875,
+        "confidence": 0.879,
         "onset": 150.175,
         "start_raw": 150.175,
         "end_raw": 150.465,
@@ -5802,7 +6042,7 @@
         "start": 150.349,
         "end": 150.674,
         "midi": 66,
-        "confidence": 0.791,
+        "confidence": 0.795,
         "onset": 150.477,
         "start_raw": 150.477,
         "end_raw": 150.593,
@@ -5813,7 +6053,7 @@
         "start": 150.674,
         "end": 150.999,
         "midi": 67,
-        "confidence": 0.677,
+        "confidence": 0.68,
         "onset": 150.593,
         "start_raw": 150.593,
         "end_raw": 150.872,
@@ -5824,7 +6064,7 @@
         "start": 150.999,
         "end": 151.649,
         "midi": 66,
-        "confidence": 0.856,
+        "confidence": 0.858,
         "onset": 151.034,
         "start_raw": 150.872,
         "end_raw": 151.557,
@@ -5835,7 +6075,7 @@
         "start": 151.649,
         "end": 151.963,
         "midi": 66,
-        "confidence": 0.775,
+        "confidence": 0.779,
         "onset": 151.719,
         "start_raw": 151.719,
         "end_raw": 152.009,
@@ -5846,7 +6086,7 @@
         "start": 152.276,
         "end": 152.602,
         "midi": 64,
-        "confidence": 0.902,
+        "confidence": 0.906,
         "onset": 152.404,
         "start_raw": 152.404,
         "end_raw": 152.532,
@@ -5857,28 +6097,42 @@
         "start": 152.602,
         "end": 152.927,
         "midi": 66,
-        "confidence": 0.853,
+        "confidence": 0.838,
         "onset": 152.532,
         "start_raw": 152.532,
-        "end_raw": 152.845,
+        "end_raw": 152.834,
         "lyric": null,
         "tie": "stop"
       },
       {
         "start": 152.927,
-        "end": 153.902,
+        "end": 153.252,
         "midi": 59,
-        "confidence": 0.678,
+        "confidence": 0.68,
         "onset": 152.938,
         "start_raw": 152.938,
+        "end_raw": 153.147,
+        "lyric": "as"
+      },
+      {
+        "start": 153.252,
+        "end": 153.577,
+        "midi": 58,
+        "confidence": 0.664,
+        "onset": 153.484,
+        "start_raw": 153.379,
+        "end_raw": 153.577,
+        "lyric": "we"
+      },
+      {
+        "start": 153.577,
+        "end": 153.902,
+        "midi": 59,
+        "confidence": 0.766,
+        "onset": 153.588,
+        "start_raw": 153.588,
         "end_raw": 154.041,
-        "lyric": "as-we-go",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "as",
-          "we",
-          "go"
-        ]
+        "lyric": "go"
       },
       {
         "start": 154.227,
@@ -5894,7 +6148,7 @@
         "start": 154.564,
         "end": 154.9,
         "midi": 66,
-        "confidence": 0.876,
+        "confidence": 0.879,
         "onset": 154.529,
         "start_raw": 154.529,
         "end_raw": 154.749,
@@ -5905,7 +6159,7 @@
         "start": 154.9,
         "end": 154.99,
         "midi": 72,
-        "confidence": 0.85,
+        "confidence": 0.852,
         "onset": 154.877,
         "start_raw": 154.877,
         "end_raw": 155.016,
@@ -5916,7 +6170,7 @@
         "start": 155.016,
         "end": 155.527,
         "midi": 73,
-        "confidence": 0.941,
+        "confidence": 0.944,
         "onset": 155.016,
         "start_raw": 155.016,
         "end_raw": 155.481,
@@ -5926,7 +6180,7 @@
         "start": 155.527,
         "end": 155.841,
         "midi": 74,
-        "confidence": 0.896,
+        "confidence": 0.898,
         "onset": 155.481,
         "start_raw": 155.481,
         "end_raw": 155.806,
@@ -5948,7 +6202,7 @@
         "start": 155.945,
         "end": 157.129,
         "midi": 74,
-        "confidence": 0.894,
+        "confidence": 0.896,
         "onset": 155.945,
         "start_raw": 155.945,
         "end_raw": 157.199,
@@ -5958,7 +6212,7 @@
         "start": 157.129,
         "end": 157.454,
         "midi": 76,
-        "confidence": 0.757,
+        "confidence": 0.76,
         "onset": 157.269,
         "start_raw": 157.269,
         "end_raw": 157.431,
@@ -5991,7 +6245,7 @@
         "start": 158.105,
         "end": 158.43,
         "midi": 83,
-        "confidence": 0.791,
+        "confidence": 0.79,
         "onset": 158.174,
         "start_raw": 158.07,
         "end_raw": 158.557,
@@ -6006,7 +6260,7 @@
         "start": 158.755,
         "end": 159.068,
         "midi": 82,
-        "confidence": 0.804,
+        "confidence": 0.805,
         "onset": 158.708,
         "start_raw": 158.708,
         "end_raw": 159.022,
@@ -6016,7 +6270,7 @@
         "start": 159.068,
         "end": 159.382,
         "midi": 73,
-        "confidence": 0.872,
+        "confidence": 0.874,
         "onset": 159.033,
         "raw_midi": 85,
         "start_raw": 159.033,
@@ -6027,7 +6281,7 @@
         "start": 159.382,
         "end": 159.707,
         "midi": 74,
-        "confidence": 0.951,
+        "confidence": 0.954,
         "onset": 159.393,
         "raw_midi": 86,
         "start_raw": 159.393,
@@ -6038,7 +6292,7 @@
         "start": 159.707,
         "end": 160.032,
         "midi": 78,
-        "confidence": 0.929,
+        "confidence": 0.927,
         "onset": 159.684,
         "start_raw": 159.684,
         "end_raw": 159.962,
@@ -6060,18 +6314,18 @@
         "start": 160.125,
         "end": 160.357,
         "midi": 73,
-        "confidence": 0.773,
+        "confidence": 0.781,
         "onset": 160.125,
         "raw_midi": 85,
         "start_raw": 160.125,
-        "end_raw": 160.427,
+        "end_raw": 160.403,
         "lyric": "hands"
       },
       {
         "start": 160.682,
         "end": 161.332,
         "midi": 78,
-        "confidence": 0.928,
+        "confidence": 0.926,
         "onset": 160.752,
         "start_raw": 160.752,
         "end_raw": 161.448,
@@ -6092,7 +6346,7 @@
         "start": 162.934,
         "end": 163.024,
         "midi": 78,
-        "confidence": 0.796,
+        "confidence": 0.797,
         "onset": 162.842,
         "start_raw": 162.842,
         "end_raw": 163.085,
@@ -6103,17 +6357,17 @@
         "start": 163.085,
         "end": 163.26,
         "midi": 82,
-        "confidence": 0.626,
+        "confidence": 0.627,
         "onset": 163.085,
         "start_raw": 163.085,
-        "end_raw": 163.213,
+        "end_raw": 163.306,
         "lyric": "save"
       },
       {
         "start": 163.585,
         "end": 163.91,
         "midi": 83,
-        "confidence": 0.836,
+        "confidence": 0.837,
         "onset": 163.55,
         "start_raw": 163.55,
         "end_raw": 163.77,
@@ -6133,7 +6387,7 @@
         "start": 164.235,
         "end": 164.56,
         "midi": 73,
-        "confidence": 0.843,
+        "confidence": 0.844,
         "onset": 164.2,
         "raw_midi": 85,
         "start_raw": 164.2,
@@ -6144,7 +6398,7 @@
         "start": 164.56,
         "end": 164.873,
         "midi": 74,
-        "confidence": 0.885,
+        "confidence": 0.884,
         "onset": 164.537,
         "raw_midi": 86,
         "start_raw": 164.537,
@@ -6155,7 +6409,7 @@
         "start": 164.873,
         "end": 165.187,
         "midi": 78,
-        "confidence": 0.884,
+        "confidence": 0.885,
         "onset": 164.838,
         "start_raw": 164.838,
         "end_raw": 165.094,
@@ -6175,7 +6429,7 @@
         "start": 165.5,
         "end": 166.394,
         "midi": 74,
-        "confidence": 0.897,
+        "confidence": 0.898,
         "onset": 165.64,
         "raw_midi": 86,
         "start_raw": 165.64,
@@ -6186,7 +6440,7 @@
         "start": 166.394,
         "end": 167.555,
         "midi": 79,
-        "confidence": 0.94,
+        "confidence": 0.936,
         "onset": 166.29,
         "start_raw": 166.29,
         "end_raw": 167.544,
@@ -6196,50 +6450,50 @@
         "start": 167.555,
         "end": 168.449,
         "midi": 74,
-        "confidence": 0.863,
+        "confidence": 0.868,
         "onset": 167.613,
         "start_raw": 167.613,
-        "end_raw": 168.449,
+        "end_raw": 168.426,
         "lyric": "ret"
       },
       {
-        "start": 169.39,
-        "end": 170.667,
+        "start": 169.076,
+        "end": 169.39,
         "midi": 74,
-        "confidence": 0.759,
-        "onset": 169.424,
-        "start_raw": 169.424,
-        "end_raw": 170.516,
+        "confidence": 0.727,
+        "onset": 169.204,
+        "start_raw": 169.204,
+        "end_raw": 169.294,
         "lyric": null
       },
       {
-        "start": 170.667,
+        "start": 169.39,
         "end": 171.317,
         "midi": 74,
-        "confidence": 0.742,
-        "onset": 170.609,
-        "start_raw": 170.609,
-        "end_raw": 171.398,
+        "confidence": 0.72,
+        "onset": 169.401,
+        "start_raw": 169.401,
+        "end_raw": 171.479,
         "lyric": null
       },
       {
-        "start": 178.747,
+        "start": 179.072,
+        "end": 180.024,
+        "midi": 74,
+        "confidence": 0.736,
+        "onset": 179.165,
+        "start_raw": 179.165,
+        "end_raw": 179.897,
+        "lyric": null
+      },
+      {
+        "start": 180.024,
         "end": 180.349,
-        "midi": 74,
-        "confidence": 0.738,
-        "onset": 179.037,
-        "start_raw": 178.887,
-        "end_raw": 180.268,
-        "lyric": null
-      },
-      {
-        "start": 180.349,
-        "end": 180.439,
-        "midi": 74,
-        "confidence": 0.702,
-        "onset": 180.338,
-        "start_raw": 180.338,
-        "end_raw": 180.477,
+        "midi": 78,
+        "confidence": 0.74,
+        "onset": 180.001,
+        "start_raw": 180.001,
+        "end_raw": 180.465,
         "lyric": "So",
         "tie": "start"
       },
@@ -6247,9 +6501,9 @@
         "start": 181.0,
         "end": 181.325,
         "midi": 76,
-        "confidence": 0.808,
-        "onset": 180.849,
-        "start_raw": 180.849,
+        "confidence": 0.805,
+        "onset": 180.837,
+        "start_raw": 180.837,
         "end_raw": 181.197,
         "lyric": null,
         "tie": "stop"
@@ -6258,7 +6512,7 @@
         "start": 181.325,
         "end": 181.415,
         "midi": 81,
-        "confidence": 0.78,
+        "confidence": 0.786,
         "onset": 181.325,
         "start_raw": 181.325,
         "end_raw": 181.429,
@@ -6266,12 +6520,12 @@
         "tie": "start"
       },
       {
-        "start": 181.441,
+        "start": 181.464,
         "end": 181.975,
         "midi": 83,
-        "confidence": 0.847,
-        "onset": 181.441,
-        "start_raw": 181.441,
+        "confidence": 0.857,
+        "onset": 181.464,
+        "start_raw": 181.464,
         "end_raw": 181.894,
         "lyric": null,
         "tie": "stop"
@@ -6280,7 +6534,7 @@
         "start": 181.975,
         "end": 182.065,
         "midi": 81,
-        "confidence": 0.822,
+        "confidence": 0.824,
         "onset": 181.917,
         "start_raw": 181.917,
         "end_raw": 182.079,
@@ -6290,7 +6544,7 @@
         "start": 182.079,
         "end": 182.3,
         "midi": 83,
-        "confidence": 0.863,
+        "confidence": 0.868,
         "onset": 182.079,
         "start_raw": 182.079,
         "end_raw": 182.311,
@@ -6300,7 +6554,7 @@
         "start": 182.3,
         "end": 182.625,
         "midi": 73,
-        "confidence": 0.835,
+        "confidence": 0.836,
         "onset": 182.451,
         "raw_midi": 85,
         "start_raw": 182.451,
@@ -6311,10 +6565,10 @@
         "start": 182.625,
         "end": 182.95,
         "midi": 74,
-        "confidence": 0.923,
-        "onset": 182.695,
+        "confidence": 0.927,
+        "onset": 182.683,
         "raw_midi": 86,
-        "start_raw": 182.695,
+        "start_raw": 182.683,
         "end_raw": 182.938,
         "lyric": "ay"
       },
@@ -6322,7 +6576,7 @@
         "start": 182.95,
         "end": 183.275,
         "midi": 78,
-        "confidence": 0.958,
+        "confidence": 0.96,
         "onset": 182.973,
         "start_raw": 182.973,
         "end_raw": 183.24,
@@ -6333,7 +6587,7 @@
         "start": 183.275,
         "end": 183.6,
         "midi": 83,
-        "confidence": 0.798,
+        "confidence": 0.8,
         "onset": 183.275,
         "start_raw": 183.275,
         "end_raw": 183.438,
@@ -6344,7 +6598,7 @@
         "start": 183.6,
         "end": 183.69,
         "midi": 73,
-        "confidence": 0.799,
+        "confidence": 0.801,
         "onset": 183.449,
         "raw_midi": 85,
         "start_raw": 183.449,
@@ -6356,10 +6610,10 @@
         "start": 183.693,
         "end": 184.227,
         "midi": 81,
-        "confidence": 0.817,
+        "confidence": 0.818,
         "onset": 183.693,
         "start_raw": 183.693,
-        "end_raw": 184.076,
+        "end_raw": 184.088,
         "lyric": null,
         "tie": "stop"
       },
@@ -6377,10 +6631,10 @@
         "start": 184.552,
         "end": 184.877,
         "midi": 78,
-        "confidence": 0.864,
+        "confidence": 0.865,
         "onset": 184.68,
         "start_raw": 184.68,
-        "end_raw": 184.947,
+        "end_raw": 184.959,
         "lyric": "go",
         "tie": "start"
       },
@@ -6399,7 +6653,7 @@
         "start": 185.191,
         "end": 185.829,
         "midi": 78,
-        "confidence": 0.768,
+        "confidence": 0.77,
         "onset": 185.33,
         "start_raw": 185.33,
         "end_raw": 185.667,
@@ -6421,17 +6675,17 @@
         "start": 186.479,
         "end": 186.569,
         "midi": 81,
-        "confidence": 0.681,
+        "confidence": 0.687,
         "onset": 186.41,
         "start_raw": 186.41,
         "end_raw": 186.607,
-        "lyric": "count"
+        "lyric": "turn"
       },
       {
         "start": 186.63,
         "end": 187.141,
         "midi": 83,
-        "confidence": 0.889,
+        "confidence": 0.89,
         "onset": 186.63,
         "start_raw": 186.63,
         "end_raw": 187.06,
@@ -6440,10 +6694,10 @@
       {
         "start": 187.141,
         "end": 187.478,
-        "midi": 81,
-        "confidence": 0.851,
-        "onset": 187.06,
-        "start_raw": 187.06,
+        "midi": 83,
+        "confidence": 0.832,
+        "onset": 187.188,
+        "start_raw": 187.188,
         "end_raw": 187.42,
         "lyric": "heav"
       },
@@ -6451,7 +6705,7 @@
         "start": 187.478,
         "end": 187.568,
         "midi": 73,
-        "confidence": 0.918,
+        "confidence": 0.919,
         "onset": 187.455,
         "raw_midi": 85,
         "start_raw": 187.455,
@@ -6463,7 +6717,7 @@
         "start": 187.594,
         "end": 187.803,
         "midi": 84,
-        "confidence": 0.77,
+        "confidence": 0.773,
         "onset": 187.594,
         "start_raw": 187.594,
         "end_raw": 187.722,
@@ -6485,17 +6739,17 @@
         "start": 188.128,
         "end": 188.442,
         "midi": 78,
-        "confidence": 0.914,
+        "confidence": 0.925,
         "onset": 188.07,
         "start_raw": 188.07,
-        "end_raw": 188.314,
+        "end_raw": 188.337,
         "lyric": "the"
       },
       {
         "start": 188.442,
         "end": 189.069,
         "midi": 83,
-        "confidence": 0.935,
+        "confidence": 0.936,
         "onset": 188.395,
         "start_raw": 188.395,
         "end_raw": 188.987,
@@ -6505,34 +6759,34 @@
         "start": 189.069,
         "end": 189.707,
         "midi": 74,
-        "confidence": 0.944,
+        "confidence": 0.946,
         "onset": 188.987,
         "raw_midi": 86,
         "start_raw": 188.987,
         "end_raw": 189.579,
-        "lyric": "ing-wir",
+        "lyric": "ing-wat",
         "lyric_extend": true,
         "lyric_syllables": [
           "ing",
-          "wir"
+          "wat"
         ]
       },
       {
         "start": 189.707,
         "end": 190.682,
         "midi": 74,
-        "confidence": 0.907,
+        "confidence": 0.909,
         "onset": 189.626,
         "raw_midi": 86,
         "start_raw": 189.626,
         "end_raw": 190.647,
-        "lyric": "es"
+        "lyric": "ers"
       },
       {
         "start": 190.682,
         "end": 191.007,
         "midi": 76,
-        "confidence": 0.63,
+        "confidence": 0.631,
         "onset": 190.764,
         "start_raw": 190.764,
         "end_raw": 190.891,
@@ -6543,7 +6797,7 @@
         "start": 191.007,
         "end": 191.332,
         "midi": 64,
-        "confidence": 0.9,
+        "confidence": 0.899,
         "onset": 191.158,
         "start_raw": 191.158,
         "end_raw": 191.286,
@@ -6565,7 +6819,7 @@
         "start": 191.646,
         "end": 192.284,
         "midi": 58,
-        "confidence": 0.719,
+        "confidence": 0.721,
         "onset": 191.588,
         "start_raw": 191.588,
         "end_raw": 192.145,
@@ -6580,7 +6834,7 @@
         "start": 192.284,
         "end": 192.609,
         "midi": 57,
-        "confidence": 0.806,
+        "confidence": 0.809,
         "onset": 192.25,
         "start_raw": 192.25,
         "end_raw": 192.575,
@@ -6590,8 +6844,8 @@
         "start": 192.609,
         "end": 192.935,
         "midi": 61,
-        "confidence": 0.881,
-        "onset": 192.691,
+        "confidence": 0.882,
+        "onset": 192.702,
         "start_raw": 192.586,
         "end_raw": 192.865,
         "lyric": "un"
@@ -6600,7 +6854,7 @@
         "start": 192.935,
         "end": 193.26,
         "midi": 62,
-        "confidence": 0.838,
+        "confidence": 0.839,
         "onset": 192.877,
         "start_raw": 192.877,
         "end_raw": 193.225,
@@ -6610,7 +6864,7 @@
         "start": 193.26,
         "end": 193.573,
         "midi": 66,
-        "confidence": 0.873,
+        "confidence": 0.874,
         "onset": 193.236,
         "start_raw": 193.236,
         "end_raw": 193.422,
@@ -6632,7 +6886,7 @@
         "start": 193.689,
         "end": 193.887,
         "midi": 73,
-        "confidence": 0.818,
+        "confidence": 0.82,
         "onset": 193.689,
         "start_raw": 193.689,
         "end_raw": 193.968,
@@ -6640,29 +6894,24 @@
       },
       {
         "start": 194.212,
-        "end": 194.862,
-        "midi": 66,
-        "confidence": 0.829,
-        "onset": 194.13,
-        "start_raw": 194.13,
-        "end_raw": 195.024,
-        "lyric": "al"
-      },
-      {
-        "start": 195.187,
         "end": 195.837,
         "midi": 66,
         "confidence": 0.758,
-        "onset": 195.071,
-        "start_raw": 195.071,
+        "onset": 194.13,
+        "start_raw": 194.13,
         "end_raw": 195.686,
-        "lyric": "ign"
+        "lyric": "al-ign",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "al",
+          "ign"
+        ]
       },
       {
         "start": 195.837,
         "end": 195.927,
         "midi": 66,
-        "confidence": 0.656,
+        "confidence": 0.662,
         "onset": 195.733,
         "start_raw": 195.733,
         "end_raw": 195.93,
@@ -6684,10 +6933,10 @@
         "start": 196.487,
         "end": 196.812,
         "midi": 66,
-        "confidence": 0.926,
+        "confidence": 0.928,
         "onset": 196.441,
         "start_raw": 196.441,
-        "end_raw": 196.731,
+        "end_raw": 196.743,
         "lyric": "til",
         "tie": "start"
       },
@@ -6695,28 +6944,39 @@
         "start": 196.812,
         "end": 196.902,
         "midi": 57,
-        "confidence": 0.655,
-        "onset": 196.731,
-        "start_raw": 196.731,
+        "confidence": 0.688,
+        "onset": 196.743,
+        "start_raw": 196.743,
         "end_raw": 196.905,
         "lyric": null,
-        "tie": "stop"
+        "tie": "continue"
       },
       {
         "start": 196.917,
         "end": 197.137,
         "midi": 59,
-        "confidence": 0.911,
+        "confidence": 0.914,
         "onset": 196.917,
         "start_raw": 196.917,
-        "end_raw": 197.254,
+        "end_raw": 197.23,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 197.137,
+        "end": 197.463,
+        "midi": 56,
+        "confidence": 0.362,
+        "onset": 197.23,
+        "start_raw": 197.23,
+        "end_raw": 197.323,
         "lyric": "the"
       },
       {
         "start": 197.463,
         "end": 197.788,
         "midi": 59,
-        "confidence": 0.837,
+        "confidence": 0.839,
         "onset": 197.509,
         "start_raw": 197.509,
         "end_raw": 197.718,
@@ -6726,7 +6986,7 @@
         "start": 197.788,
         "end": 197.878,
         "midi": 61,
-        "confidence": 0.878,
+        "confidence": 0.919,
         "onset": 197.741,
         "start_raw": 197.741,
         "end_raw": 197.95,
@@ -6736,8 +6996,8 @@
         "start": 197.95,
         "end": 198.438,
         "midi": 62,
-        "confidence": 0.851,
-        "onset": 197.95,
+        "confidence": 0.94,
+        "onset": 198.055,
         "start_raw": 197.95,
         "end_raw": 198.391,
         "lyric": "from"
@@ -6746,10 +7006,10 @@
         "start": 198.438,
         "end": 198.751,
         "midi": 66,
-        "confidence": 0.858,
+        "confidence": 0.879,
         "onset": 198.403,
         "start_raw": 198.403,
-        "end_raw": 198.647,
+        "end_raw": 198.658,
         "lyric": "the",
         "tie": "start"
       },
@@ -6757,7 +7017,7 @@
         "start": 198.751,
         "end": 199.065,
         "midi": 73,
-        "confidence": 0.936,
+        "confidence": 0.938,
         "onset": 198.821,
         "start_raw": 198.821,
         "end_raw": 199.007,
@@ -6768,7 +7028,7 @@
         "start": 199.065,
         "end": 199.155,
         "midi": 74,
-        "confidence": 0.624,
+        "confidence": 0.625,
         "onset": 199.007,
         "start_raw": 199.007,
         "end_raw": 199.181,
@@ -6779,7 +7039,7 @@
         "start": 199.181,
         "end": 199.39,
         "midi": 73,
-        "confidence": 0.844,
+        "confidence": 0.846,
         "onset": 199.181,
         "start_raw": 199.181,
         "end_raw": 199.32,
@@ -6790,7 +7050,7 @@
         "start": 199.39,
         "end": 199.48,
         "midi": 74,
-        "confidence": 0.882,
+        "confidence": 0.883,
         "onset": 199.32,
         "start_raw": 199.32,
         "end_raw": 199.494,
@@ -6801,12 +7061,12 @@
         "start": 199.494,
         "end": 199.715,
         "midi": 75,
-        "confidence": 0.601,
+        "confidence": 0.6,
         "onset": 199.494,
         "start_raw": 199.494,
         "end_raw": 199.657,
         "lyric": null,
-        "tie": "stop"
+        "tie": "continue"
       },
       {
         "start": 199.715,
@@ -6816,150 +7076,185 @@
         "onset": 199.68,
         "start_raw": 199.68,
         "end_raw": 199.843,
-        "lyric": "time",
-        "tie": "start"
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 199.843,
         "end": 202.292,
         "midi": 74,
-        "confidence": 0.969,
+        "confidence": 0.97,
         "onset": 199.843,
         "start_raw": 199.843,
         "end_raw": 202.234,
-        "lyric": null,
-        "tie": "stop"
+        "lyric": "tim-es",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "tim",
+          "es"
+        ]
       },
       {
         "start": 202.617,
         "end": 203.256,
         "midi": 74,
-        "confidence": 0.794,
-        "onset": 202.745,
-        "start_raw": 202.745,
-        "end_raw": 203.209,
-        "lyric": null
+        "confidence": 0.801,
+        "onset": 202.768,
+        "start_raw": 202.768,
+        "end_raw": 203.198,
+        "lyric": "it",
+        "tie": "start"
       },
       {
         "start": 203.256,
-        "end": 203.569,
-        "midi": 74,
-        "confidence": 0.754,
-        "onset": 203.337,
-        "start_raw": 203.337,
-        "end_raw": 203.488,
-        "lyric": null
-      },
-      {
-        "start": 203.569,
         "end": 204.545,
         "midi": 74,
-        "confidence": 0.744,
-        "onset": 203.569,
-        "start_raw": 203.569,
+        "confidence": 0.749,
+        "onset": 203.314,
+        "start_raw": 203.314,
+        "end_raw": 204.487,
+        "lyric": null,
+        "tie": "stop"
+      },
+      {
+        "start": 204.545,
+        "end": 204.635,
+        "midi": 74,
+        "confidence": 0.757,
+        "onset": 204.556,
+        "start_raw": 204.556,
         "end_raw": 204.684,
-        "lyric": null
+        "lyric": "on",
+        "tie": "start"
       },
       {
         "start": 205.195,
         "end": 206.82,
         "midi": 69,
-        "confidence": 0.827,
+        "confidence": 0.833,
         "onset": 205.195,
         "start_raw": 205.195,
         "end_raw": 206.75,
-        "lyric": null
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 207.784,
         "end": 208.422,
         "midi": 62,
-        "confidence": 0.728,
+        "confidence": 0.745,
         "onset": 207.795,
         "start_raw": 207.795,
-        "end_raw": 208.318,
+        "end_raw": 208.329,
+        "lyric": "on"
+      },
+      {
+        "start": 208.422,
+        "end": 208.747,
+        "midi": 62,
+        "confidence": 0.752,
+        "onset": 208.562,
+        "start_raw": 208.562,
+        "end_raw": 208.747,
         "lyric": null
+      },
+      {
+        "start": 208.747,
+        "end": 209.072,
+        "midi": 62,
+        "confidence": 0.762,
+        "onset": 208.817,
+        "start_raw": 208.817,
+        "end_raw": 209.2,
+        "lyric": "Let's-bring-it",
+        "lyric_extend": true,
+        "lyric_syllables": [
+          "Let's",
+          "bring",
+          "it"
+        ]
       },
       {
         "start": 209.398,
         "end": 209.711,
         "midi": 62,
-        "confidence": 0.8,
+        "confidence": 0.797,
         "onset": 209.328,
         "start_raw": 209.328,
         "end_raw": 209.839,
-        "lyric": null
+        "lyric": "on",
+        "tie": "start"
       },
       {
         "start": 210.35,
         "end": 211.638,
-        "midi": 62,
-        "confidence": 0.84,
-        "onset": 210.21,
-        "start_raw": 210.21,
+        "midi": 57,
+        "confidence": 0.865,
+        "onset": 210.326,
+        "start_raw": 210.326,
         "end_raw": 211.696,
-        "lyric": null
+        "lyric": null,
+        "tie": "continue"
       },
       {
         "start": 211.638,
         "end": 211.952,
         "midi": 65,
-        "confidence": 0.763,
+        "confidence": 0.777,
         "onset": 211.708,
         "start_raw": 211.708,
         "end_raw": 211.905,
-        "lyric": "Tog",
-        "tie": "start"
+        "lyric": null,
+        "tie": "stop"
       },
       {
         "start": 211.952,
         "end": 212.042,
         "midi": 66,
-        "confidence": 0.769,
+        "confidence": 0.773,
         "onset": 211.905,
         "start_raw": 211.905,
         "end_raw": 212.033,
-        "lyric": null,
-        "tie": "stop"
+        "lyric": null
       },
       {
         "start": 212.056,
         "end": 212.277,
         "midi": 69,
-        "confidence": 0.797,
+        "confidence": 0.752,
         "onset": 212.056,
         "start_raw": 212.056,
-        "end_raw": 212.172,
-        "lyric": "et"
+        "end_raw": 212.161,
+        "lyric": null
       },
       {
         "start": 212.277,
         "end": 212.602,
         "midi": 59,
-        "confidence": 0.823,
+        "confidence": 0.834,
         "onset": 212.393,
         "start_raw": 212.23,
         "end_raw": 212.718,
-        "lyric": "her"
+        "lyric": null
       },
       {
         "start": 212.927,
         "end": 213.252,
         "midi": 59,
-        "confidence": 0.888,
+        "confidence": 0.887,
         "onset": 212.973,
         "start_raw": 212.973,
         "end_raw": 213.217,
-        "lyric": "we"
+        "lyric": "We"
       },
       {
         "start": 213.252,
         "end": 213.577,
         "midi": 61,
-        "confidence": 0.849,
+        "confidence": 0.858,
         "onset": 213.229,
         "start_raw": 213.229,
-        "end_raw": 213.426,
+        "end_raw": 213.415,
         "lyric": "will-stop-the",
         "lyric_extend": true,
         "lyric_syllables": [
@@ -6972,53 +7267,41 @@
         "start": 215.516,
         "end": 215.829,
         "midi": 62,
-        "confidence": 0.878,
+        "confidence": 0.874,
         "onset": 215.528,
         "start_raw": 215.528,
-        "end_raw": 215.783,
-        "lyric": "cos-mos-We",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "cos",
-          "mos",
-          "We"
-        ]
+        "end_raw": 215.806,
+        "lyric": null
       },
       {
         "start": 215.829,
         "end": 216.155,
         "midi": 64,
-        "confidence": 0.771,
-        "onset": 215.783,
-        "start_raw": 215.783,
+        "confidence": 0.819,
+        "onset": 215.806,
+        "start_raw": 215.806,
         "end_raw": 216.038,
-        "lyric": "will"
+        "lyric": null
       },
       {
         "start": 216.155,
         "end": 216.48,
         "midi": 66,
-        "confidence": 0.763,
-        "onset": 216.097,
-        "start_raw": 216.097,
+        "confidence": 0.798,
+        "onset": 216.131,
+        "start_raw": 216.131,
         "end_raw": 216.398,
-        "lyric": "shop"
+        "lyric": null
       },
       {
         "start": 216.48,
         "end": 216.57,
         "midi": 69,
-        "confidence": 0.911,
+        "confidence": 0.912,
         "onset": 216.468,
         "start_raw": 216.468,
-        "end_raw": 216.631,
-        "lyric": "the-cos-mos",
-        "lyric_extend": true,
-        "lyric_syllables": [
-          "the",
-          "cos",
-          "mos"
-        ]
+        "end_raw": 216.642,
+        "lyric": null
       },
       {
         "start": 217.78,
@@ -7028,13 +7311,13 @@
         "onset": 217.861,
         "start_raw": 217.861,
         "end_raw": 218.047,
-        "lyric": "Tuck"
+        "lyric": "Talk"
       },
       {
         "start": 218.407,
         "end": 218.732,
         "midi": 76,
-        "confidence": 0.758,
+        "confidence": 0.753,
         "onset": 218.477,
         "start_raw": 218.477,
         "end_raw": 218.651,
@@ -7044,7 +7327,7 @@
         "start": 218.732,
         "end": 219.057,
         "midi": 78,
-        "confidence": 0.85,
+        "confidence": 0.852,
         "onset": 218.662,
         "start_raw": 218.662,
         "end_raw": 219.022,
@@ -7054,7 +7337,7 @@
         "start": 219.057,
         "end": 219.382,
         "midi": 69,
-        "confidence": 0.831,
+        "confidence": 0.863,
         "onset": 219.022,
         "start_raw": 219.022,
         "end_raw": 219.278,
@@ -7064,7 +7347,7 @@
         "start": 219.382,
         "end": 219.472,
         "midi": 72,
-        "confidence": 0.698,
+        "confidence": 0.669,
         "onset": 219.324,
         "start_raw": 219.324,
         "end_raw": 219.452,
@@ -7073,22 +7356,22 @@
       },
       {
         "start": 219.487,
-        "end": 220.032,
+        "end": 219.707,
         "midi": 73,
-        "confidence": 0.91,
+        "confidence": 0.909,
         "onset": 219.487,
         "start_raw": 219.487,
-        "end_raw": 219.939,
+        "end_raw": 219.742,
         "lyric": null,
         "tie": "stop"
       },
       {
-        "start": 220.032,
-        "end": 220.122,
+        "start": 219.707,
+        "end": 220.032,
         "midi": 74,
-        "confidence": 0.931,
-        "onset": 219.963,
-        "start_raw": 219.963,
+        "confidence": 0.76,
+        "onset": 219.742,
+        "start_raw": 219.742,
         "end_raw": 220.148,
         "lyric": "mos"
       },
@@ -7096,48 +7379,68 @@
         "start": 220.682,
         "end": 222.958,
         "midi": 74,
-        "confidence": 0.922,
+        "confidence": 0.916,
         "onset": 220.566,
         "start_raw": 220.566,
-        "end_raw": 222.9,
-        "lyric": "hey"
+        "end_raw": 222.819,
+        "lyric": null
+      },
+      {
+        "start": 223.283,
+        "end": 223.373,
+        "midi": 83,
+        "confidence": 0.67,
+        "onset": 223.237,
+        "start_raw": 223.237,
+        "end_raw": 223.353,
+        "lyric": null
+      },
+      {
+        "start": 223.608,
+        "end": 223.698,
+        "midi": 83,
+        "confidence": 0.643,
+        "onset": 223.504,
+        "start_raw": 223.504,
+        "end_raw": 223.643,
+        "lyric": null
       }
     ],
     "range": {
-      "low_midi": 57,
+      "low_midi": 55,
       "high_midi": 84
     },
     "warnings": [
-      "八度修正 2797 帧（pyin 常见八度误判）",
+      "八度修正 2661 帧（pyin 常见八度误判）",
       "超音域帧按八度归位 672 帧",
       "20 个音符超出主旋律合理音域（55-84），已按八度归位",
-      "5 个歌词音节未能对齐到音符（ASR 可能多识别或旋律缺失）：up、ong、in、in、ay"
+      "12 个歌词音节未能对齐到音符（ASR 可能多识别或旋律缺失）：out、ong、in、in、ay、Let's、bring、Let's"
     ],
     "engine": "pyin",
     "quantize": {
       "grid_points": 707,
       "beat_period": 0.6501,
-      "snapped": 326,
+      "snapped": 333,
       "kept_raw": 0,
-      "adjusted_overlap": 70
+      "adjusted_overlap": 67
     },
     "alignment": {
-      "lines": 18,
-      "syllables": 242,
-      "notes": 326,
-      "matched_syllables": 237,
-      "notes_with_lyric": 200,
-      "coverage": 0.613,
-      "melisma": 65,
-      "shared": 27,
+      "lines": 23,
+      "syllables": 247,
+      "notes": 333,
+      "matched_syllables": 235,
+      "notes_with_lyric": 203,
+      "coverage": 0.61,
+      "melisma": 67,
+      "shared": 25,
       "unmatched": [
         {
-          "text": "up",
+          "text": "out",
           "start": 31.56
         },
         {
           "text": "ong",
-          "start": 49.73
+          "start": 50.39
         },
         {
           "text": "in",
@@ -7145,11 +7448,39 @@
         },
         {
           "text": "in",
-          "start": 154.0
+          "start": 154.02
         },
         {
           "text": "ay",
           "start": 161.54
+        },
+        {
+          "text": "Let's",
+          "start": 201.54
+        },
+        {
+          "text": "bring",
+          "start": 202.1
+        },
+        {
+          "text": "Let's",
+          "start": 206.88
+        },
+        {
+          "text": "bring",
+          "start": 207.16
+        },
+        {
+          "text": "it",
+          "start": 207.38
+        },
+        {
+          "text": "cos",
+          "start": 214.36
+        },
+        {
+          "text": "mos",
+          "start": 214.76
         }
       ],
       "lines_without_notes": 0
@@ -7167,17 +7498,25 @@
     "jsonschema": "4.26.0",
     "ffmpeg": "ffmpeg version 9.0.1-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
     "demucs_model": "htdemucs",
+    "separate": {
+      "engine": "demucs",
+      "model": "htdemucs",
+      "device": "cpu",
+      "shifts": null,
+      "overlap": null,
+      "cached": false
+    },
     "lyrics": {
       "available": true,
       "engine": "faster-whisper",
       "model": "medium",
       "device": "cpu",
-      "line_count": 18
+      "line_count": 23
     },
     "melody": {
       "available": true,
       "engine": "pyin",
-      "note_count": 326
+      "note_count": 333
     }
   },
   "warnings": [
@@ -7200,27 +7539,34 @@
       "code": "key.relative_ambiguity"
     },
     {
+      "level": "warn",
+      "message": "关系大小调歧义（B 小调 vs D 大调，delta=0.003），按行业惯例按大调标注。",
+      "stage": "key_refine",
+      "code": "key.relative_ambiguity"
+    },
+    {
       "level": "info",
-      "message": "段落可能切得不够细：桥段 1 超过 16 小节（谱面连续重复同一和弦进行，对弹唱无影响，仅提示结构信息可能不够细）。",
+      "message": "段落可能切得不够细：副歌 3 超过 16 小节（谱面连续重复同一和弦进行，对弹唱无影响，仅提示结构信息可能不够细）。",
       "stage": "structure",
       "code": "structure.coarse"
     }
   ],
   "meta": {
-    "total_elapsed_seconds": 538.687,
+    "total_elapsed_seconds": 573.11,
     "stage_timings": {
-      "ingest": 2.828,
-      "separate": 308.469,
-      "beats": 11.594,
-      "key": 12.218,
-      "chords": 13.188,
-      "key_refine": 12.219,
-      "structure": 13.781,
-      "lyrics": 151.469,
-      "melody": 12.875
+      "ingest": 3.25,
+      "separate": 234.25,
+      "beats": 12.391,
+      "key": 13.484,
+      "chords": 14.953,
+      "key_refine": 12.985,
+      "structure": 15.078,
+      "lyrics": 252.812,
+      "melody": 13.844
     },
     "options": {
       "include_tab": true,
+      "quality": "standard",
       "no_lyrics": false,
       "no_melody": false
     },
@@ -7236,17 +7582,17 @@
       "chords[].bar_aligned": "和弦起点是否落在小节线上（容差 8% 小节长度）。false 表示和弦从反拍/半小节开始，属于正常现象，不是识别错误，score-engine 不应据此降级。",
       "quality": "assess_analysis_quality 的自检结果：overall 0..1，stages 为各阶段分，issues 为需要人工关注的点（level 为 info/warn/error）。"
     },
-    "analysis_json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\analysis.json",
-    "manifest_json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\manifest.json"
+    "analysis_json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\analysis.json",
+    "manifest_json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\manifest.json"
   },
   "quality": {
-    "overall": 0.824,
+    "overall": 0.816,
     "stages": {
       "beats": 0.882,
-      "key": 0.843,
+      "key": 0.811,
       "chords": 0.745,
-      "structure": 0.851,
-      "melody": 0.849,
+      "structure": 0.846,
+      "melody": 0.85,
       "lyrics": 1.0
     },
     "issues": [
@@ -7259,8 +7605,8 @@
       {
         "level": "info",
         "code": "structure.coarse",
-        "message": "桥段 1（99.1s-140.7s）超过 16 小节，可能还能细分，但连续重复同一和弦进行对弹唱无影响。",
-        "target": "桥段 1"
+        "message": "副歌 3（99.1s-140.7s）超过 16 小节，可能还能细分，但连续重复同一和弦进行对弹唱无影响。",
+        "target": "副歌 3"
       }
     ]
   }

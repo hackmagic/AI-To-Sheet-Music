@@ -307,3 +307,119 @@ def test_simplify_qualities_falls_back_to_diatonic_triad():
     assert simplified[0]["simplified_from"] == "sus4"
     # 高置信度的那条保留原样
     assert simplified[-1]["quality"] == "sus4"
+
+
+# --------------------------------------------------------------------------- #
+# 特征融合（中值 + 谱归一化）与重复一致性
+# --------------------------------------------------------------------------- #
+
+
+def _slot(chroma_columns: list[list[float]]) -> object:
+    return np.asarray(chroma_columns, dtype=np.float64).T
+
+
+def test_fusion_matrix_is_robust_to_attack_frames() -> None:
+    """槽位里混进一两帧「宽带攻击」（鼓点）时，中值聚合不该被带偏。
+
+    构造一段 C 大调三和弦的 chroma，其中第 2 帧是鼓点造成的全通道高能量；
+    融合后的矩阵仍应在 C/E/G 上最高，而不是被那一帧拉成均匀分布。
+    """
+    c_major = [1.0, 0.0, 0.0, 0.0, 0.9, 0.0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.0]
+    attack = [1.0] * 12
+    columns = [c_major, attack, c_major, c_major]
+    chroma = _slot(columns)
+    frame_times = [(0, 4)]
+    fused = chords_module._slot_matrix_fused(chroma, frame_times, np, fusion=True)
+    column = fused[:, 0]
+    assert column.shape == (12,)
+    assert pytest.approx(float(column.sum()), abs=1e-9) == 1.0
+    top = np.argsort(column)[::-1][:3]
+    assert {int(index) for index in top} == {0, 4, 7}
+
+    legacy = chords_module._slot_matrix_fused(chroma, frame_times, np, fusion=False, smooth=False)
+    legacy_column = legacy[:, 0]
+    # 两版都能排出正确的前三名，区别在「和弦音与非和弦音的差距」：
+    # 均值聚合把攻击帧的能量平均到所有音级上，非和弦音被抬到 0.05 上下；
+    # 中值 + 谱归一化融合后，非和弦音几乎归零，差距拉大三倍以上。
+    fused_gap = float(column[0]) / max(1e-9, float(column[1]))
+    legacy_gap = float(legacy_column[0]) / max(1e-9, float(legacy_column[1]))
+    assert fused_gap > legacy_gap * 2.5
+
+
+def test_fusion_weights_are_normalised_per_slot() -> None:
+    columns = [[0.2] * 12, [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+    chroma = _slot(columns)
+    fused = chords_module._slot_matrix_fused(chroma, [(0, 2)], np, fusion=True, smooth=False)
+    assert pytest.approx(float(fused[:, 0].sum()), abs=1e-9) == 1.0
+    # 单音级占优的槽位：融合后最大分量应该明显高于均匀分布的 1/12
+    assert float(fused[:, 0].max()) > 0.25
+    assert int(np.argmax(fused[:, 0])) == 0
+
+
+def test_repetition_weights_ignore_adjacent_slots() -> None:
+    """相邻槽位天然相似，必须排除，否则「永远不换和弦」会被奖励。"""
+    rng = np.random.default_rng(7)
+    matrix = rng.random((12, 40)) + 0.1
+    weights = chords_module._repetition_weights(matrix, np)
+    assert weights.shape == (40, 40)
+    radius = chords_module._REPETITION_EXCLUDE
+    for index in range(40):
+        for offset in range(1, radius + 1):
+            if index + offset < 40:
+                assert weights[index, index + offset] == 0.0
+        assert weights[index, index] == 0.0
+
+
+def test_repetition_weights_empty_when_nothing_repeats() -> None:
+    """每个槽位都和别的槽位不像时，不该产生任何权重。"""
+    matrix = np.zeros((12, 12), dtype=np.float64)
+    for index in range(12):
+        matrix[index, index] = 1.0
+    weights = chords_module._repetition_weights(matrix, np)
+    assert float(weights.sum()) == 0.0
+
+
+def test_repetition_prior_boosts_neighbour_majority() -> None:
+    """邻居槽位大多解成 Am 时，当前槽位被加分的也是 Am。"""
+    emissions = [
+        [
+            {"root_pc": 9, "quality": "m", "symbol": "Am", "score": 0.50},
+            {"root_pc": 0, "quality": "", "symbol": "C", "score": 0.48},
+        ]
+        for _ in range(4)
+    ]
+    states = [
+        {"root_pc": 9, "quality": "m", "symbol": "Am"},
+        {"root_pc": 9, "quality": "m", "symbol": "Am"},
+        {"root_pc": 9, "quality": "m", "symbol": "Am"},
+        {"root_pc": 0, "quality": "", "symbol": "C"},
+    ]
+    weights = np.zeros((4, 4), dtype=np.float64)
+    weights[3, 0] = weights[3, 1] = weights[3, 2] = 1.0
+    boosted, touched = chords_module._apply_repetition_prior(emissions, weights, states, np)
+    assert touched > 0
+    am_entry = next(item for item in boosted[3] if item["symbol"] == "Am")
+    assert float(am_entry["score"]) > 0.50
+    # 前三个槽位没有邻居权重，排序与分数不应改变
+    assert [item["symbol"] for item in boosted[0]] == ["Am", "C"]
+    assert float(boosted[0][0]["score"]) == pytest.approx(0.50)
+
+
+def test_recognize_chords_reports_stats(tmp_path: Path) -> None:
+    """统计块要能被上层写进 manifest：融合开关、槽位数必须可见。"""
+    path = _write_triad_song(tmp_path / "triad.wav")
+    beats = {
+        "bpm": 60.0, "bpm_display": 60.0, "beats_per_bar": 4, "time_signature": "4/4",
+        "beats": [index * 1.0 for index in range(9)],
+        "downbeats": [0.0, 4.0, 8.0],
+        "confidence": 1.0,
+    }
+    stats: dict = {}
+    events = chords_module.recognize_chords(
+        path, beats, total_seconds=8.0, feature_fusion=True, repetition_pass=False, stats=stats
+    )
+    assert events
+    assert stats["feature_fusion"] is True
+    assert stats["enabled"] is False
+    assert stats["slots"] >= 1
+    assert all("source" in event for event in events)

@@ -192,6 +192,26 @@ _MID_BAR_CHANGE_PENALTY = 0.02
 _CHANGE_HYSTERESIS = 0.04
 _HYSTERESIS_BAR_TOLERANCE = 0.08
 
+# 特征融合权重：中值聚合（抗攻击瞬态）与谱归一化均值（抗响度偏差）。
+# 中值路权重更高，因为它对「鼓点/起音把 chroma 摊宽」这个主要误差源更有效；
+# 谱归一化路负责压住「贝斯一响低频音级通吃」的偏差。
+_FUSION_WEIGHTS = (0.62, 0.38)
+# 槽位两端各裁掉多少比例再聚合。想法是「和弦在槽位边界换，边界帧是两个和弦的混合」，
+# 但实测裁剪反而更差（docs/09 §4：干净率 98.0% → 96.4%(0.15) / 95.2%(0.30)），
+# 因为槽位变短后样本不足、中值不稳定。默认 0（不裁）。
+_SLOT_TRIM = 0.0
+# 重复一致性第二遍解码：槽位自相似度阈值、每个槽位最多参考几个邻居、
+# 排除多近的相邻槽位（相邻天然相似，算进来等于奖励「别换和弦」）、
+# 以及一致性证据的加分幅度（相对 emission 分数 0.3~0.6 的量级，必须很小）。
+# ⚠️ 实测结论（docs/09-chord-tuning.md）：重复一致性这一遍在真歌上是**负收益**——
+# 跨分轨一致率 55.2%→47.7%、调内三和弦干净率 93.9%→95.8% 但事件数乱跳，
+# 所以默认关闭，保留实现供继续实验（recognize_chords(repetition_pass=True)
+# 或环境变量 AITSM_CHORD_REPETITION=1）。
+_REPETITION_SIMILARITY = 0.93
+_REPETITION_MAX_NEIGHBORS = 24
+_REPETITION_EXCLUDE = 3
+_REPETITION_STRENGTH = 0.045
+
 
 def diatonic_triad_quality(root_pc: int, key: dict[str, Any] | None) -> str | None:
     """返回该根音在当前调里的自然三和弦质量（"" 或 "m"），非调内返回 None。"""
@@ -772,11 +792,190 @@ def _slot_aggregate(feature: Any, frames_start: int, frames_end: int, np: Any, *
     block = feature[:, lo:hi]
     if block.size == 0:
         return np.zeros(feature.shape[0], dtype=np.float64)
-    values = block.mean(axis=1) if mode == "mean" else block.max(axis=1)
+    if mode == "median":
+        values = np.median(block, axis=1)
+    elif mode == "max":
+        values = block.max(axis=1)
+    else:
+        values = block.mean(axis=1)
     total = float(values.sum())
     if total <= 1e-9:
         return np.zeros(feature.shape[0], dtype=np.float64)
     return values / total
+
+
+def _l1(vector: Any, np: Any) -> Any:
+    values = np.clip(np.asarray(vector, dtype=np.float64).reshape(-1), 0.0, None)
+    total = float(values.sum())
+    if total <= 1e-9:
+        return np.full(values.shape, 1.0 / max(1, values.shape[0]), dtype=np.float64)
+    return values / total
+
+
+def _trim_frames(lo: int, hi: int, trim: float) -> tuple[int, int]:
+    """把槽位帧区间的两端各裁掉 trim 比例（保持至少 1 帧）。"""
+    if trim <= 0.0:
+        return lo, hi
+    span = hi - lo
+    if span < 3:
+        return lo, hi
+    cut = int(round(span * min(0.45, float(trim))))
+    return lo + cut, max(lo + cut + 1, hi - cut)
+
+
+def _slot_matrix_fused(
+    chroma: Any,
+    frame_times: list[tuple[int, int]],
+    np: Any,
+    *,
+    fusion: bool = True,
+    smooth: bool = True,
+    trim: float = _SLOT_TRIM,
+) -> Any:
+    """逐槽位聚合出 12×N 的和弦特征矩阵。
+
+    两路特征：
+    - **中值聚合**：对槽位内的帧取中位数。攻击瞬态（鼓点、拨弦起音）会把
+      一两帧的 chroma 摊得很宽，均值会被这些离群帧带偏，中位数不会。
+    - **谱归一化均值**：每帧先按自身能量归一化再取均值，压低「响的就是和弦」
+      的偏差——贝斯/底鼓一响，整段的原始 chroma 会被低频音级主导。
+
+    两路各自 L1 归一化后按 `_FUSION_WEIGHTS` 融合。`fusion=False` 时退回旧行为
+    （纯 mean 聚合、不融合），用于 A/B 对比。
+    """
+    if not fusion:
+        matrix = np.stack([
+            _slot_aggregate(chroma, lo, hi, np, mode="mean") for lo, hi in frame_times
+        ], axis=1)
+        return _smooth_matrix(matrix, np) if smooth else matrix
+    trimmed = [_trim_frames(lo, hi, trim) for lo, hi in frame_times]
+
+    columns_median: list[Any] = []
+    columns_whitened: list[Any] = []
+    frame_norm = np.linalg.norm(np.asarray(chroma, dtype=np.float64), axis=0, keepdims=True)
+    whitened = np.asarray(chroma, dtype=np.float64) / np.maximum(frame_norm, 1e-9)
+    for lo, hi in trimmed:
+        columns_median.append(_slot_aggregate(chroma, lo, hi, np, mode="median"))
+        columns_whitened.append(_slot_aggregate(whitened, lo, hi, np, mode="mean"))
+    median_matrix = np.stack(columns_median, axis=1)
+    whitened_matrix = np.stack(columns_whitened, axis=1)
+    weight_median, weight_whitened = _FUSION_WEIGHTS
+    fused = np.zeros_like(median_matrix)
+    for index in range(median_matrix.shape[1]):
+        fused[:, index] = (
+            weight_median * _l1(median_matrix[:, index], np)
+            + weight_whitened * _l1(whitened_matrix[:, index], np)
+        )
+        fused[:, index] = _l1(fused[:, index], np)
+    return _smooth_matrix(fused, np) if smooth else fused
+
+
+def _repetition_weights(
+    slot_matrix: Any,
+    np: Any,
+    *,
+    threshold: float = _REPETITION_SIMILARITY,
+    max_neighbors: int = _REPETITION_MAX_NEIGHBORS,
+    exclude_radius: int = _REPETITION_EXCLUDE,
+) -> Any:
+    """算出「哪些槽位的伴奏长得像自己」的权重矩阵（N×N）。
+
+    做法是槽位级自相似矩阵（余弦相似度），只保留相似度 ≥ threshold 的邻居，
+    每个槽位最多留 max_neighbors 个；并排除 ±exclude_radius 内的相邻槽位——
+    相邻槽位天然相似，把它们算进来等于奖励「永远别换和弦」，会把换和弦抹平。
+    """
+    matrix = np.asarray(slot_matrix, dtype=np.float64)
+    if matrix.ndim != 2 or matrix.shape[1] < 4:
+        return np.zeros((matrix.shape[1] if matrix.ndim == 2 else 0,) * 2, dtype=np.float64)
+    norms = np.linalg.norm(matrix, axis=0, keepdims=True)
+    unit = matrix / np.maximum(norms, 1e-9)
+    similarity = np.clip(unit.T @ unit, -1.0, 1.0).astype(np.float64)
+    slots = similarity.shape[0]
+    weights = np.zeros_like(similarity)
+    for index in range(slots):
+        row = similarity[index].copy()
+        low = max(0, index - int(exclude_radius))
+        high = min(slots, index + int(exclude_radius) + 1)
+        row[low:high] = 0.0
+        candidates = np.where(row >= float(threshold))[0]
+        if candidates.size == 0:
+            continue
+        if candidates.size > max_neighbors:
+            order = np.argsort(row[candidates])[::-1][: int(max_neighbors)]
+            candidates = candidates[np.sort(order)]
+        # 相似度映射到 (0,1] 的权重：刚好过线的小、接近 1 的大
+        weights[index, candidates] = (row[candidates] - float(threshold)) / max(1e-6, 1.0 - float(threshold))
+    return weights
+
+
+def _apply_repetition_prior(
+    emissions: list[list[dict[str, Any]]],
+    weights: Any,
+    states: list[dict[str, Any]],
+    np: Any,
+    *,
+    strength: float = _REPETITION_STRENGTH,
+) -> tuple[list[list[dict[str, Any]]], int]:
+    """用「相似槽位上一遍解出的是什么和弦」给候选加一点分。
+
+    这是自训练式的平滑：一首歌里副歌唱三遍，其中两遍的 chroma 清楚、一遍被
+    衰减或加花搞模糊。第一遍解码后，模糊那遍的邻居槽位已经给出了可信答案，
+    第二遍就把这份一致性证据加回去。
+
+    只在邻居相似度足够（权重 > 0）时才加，且幅度很小（`strength`），
+    避免把整首歌压成同一个和弦。返回 (新打分, 被改动的槽位数)。
+    """
+    if weights.size == 0 or not states:
+        return emissions, 0
+    slots = min(weights.shape[0], len(emissions), len(states))
+    if slots <= 0:
+        return emissions, 0
+    symbols = [str(state.get("symbol") or "") for state in states]
+    adjusted: list[list[dict[str, Any]]] = []
+    touched = 0
+    for index in range(len(emissions)):
+        candidates = emissions[index]
+        if index >= slots:
+            adjusted.append(candidates)
+            continue
+        row = weights[index]
+        total = float(np.sum(row))
+        if total <= 1e-9:
+            adjusted.append(candidates)
+            continue
+        # 每个和弦符号在「相似槽位」里占的加权比例
+        shares: dict[str, float] = {}
+        for neighbor in range(slots):
+            weight = float(row[neighbor])
+            if weight <= 0.0:
+                continue
+            symbol = symbols[neighbor]
+            if not symbol:
+                continue
+            shares[symbol] = shares.get(symbol, 0.0) + weight
+        if not shares:
+            adjusted.append(candidates)
+            continue
+        best_share = max(shares.values()) / total
+        rescored: list[dict[str, Any]] = []
+        changed = False
+        for candidate in candidates:
+            symbol = str(candidate.get("symbol") or "")
+            share = shares.get(symbol, 0.0) / total
+            bonus = strength * share
+            item = dict(candidate)
+            item["score"] = float(candidate.get("score") or 0.0) + bonus
+            if symbol == symbols[index] and best_share >= 0.5:
+                # 当前解码结果本来就是邻居里的大多数：额外小幅确认
+                item["score"] += strength * 0.5 * best_share
+            if abs(bonus) > 1e-9:
+                changed = True
+            rescored.append(item)
+        rescored.sort(key=lambda entry: float(entry.get("score") or 0.0), reverse=True)
+        adjusted.append(rescored)
+        if changed:
+            touched += 1
+    return adjusted, touched
 
 
 def _smooth_matrix(matrix: Any, np: Any) -> Any:
@@ -822,6 +1021,10 @@ def recognize_chords(
     key: dict[str, Any] | None = None,
     total_seconds: float | None = None,
     bass_wav: Path | str | None = None,
+    feature_fusion: bool = True,
+    repetition_pass: bool = False,
+    slot_trim: float = _SLOT_TRIM,
+    stats: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """按拍输出和弦事件列表。"""
     librosa, np = _require_libs()
@@ -878,14 +1081,11 @@ def recognize_chords(
         except Exception:  # pragma: no cover
             bass_chroma = None
 
-    # 3) 逐槽聚合 + 平滑
+    # 3) 逐槽聚合 + 平滑（中值 / 谱归一化两路融合，见 _slot_matrix_fused）
     frame_times = []
     for start, end in slot_times:
         frame_times.append((int(round(start * sr / HOP_LENGTH)), int(round(end * sr / HOP_LENGTH))))
-    slot_matrix = np.stack([
-        _slot_aggregate(chroma, lo, hi, np, mode="mean") for lo, hi in frame_times
-    ], axis=1)
-    slot_matrix = _smooth_matrix(slot_matrix, np)
+    slot_matrix = _slot_matrix_fused(chroma, frame_times, np, fusion=feature_fusion, trim=slot_trim)
     bass_matrix = None
     if bass_chroma is not None:
         bass_matrix = np.stack([
@@ -912,6 +1112,26 @@ def recognize_chords(
     states = viterbi_decode(emissions, change_penalty=change_penalty)
     if not states:
         return []
+
+    # 4b) 重复一致性第二遍：相似槽位（副歌重复、主歌重复）互相背书。
+    #     先把第一遍的解码结果当作「邻居的投票」，对候选重新加一点点分，再解一遍。
+    #     这一步专门救「同一段伴奏被衰减/加花搞模糊」的槽位——它们的邻居槽位
+    #     chroma 清楚，第一遍已经解对了，把这份一致性证据补回来。
+    repetition_stats: dict[str, Any] = {"enabled": bool(repetition_pass), "touched_slots": 0}
+    if repetition_pass and len(slot_times) >= 8:
+        weights = _repetition_weights(slot_matrix, np)
+        if float(np.sum(weights)) > 0.0:
+            boosted, touched = _apply_repetition_prior(emissions, weights, states, np)
+            repetition_stats["touched_slots"] = int(touched)
+            if touched > 0:
+                second = viterbi_decode(boosted, change_penalty=change_penalty)
+                if second:
+                    emissions = boosted
+                    states = second
+    if stats is not None:
+        stats.update(repetition_stats)
+        stats["feature_fusion"] = bool(feature_fusion)
+        stats["slots"] = len(slot_times)
     # 滞回：小节中途换和弦必须赢过当前和弦 _CHANGE_HYSTERESIS 分
     states = apply_change_hysteresis(
         states,
@@ -985,8 +1205,9 @@ def recognize_chords(
     # 7) 收尾：对齐到 0..total、保证连续覆盖，再标注来源
     events = enforce_boundaries(events, total_seconds, prefer_flat=prefer_flat)
     bar_seconds, bar_starts = _bar_grid(beats, total_seconds)
+    suffix = f"+repetition({repetition_stats['touched_slots']})" if repetition_stats.get("touched_slots") else ""
     for event in events:
-        event["source"] = f"chroma-template+{bass_source}+viterbi"
+        event["source"] = f"chroma-template+{bass_source}+viterbi{suffix}"
         event.pop("bass_strength", None)
         # 持续越久的和弦越可信（同一和弦占 4 小节显然比占半小节更确定）
         duration = float(event["end"]) - float(event["start"])

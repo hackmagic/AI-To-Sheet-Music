@@ -764,15 +764,26 @@ def run_pipeline(
     # 优先用「去掉人声」的伴奏轨算 chroma：人声旋律会被当成和弦外音，把三和弦误判成
     # 七和弦/挂留，是 confidence 偏低的主要来源之一。
     harmony_wav = _build_instrumental(stems_paths, work) or analysis_wav
+    chord_stats: dict[str, Any] = {}
+    # 和弦识别内部有两个可实验开关（默认值由 seconds 级 A/B 决定，见 docs/09）：
+    # AITSM_CHORD_FUSION=0 关掉中值/谱归一化特征融合（回到旧的均值聚合）；
+    # AITSM_CHORD_REPETITION=1 打开重复一致性第二遍（实测负收益，默认关）。
     chords = chords_mod.recognize_chords(
         harmony_wav, beats, key=key, total_seconds=total_seconds,
         bass_wav=stems_paths.get("bass"),
+        feature_fusion=os.environ.get("AITSM_CHORD_FUSION", "1").lower() not in {"0", "false", "no"},
+        repetition_pass=os.environ.get("AITSM_CHORD_REPETITION", "0").lower() in {"1", "true", "yes"},
+        stats=chord_stats,
     )
     stage_end(
         "chords", started, engine="chroma-template+viterbi",
         extra={
             "count": len(chords),
             "source": "instrumental" if harmony_wav is not analysis_wav else "mix",
+            # 这两项决定了「同一条音频为什么这次比上次稳」，必须能追溯
+            "feature_fusion": chord_stats.get("feature_fusion"),
+            "repetition_touched_slots": chord_stats.get("touched_slots"),
+            "slots": chord_stats.get("slots"),
         },
     )
     if not chords:

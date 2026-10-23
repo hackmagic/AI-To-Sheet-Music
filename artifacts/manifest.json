@@ -1,6 +1,6 @@
 {
   "schema": "aitsm.manifest/v1",
-  "created_at": "2026-10-21T07:49:31+0800",
+  "created_at": "2026-10-23T12:41:58+0800",
   "input": {
     "path": "K:\\workspaces\\hackmagic\\hackmagic-music\\assets\\小林未郁、HOYO-MiX\\小林未郁、HOYO-MiX - 下一站 Beyond This Station.flac",
     "original_name": "小林未郁、HOYO-MiX - 下一站 Beyond This Station.flac",
@@ -12,6 +12,7 @@
   },
   "options": {
     "include_tab": true,
+    "quality": "standard",
     "no_lyrics": false,
     "no_melody": false
   },
@@ -19,7 +20,7 @@
     "analysis": [
       {
         "name": "ingest",
-        "elapsed_seconds": 2.828,
+        "elapsed_seconds": 3.25,
         "ok": true,
         "engine": "ffmpeg",
         "duration": 229.032245,
@@ -27,7 +28,7 @@
       },
       {
         "name": "separate",
-        "elapsed_seconds": 308.469,
+        "elapsed_seconds": 234.25,
         "ok": true,
         "engine": "demucs",
         "device": "cpu",
@@ -35,7 +36,7 @@
       },
       {
         "name": "beats",
-        "elapsed_seconds": 11.594,
+        "elapsed_seconds": 12.391,
         "ok": true,
         "engine": "librosa",
         "bpm": 92.47,
@@ -43,45 +44,49 @@
       },
       {
         "name": "key",
-        "elapsed_seconds": 12.218,
+        "elapsed_seconds": 13.484,
         "ok": true,
         "engine": "krumhansl"
       },
       {
         "name": "chords",
-        "elapsed_seconds": 13.188,
+        "elapsed_seconds": 14.953,
         "ok": true,
         "engine": "chroma-template+viterbi",
-        "count": 55
+        "count": 65,
+        "source": "instrumental",
+        "feature_fusion": true,
+        "repetition_touched_slots": 0,
+        "slots": 176
       },
       {
         "name": "key_refine",
-        "elapsed_seconds": 12.219,
+        "elapsed_seconds": 12.985,
         "ok": true,
         "engine": "krumhansl+chord-functions"
       },
       {
         "name": "structure",
-        "elapsed_seconds": 13.781,
+        "elapsed_seconds": 15.078,
         "ok": true,
         "engine": "ssm+novelty",
-        "count": 12
+        "count": 11
       },
       {
         "name": "lyrics",
-        "elapsed_seconds": 151.469,
+        "elapsed_seconds": 252.812,
         "ok": true,
         "engine": "faster-whisper"
       },
       {
         "name": "melody",
-        "elapsed_seconds": 12.875,
+        "elapsed_seconds": 13.844,
         "ok": true,
         "engine": "pyin"
       }
     ],
     "analysis_summary": {
-      "duration_sec": 538.72,
+      "duration_sec": 573.16,
       "engines": {
         "python": "3.12.8",
         "numpy": "2.5.4",
@@ -93,43 +98,51 @@
         "jsonschema": "4.26.0",
         "ffmpeg": "ffmpeg version 9.0.1-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
         "demucs_model": "htdemucs",
+        "separate": {
+          "engine": "demucs",
+          "model": "htdemucs",
+          "device": "cpu",
+          "shifts": null,
+          "overlap": null,
+          "cached": false
+        },
         "lyrics": {
           "available": true,
           "engine": "faster-whisper",
           "model": "medium",
           "device": "cpu",
-          "line_count": 18
+          "line_count": 23
         },
         "melody": {
           "available": true,
           "engine": "pyin",
-          "note_count": 326
+          "note_count": 333
         }
       },
-      "output": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\analysis.json"
+      "output": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\analysis.json"
     },
     "arrange": {
-      "duration_sec": 0.06
+      "duration_sec": 0.07
     },
     "export": {
       "outputs": {
-        "json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\score.json",
-        "musicxml": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\score.musicxml",
-        "midi": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\score.mid"
+        "json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\score.json",
+        "musicxml": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\score.musicxml",
+        "midi": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\score.mid"
       },
       "errors": {}
     }
   },
   "stage_timings": {
-    "ingest": 2.828,
-    "separate": 308.469,
-    "beats": 11.594,
-    "key": 12.218,
-    "chords": 13.188,
-    "key_refine": 12.219,
-    "structure": 13.781,
-    "lyrics": 151.469,
-    "melody": 12.875
+    "ingest": 3.25,
+    "separate": 234.25,
+    "beats": 12.391,
+    "key": 13.484,
+    "chords": 14.953,
+    "key_refine": 12.985,
+    "structure": 15.078,
+    "lyrics": 252.812,
+    "melody": 13.844
   },
   "degraded": [
     {
@@ -149,23 +162,29 @@
       "level": "warn",
       "code": "key.relative_ambiguity",
       "message": "关系大小调歧义（B 小调 vs D 大调，delta=0.036），按行业惯例按大调标注。"
+    },
+    {
+      "stage": "key_refine",
+      "level": "warn",
+      "code": "key.relative_ambiguity",
+      "message": "关系大小调歧义（B 小调 vs D 大调，delta=0.003），按行业惯例按大调标注。"
     }
   ],
   "outputs": {
-    "analysis": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\analysis.json",
-    "analysis_sha256": "f9d68850b69540dc8a112235aadae26727450aedd154c273b9116c6645a3e50c",
-    "manifest": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\manifest.json",
-    "playback_audio": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\playback.mp3",
+    "analysis": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\analysis.json",
+    "analysis_sha256": "89e151a6a977338209f20ddb6733dec97a8871489b7c8d5678a07fb63ab38a42",
+    "manifest": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\manifest.json",
+    "playback_audio": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\playback.mp3",
     "stems": {
-      "vocals": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\vocals.wav",
-      "drums": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\drums.wav",
-      "bass": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\bass.wav",
-      "other": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\stems\\other.wav"
+      "vocals": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems\\vocals.wav",
+      "drums": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems\\drums.wav",
+      "bass": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems\\bass.wav",
+      "other": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\stems\\other.wav"
     },
-    "json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\score.json",
-    "musicxml": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\score.musicxml",
-    "midi": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\score.mid",
-    "score": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-v2\\score.json"
+    "json": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\score.json",
+    "musicxml": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\score.musicxml",
+    "midi": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\score.mid",
+    "score": "K:\\workspaces\\hackmagic\\AI-To-Sheet-Music\\work\\accept-chords\\score.json"
   },
   "tools": {
     "python": "3.12.8",
@@ -178,27 +197,35 @@
     "jsonschema": "4.26.0",
     "ffmpeg": "ffmpeg version 9.0.1-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
     "demucs_model": "htdemucs",
+    "separate": {
+      "engine": "demucs",
+      "model": "htdemucs",
+      "device": "cpu",
+      "shifts": null,
+      "overlap": null,
+      "cached": false
+    },
     "lyrics": {
       "available": true,
       "engine": "faster-whisper",
       "model": "medium",
       "device": "cpu",
-      "line_count": 18
+      "line_count": 23
     },
     "melody": {
       "available": true,
       "engine": "pyin",
-      "note_count": 326
+      "note_count": 333
     }
   },
   "quality": {
-    "overall": 0.824,
+    "overall": 0.816,
     "stages": {
       "beats": 0.882,
-      "key": 0.843,
+      "key": 0.811,
       "chords": 0.745,
-      "structure": 0.851,
-      "melody": 0.849,
+      "structure": 0.846,
+      "melody": 0.85,
       "lyrics": 1.0
     },
     "issues": [
@@ -211,8 +238,8 @@
       {
         "level": "info",
         "code": "structure.coarse",
-        "message": "桥段 1（99.1s-140.7s）超过 16 小节，可能还能细分，但连续重复同一和弦进行对弹唱无影响。",
-        "target": "桥段 1"
+        "message": "副歌 3（99.1s-140.7s）超过 16 小节，可能还能细分，但连续重复同一和弦进行对弹唱无影响。",
+        "target": "副歌 3"
       }
     ]
   },
@@ -220,7 +247,7 @@
     "valid": true,
     "errors": []
   },
-  "total_elapsed_seconds": 538.687,
+  "total_elapsed_seconds": 573.11,
   "warnings": [
     {
       "level": "warn",
@@ -241,8 +268,14 @@
       "code": "key.relative_ambiguity"
     },
     {
+      "level": "warn",
+      "message": "关系大小调歧义（B 小调 vs D 大调，delta=0.003），按行业惯例按大调标注。",
+      "stage": "key_refine",
+      "code": "key.relative_ambiguity"
+    },
+    {
       "level": "info",
-      "message": "段落可能切得不够细：桥段 1 超过 16 小节（谱面连续重复同一和弦进行，对弹唱无影响，仅提示结构信息可能不够细）。",
+      "message": "段落可能切得不够细：副歌 3 超过 16 小节（谱面连续重复同一和弦进行，对弹唱无影响，仅提示结构信息可能不够细）。",
       "stage": "structure",
       "code": "structure.coarse"
     }
@@ -251,6 +284,6 @@
     "name": "AI-To-Sheet-Music",
     "version": "0.1.0"
   },
-  "started_at": 1792539632.540803,
-  "duration_sec": 539.68
+  "started_at": 1792729945.040195,
+  "duration_sec": 574.14
 }

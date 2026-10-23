@@ -121,6 +121,13 @@ class Profile:
     structure: list[tuple[str, int]]
     # 是否有人声旋律
     with_vocals: bool = True
+    # 把最后一段（通常是重复出现的副歌）做旧：低通 + 衰减。
+    # 用途是造一个「同一个人重复段落里有一遍信号变差」的用例，
+    # 检查「重复一致性」这类跨段证据能不能把它救回来。
+    degrade_last_section: bool = False
+    # 做旧方式：lowpass 只压高频；thin_fifth 再把和弦垫的三音去掉（只剩根音+五度），
+    # 让大小三和弦在频谱上几乎无法区分——这时候只有「同一段副歌前面唱过什么」能定案。
+    degrade_mode: str = "lowpass"
     # 配器风格：决定各声部音量
     mix: dict[str, float] = field(default_factory=lambda: {
         "chords": 0.34, "bass": 0.30, "melody": 0.24, "drums": 0.16,
@@ -181,6 +188,23 @@ PROFILES: dict[str, Profile] = {
         with_vocals=False,
         mix={"chords": 0.38, "bass": 0.32, "melody": 0.24, "drums": 0.16},
     ),
+    # 4) 编配更满的流行：测「鼓/贝斯很吵、和弦垫被压」时的稳健性，
+    #    并且把最后一遍副歌做旧（低通+衰减），专门考跨重复段的一致性证据。
+    "busy": Profile(
+        name="busy",
+        title="合成测试 · 满编配流行（末段做旧）",
+        style="pop",
+        bpm=122.0,
+        time_signature=(4, 4),
+        key_tonic="G",
+        key_mode="major",
+        progression=[("G", "maj"), ("E", "min"), ("C", "maj"), ("D", "maj")],
+        structure=[("intro", 1), ("verse", 2), ("chorus", 2), ("verse", 1), ("chorus", 1)],
+        with_vocals=True,
+        mix={"chords": 0.24, "bass": 0.34, "melody": 0.22, "drums": 0.30},
+        degrade_last_section=True,
+        degrade_mode="noise_floor",
+    ),
 }
 
 
@@ -189,10 +213,15 @@ def _chord_track(profile: Profile, total_bars: int, sr: int) -> np.ndarray:
     bar_len = int(profile.bar_seconds * sr)
     buffer = np.zeros(bar_len * total_bars)
     beat_len = profile.bar_seconds / profile.beats_per_bar
+    per_section = len(profile.progression)
+    thin_from = total_bars - per_section if profile.degrade_last_section and profile.degrade_mode == "thin_fifth" else total_bars
     for bar in range(total_bars):
         root_name, quality = profile.progression[bar % len(profile.progression)]
         root = _midi(root_name, 4)
         tones = [root + step for step in CHORD_TONES[quality]]
+        if bar >= thin_from:
+            # 只剩根音+五度：三音缺失，maj/min 在 chroma 上无法区分
+            tones = [offset for offset in tones if (offset - root) % 12 in (0, 7)]
         # 低八度补一个根音，让和弦更有厚度
         tones = [root - 12] + tones
         bar_start = bar * bar_len
@@ -310,7 +339,52 @@ def synthesize(profile: Profile, sr: int = SAMPLE_RATE) -> np.ndarray:
     # 归一化到 -1..1，留 3dB 余量
     peak = float(np.max(np.abs(mix))) or 1.0
     mix = mix / peak * 0.71
+    if profile.degrade_last_section:
+        per_section = len(profile.progression)
+        bar_len = int(profile.bar_seconds * sr)
+        start = max(0, (total_bars - per_section) * bar_len)
+        if profile.degrade_mode == "noise_floor":
+            mix = degrade_segment(mix, start, length, sr, mode="noise_floor", gain=0.22, noise=0.05)
+        else:
+            mix = degrade_segment(mix, start, length, sr, mode=profile.degrade_mode)
     return mix
+
+
+def degrade_segment(
+    mix: np.ndarray,
+    start: int,
+    end: int,
+    sr: int = SAMPLE_RATE,
+    *,
+    mode: str = "lowpass",
+    gain: float = 0.62,
+    noise: float = 0.0,
+) -> np.ndarray:
+    """把一段音频做旧，模拟「同一段副歌第二遍录得更闷/更轻/更脏」。
+
+    mode="lowpass"     一阶低通 + 衰减（闷）
+    mode="noise_floor" 大幅衰减 + 加宽带噪声（远、糊），信噪比低到单看这一段很难定和弦
+    mode="thin_fifth"  低通 + 只保留根音五度（由和弦轨处理），大小三和弦无法区分
+    """
+    out = mix.copy()
+    start = max(0, int(start))
+    end = min(len(out), int(end))
+    if end - start < 2:
+        return out
+    alpha = 0.10  # 截止频率约 400Hz，高频（镲片、泛音）基本被抹掉
+    segment = out[start:end]
+    filtered = np.empty_like(segment)
+    state = 0.0
+    for index in range(segment.shape[0]):
+        state += alpha * (segment[index] - state)
+        filtered[index] = state
+    processed = filtered * float(gain)
+    if mode == "noise_floor" and noise > 0:
+        # 固定种子：同一个 profile 每次渲染出同一段音频，评估才可复现
+        rng = np.random.default_rng(20240607)
+        processed = processed + rng.normal(0.0, float(noise), size=processed.shape)
+    out[start:end] = processed
+    return out
 
 
 def ground_truth(profile: Profile) -> dict[str, Any]:
@@ -330,8 +404,10 @@ def ground_truth(profile: Profile) -> dict[str, Any]:
                 "end_sec": round((bar_cursor + per_section_bars) * bar_seconds, 4),
             })
             bar_cursor += per_section_bars
+    degraded_from_bar = total_bars - len(profile.progression) + 1 if profile.degrade_last_section else None
     return {
         "schema": "aitsm.groundtruth/v1",
+        "degraded_from_bar": degraded_from_bar,
         "profile": profile.name,
         "title": profile.title,
         "style": profile.style,
