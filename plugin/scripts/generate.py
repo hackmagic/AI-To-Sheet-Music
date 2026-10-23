@@ -606,7 +606,13 @@ def main() -> int:
     parser.add_argument(
         "--whisper-model",
         default=None,
-        help="歌词模型：medium（默认，准）或 small（约快 2 倍，CER 高约 0.10）",
+        help="歌词模型：medium（默认，准）、small（约快 2 倍，CER 高约 0.10）或 large-v3（最准，很慢）",
+    )
+    parser.add_argument(
+        "--quality",
+        default=None,
+        choices=["standard", "high", "max"],
+        help="质量档：standard/fast（默认）；high 用微调分轨模型（约 4 倍慢）；max 再加多次位移与 large-v3 歌词",
     )
     args = parser.parse_args()
 
@@ -687,6 +693,8 @@ def main() -> int:
         cmd += ["--no-melody"]
     if args.whisper_model:
         cmd += ["--whisper-model", args.whisper_model]
+    if args.quality:
+        cmd += ["--quality", args.quality]
 
     env = _locate.child_env(root)
     try:

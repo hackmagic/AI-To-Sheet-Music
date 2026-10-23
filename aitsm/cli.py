@@ -14,12 +14,47 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
 
 from . import __version__
 from .config import REPO_ROOT, SETTINGS, WEB_DIR, check_optional_engines, resolve_binary
+
+
+#: ``--quality`` 预设：只拧「更慢但更准」的旋钮，不改算法结构。
+#: standard = 默认（htdemucs + medium 歌词）；high = 微调分轨 + 更稳的分段；
+#: max = 微调分轨 + 多次位移 + large-v3 歌词（CPU 上非常慢）。
+QUALITY_PRESETS: dict[str, dict[str, str]] = {
+    "standard": {},
+    "high": {
+        "AITSM_DEMUCS_MODEL": "htdemucs_ft",
+        "AITSM_DEMUCS_SHIFTS": "2",
+        "AITSM_DEMUCS_OVERLAP": "0.75",
+    },
+    "max": {
+        "AITSM_DEMUCS_MODEL": "htdemucs_ft",
+        "AITSM_DEMUCS_SHIFTS": "4",
+        "AITSM_DEMUCS_OVERLAP": "0.9",
+        "AITSM_WHISPER_MODEL": "large-v3",
+    },
+}
+
+
+def apply_quality_preset(name: str) -> dict[str, str]:
+    """把 ``--quality`` 预设写进环境变量，返回实际生效的项。
+
+    已经显式设置过的环境变量不覆盖——这样用户可以用
+    ``AITSM_WHISPER_MODEL=medium`` 手动调和预设里更激进的值。
+    """
+    applied: dict[str, str] = {}
+    for key, value in QUALITY_PRESETS.get(name, {}).items():
+        if os.environ.get(key):
+            continue
+        os.environ[key] = value
+        applied[key] = value
+    return applied
 
 
 def cmd_serve(args: argparse.Namespace) -> int:
@@ -52,11 +87,23 @@ def cmd_generate(args: argparse.Namespace) -> int:
         "device": args.device,
         "language": args.language,
         "whisper_model": args.whisper_model,
+        "quality": getattr(args, "quality", None) or "standard",
         "no_separation": args.no_separation,
         "no_lyrics": args.no_lyrics,
         "no_melody": args.no_melody,
     }
     options = {k: v for k, v in options.items() if v is not None}
+
+    # --quality 预设通过环境变量生效（分轨在调用时读取，歌词模型在下游读取）；
+    # 显式 --whisper-model 优先级最高。
+    quality = str(options.get("quality") or "standard")
+    applied = apply_quality_preset(quality)
+    if args.whisper_model:
+        os.environ["AITSM_WHISPER_MODEL"] = args.whisper_model
+        applied["AITSM_WHISPER_MODEL"] = args.whisper_model
+    if quality != "standard":
+        detail = ", ".join(f"{k.replace('AITSM_', '')}={v}" for k, v in sorted(applied.items()))
+        print(f"质量档：{quality}（{detail or '无额外设置'}）")
 
     def progress(stage: str, percent: float, message: str) -> None:
         bar = "#" * int(percent / 4)
@@ -147,6 +194,12 @@ def build_parser() -> argparse.ArgumentParser:
     gen.add_argument("--no-separation", action="store_true")
     gen.add_argument("--no-lyrics", action="store_true")
     gen.add_argument("--no-melody", action="store_true")
+    gen.add_argument(
+        "--quality",
+        default="standard",
+        choices=["standard", "high", "max"],
+        help="质量档：standard 默认；high 用微调分轨（slow）；max 再加多次位移与 large-v3 歌词（very slow，CPU 上可能 30 分钟以上）",
+    )
     gen.set_defaults(func=cmd_generate)
 
     demo = sub.add_parser("demo", help="导出示例谱面")

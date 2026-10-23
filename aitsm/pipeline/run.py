@@ -170,6 +170,42 @@ def _normalize_warnings(stage: str, items: Any) -> list[dict[str, Any]]:
     return output
 
 
+def _build_instrumental(stems_paths: dict[str, str], work: Path) -> str | None:
+    """把鼓/贝斯/伴奏三条分轨相加成「去掉人声」的伴奏轨，供和弦识别使用。
+
+    和弦 chroma 最怕人声：主旋律音在和弦模板里全是「非和弦音」，一个持续的主音就足以
+    把三和弦判成 add9/七和弦，把置信度拉低。用伴奏轨算 chroma 是这件事的标准做法
+    （也顺便让低音约束更干净）。分轨缺失时返回 None，调用方回退到混音。
+    """
+    import numpy as np
+    import soundfile as sf  # type: ignore[import-not-found]
+
+    parts = [stems_paths.get(name) for name in ("drums", "bass", "other")]
+    if not all(parts):
+        return None
+    total = None
+    sample_rate = None
+    for path in parts:
+        try:
+            data, rate = sf.read(str(path), dtype="float32", always_2d=True)
+        except Exception:
+            return None
+        if total is None:
+            total = data.copy()
+            sample_rate = rate
+            continue
+        length = min(len(total), len(data))
+        total = total[:length] + data[:length]
+    if total is None or not len(total) or not sample_rate:
+        return None
+    peak = float(np.max(np.abs(total)))
+    if peak > 0.99:
+        total = total / peak * 0.99
+    target = work / "instrumental.wav"
+    sf.write(str(target), total, int(sample_rate))
+    return str(target)
+
+
 def _tool_versions() -> dict[str, str]:
     versions: dict[str, str] = {"python": f"{__import__('sys').version_info.major}.{__import__('sys').version_info.minor}.{__import__('sys').version_info.micro}"}
     for name, label in (
@@ -725,11 +761,20 @@ def run_pipeline(
     # ---------------- 5. chords ----------------
     _emit(progress, "chords", 79.0, "识别和弦")
     started = stage_begin("chords")
+    # 优先用「去掉人声」的伴奏轨算 chroma：人声旋律会被当成和弦外音，把三和弦误判成
+    # 七和弦/挂留，是 confidence 偏低的主要来源之一。
+    harmony_wav = _build_instrumental(stems_paths, work) or analysis_wav
     chords = chords_mod.recognize_chords(
-        analysis_wav, beats, key=key, total_seconds=total_seconds,
+        harmony_wav, beats, key=key, total_seconds=total_seconds,
         bass_wav=stems_paths.get("bass"),
     )
-    stage_end("chords", started, engine="chroma-template+viterbi", extra={"count": len(chords)})
+    stage_end(
+        "chords", started, engine="chroma-template+viterbi",
+        extra={
+            "count": len(chords),
+            "source": "instrumental" if harmony_wav is not analysis_wav else "mix",
+        },
+    )
     if not chords:
         warnings.append(_warn("chords", "未识别到任何和弦。", level="warn", code="chords.no_chords"))
     elif len(chords) >= 3:
@@ -870,6 +915,15 @@ def run_pipeline(
         "tools": {
             **_tool_versions(),
             **({"demucs_model": stems_info.get("model")} if stems_info.get("model") else {}),
+            # 分轨质量旋钮决定「这一份结果有多贵」，必须能追溯到具体参数
+            "separate": {
+                "engine": stems_info.get("engine"),
+                "model": stems_info.get("model"),
+                "device": stems_info.get("device"),
+                "shifts": (stems_info.get("shifts") if isinstance(stems_info, dict) else None),
+                "overlap": (stems_info.get("overlap") if isinstance(stems_info, dict) else None),
+                "cached": stems_info.get("cached"),
+            },
             "lyrics": {
                 "available": bool(lyrics and lyrics.get("lines")),
                 "engine": (lyrics or {}).get("engine", "none"),

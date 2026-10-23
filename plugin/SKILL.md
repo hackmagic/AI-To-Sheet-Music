@@ -70,6 +70,7 @@ python scripts/generate.py "<音频文件>" --out <输出目录>
 --language zh             # 歌词语言；默认 auto
 --device cpu              # auto / cuda / cpu
 --whisper-model small     # 歌词模型降级（默认 medium；small 约快 2 倍、CER 高约 0.10）
+--quality high            # 质量档：high 用微调分轨（约 4 倍慢），max 再加多次位移与 large-v3 歌词（1.5 小时以上）
 --no-separation           # 跳过分轨（快，但旋律基本不可信）
 --out <dir>               # 不给则自动选可写位置
 ```

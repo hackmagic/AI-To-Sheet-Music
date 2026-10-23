@@ -54,6 +54,7 @@ work/mysong/
 --difficulty beginner     # beginner / elementary / intermediate / advanced
 --language zh             # 歌词语言，默认 auto 自动检测
 --whisper-model small     # 歌词模型降级（默认 medium；small 快约 2.3 倍、CER 高约 0.10）
+--quality high            # 质量档 standard/high/max：微调分轨、更稳分段、large-v3 歌词（更慢更准）
 --no-separation           # 跳过分轨（快，但旋律与和弦质量下降）
 --start 60 --duration 30  # 只处理片段（调试用）
 --device cpu              # auto / cuda / cpu
@@ -87,7 +88,7 @@ work/mysong/
 | 歌词 | 字符级 CER **0.49–0.54**（medium；small 约 0.64）；同一配置跑三次差 0.05，因为分轨不是比特可复现 | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 中文歌（216s 慢歌） | 59 小节 / 6 段、D 大调 conf 0.57；歌词 lev_cer **0.669** / recall **0.835** / precision **0.606**（中文专属清洗后） | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | MusicXML 落地 | 过官方 XSD + **MuseScore Studio 4.7.5 实机打开**：双谱表、和弦、逐字歌词、段落、`♩=92` 全部正确；**不带 `-f` 的严格导入 exit 0**（4 份谱面），可导 PDF/PNG | [docs/05-acceptance.md](docs/05-acceptance.md) |
-| 成本 | 4 分钟歌 CPU 冷启动约 9 分钟（分轨 5 分钟 + 歌词 2.5 分钟） | [docs/05-acceptance.md](docs/05-acceptance.md) |
+| 成本 | 4 分钟歌 CPU 冷启动约 9 分钟（分轨 5 分钟 + 歌词 2.5 分钟）；`--quality high` 约 45 分钟，`max` 1.5–2 小时 | [docs/08-quality-tiers.md](docs/08-quality-tiers.md) |
 
 合成曲只用于验证**信号层**（BPM / 拍号 / 调性 / 和弦），合成人声是正弦波所以不评歌词与旋律；真实歌曲的段落边界与歌词仍需人工校对。
 

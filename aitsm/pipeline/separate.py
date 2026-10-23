@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import json
+import os
 import time
 from pathlib import Path
 from typing import Any
@@ -23,8 +24,42 @@ SAMPLE_RATE = 22050
 HQ_SAMPLE_RATE = 44100
 
 _SEED = 17
-_SHIFTS = 1
-_OVERLAP = 0.5
+
+
+def _env_int(name: str, default: int) -> int:
+    try:
+        raw = os.environ.get(name)
+        return int(raw) if raw else default
+    except (TypeError, ValueError):
+        return default
+
+
+def _env_float(name: str, default: float) -> float:
+    try:
+        raw = os.environ.get(name)
+        return float(raw) if raw else default
+    except (TypeError, ValueError):
+        return default
+
+
+# 分轨质量旋钮（``--quality`` 预设会写这些环境变量）：
+#   AITSM_DEMUCS_MODEL   htdemucs（默认）| htdemucs_ft（微调版，人声更干净，约 4 倍耗时）
+#   AITSM_DEMUCS_SHIFTS  随机位移次数，越大越稳越慢
+#   AITSM_DEMUCS_OVERLAP 分段重叠率，越大边界越平滑越慢
+_SHIFTS_DEFAULT = 1
+_OVERLAP_DEFAULT = 0.5
+
+
+def demucs_quality() -> tuple[str, int, float]:
+    """当前分轨质量设置：(模型名, shifts, overlap)。
+
+    每次调用现读环境变量，这样 ``--quality`` 可以在同一进程里按任务调整，
+    而不用重新 import 模块。
+    """
+    model = (os.environ.get("AITSM_DEMUCS_MODEL") or "htdemucs").strip() or "htdemucs"
+    shifts = max(1, _env_int("AITSM_DEMUCS_SHIFTS", _SHIFTS_DEFAULT))
+    overlap = min(0.95, max(0.0, _env_float("AITSM_DEMUCS_OVERLAP", _OVERLAP_DEFAULT)))
+    return model, shifts, overlap
 _SEGMENT = 7.0
 _CPU_SEGMENT = 4.0
 
@@ -117,7 +152,7 @@ def _run_demucs(
     from demucs.apply import apply_model  # type: ignore[import-not-found]
 
     librosa, _ = _require_libs()
-    model_name = "htdemucs"
+    model_name, shifts, overlap = demucs_quality()
     model, versions = _load_demucs_model(model_name)
     chosen_device = _pick_device(device, torch)
     model.to(chosen_device)
@@ -150,9 +185,9 @@ def _run_demucs(
                 model,
                 normalized[None],
                 device=attempt["device"],
-                shifts=_SHIFTS,
+                shifts=shifts,
                 split=True,
-                overlap=_OVERLAP,
+                overlap=overlap,
                 segment=segment,
                 progress=False,
                 num_workers=0,
@@ -164,7 +199,7 @@ def _run_demucs(
             try:
                 sources = apply_model(
                     model, normalized[None], device=attempt["device"],
-                    shifts=_SHIFTS, split=True, overlap=_OVERLAP,
+                    shifts=shifts, split=True, overlap=overlap,
                     progress=False, num_workers=0,
                 )[0]
                 used = attempt
@@ -299,13 +334,16 @@ def separate(source_wav: Path | str, work_dir: Path | str, *, device: str = "aut
 
     mix_path, mix_info = _prepare_mix(source, work)
     input_sha = media.sha256_file(mix_path)
+    # 质量旋钮每次调用现读环境变量（--quality 预设通过环境变量生效），
+    # 而且必须同时进缓存键：换了模型/位移次数就不能复用旧分轨。
+    model_name, shifts, overlap = demucs_quality()
     cache_key = {
         "input_sha256": input_sha,
         "input_frames": media.probe_media(mix_path)["duration"],
         "device": (device or "auto").lower(),
-        "model": "htdemucs",
-        "shifts": _SHIFTS,
-        "overlap": _OVERLAP,
+        "model": model_name,
+        "shifts": shifts,
+        "overlap": overlap,
         "segment": _SEGMENT,
     }
 
@@ -320,6 +358,9 @@ def separate(source_wav: Path | str, work_dir: Path | str, *, device: str = "aut
                 "device": cached.get("device", "cpu"),
                 "stems": stems,
                 "hq_stems": cached.get("hq_stems") or {},
+                # 复用缓存时也要带上质量参数，否则上层不知道这份 stem 是哪个档位产的
+                "shifts": (cached.get("cache_key") or {}).get("shifts"),
+                "overlap": (cached.get("cache_key") or {}).get("overlap"),
                 "warnings": ["复用已有分轨结果（输入哈希与参数一致）。"],
                 "versions": cached.get("versions") or _demucs_versions(),
                 "cached": True,
@@ -337,12 +378,18 @@ def separate(source_wav: Path | str, work_dir: Path | str, *, device: str = "aut
         "mix_wav": str(mix_path),
         "mix_reused": mix_info.get("reused", False),
         "elapsed_seconds": round(time.monotonic() - started, 3),
+        # 质量旋钮随结果上报，manifest 里才能解释「为什么这份比那份慢/准」
+        "model": result.get("model") or model_name,
+        "shifts": shifts,
+        "overlap": overlap,
     })
     try:
         manifest_path.write_text(json.dumps({
             "cache_key": cache_key,
             "engine": result["engine"],
-            "model": result.get("model"),
+            "model": result.get("model") or model_name,
+            "shifts": shifts,
+            "overlap": overlap,
             "device": result.get("device"),
             "stems": result["stems"],
             "hq_stems": result.get("hq_stems") or {},
