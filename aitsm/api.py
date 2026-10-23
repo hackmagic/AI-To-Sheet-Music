@@ -202,6 +202,10 @@ def demo_score(sample: bool = False) -> JSONResponse:
     优先给**真曲交付版**（``artifacts/score.json``：整首 88 小节、真实英文歌词），
     这样打开首页看到的就是完整成品而不是手写样例。
     ``?sample=1`` 仍可取回 12 小节的手写样例（离线自检用，不依赖 artifacts）。
+
+    交付文件里不写播放地址（它是产物，不该绑定某个本地目录）；但如果
+    ``work/jobs/demo/playback.mp3`` 存在，就在**响应里**补一个 ``audio_url``，
+    让首页可以直接对齐音频播放。只改内存副本，不回写文件。
     """
     candidates: list[Path] = []
     if not sample:
@@ -209,8 +213,26 @@ def demo_score(sample: bool = False) -> JSONResponse:
     candidates.append(SAMPLES_DIR / "demo-score.json")
     for path in candidates:
         if path.is_file():
-            return JSONResponse(json.loads(path.read_text(encoding="utf-8")))
+            score = json.loads(path.read_text(encoding="utf-8"))
+            if not sample:
+                _attach_demo_audio(score)
+            return JSONResponse(score)
     raise HTTPException(status_code=404, detail="示例数据缺失")
+
+
+def _attach_demo_audio(score: dict[str, Any]) -> None:
+    """若演示音频存在，把地址挂到 ``meta.source.audio_url``（只改内存副本）。"""
+    playback = SETTINGS.work_root / "jobs" / "demo" / "playback.mp3"
+    if not playback.is_file():
+        return
+    meta = score.get("meta")
+    if not isinstance(meta, dict):
+        return
+    source = meta.get("source")
+    if not isinstance(source, dict):
+        source = {}
+        meta["source"] = source
+    source.setdefault("audio_url", "/jobs/demo/playback.mp3")
 
 
 if WEB_DIR.is_dir():

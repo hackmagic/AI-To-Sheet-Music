@@ -1569,7 +1569,14 @@ def arrange(analysis: dict, options: dict | None = None) -> dict:
                 "original_name": str(source.get("original_name") or ""),
                 "duration_sec": round(duration, 3),
                 "sha256": str(source.get("sha256") or ""),
-                "audio_url": str((analysis.get("audio") or {}).get("playback_audio") or ""),
+                # 只写浏览器可用的 URL 形态（如 /jobs/<id>/playback.mp3）；
+                # 绝对本地路径写进交付物会把本机目录结构带出去，且换台机器就没用。
+                # 任务态下播放地址由 service 层补，演示态由 /api/demo 补。
+                **(
+                    {"audio_url": playback_url}
+                    if (playback_url := str((analysis.get("audio") or {}).get("playback_audio") or "")).startswith("/")
+                    else {}
+                ),
             },
             "tempo": round(bpm, 3),
             "tempo_source": "beat-track" if beats_conf > 0 else "default",

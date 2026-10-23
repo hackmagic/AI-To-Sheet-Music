@@ -244,11 +244,16 @@ function applyScore(score, { audioUrl = null } = {}) {
   state.raw = score;
   state.transpose = 0;
   state.capo = Number(score?.meta?.capo) || 0;
-  state.audioUrl = audioUrl;
+  // 显式传入的地址优先；其次是谱面里写的 URL 形态地址（如 /jobs/demo/playback.mp3）。
+  // 绝对本地路径（D:\...\playback.mp3）在浏览器里没有意义，一律忽略。
+  const declared = score?.meta?.source?.audio_url;
+  const fallback = typeof declared === 'string' && declared.startsWith('/') ? declared : null;
+  const resolved = audioUrl || fallback;
+  state.audioUrl = resolved;
   state.jobId = state.jobId || null;
 
-  if (audioUrl) {
-    dom.audio.src = audioUrl;
+  if (resolved) {
+    dom.audio.src = resolved;
     dom.audio.load();
     if (dom['play-source']) {
       dom['play-source'].hidden = false;
