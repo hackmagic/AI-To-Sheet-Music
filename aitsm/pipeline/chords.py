@@ -987,6 +987,80 @@ def _smooth_matrix(matrix: Any, np: Any) -> Any:
     return smoothed
 
 
+# 八度权重：C1 起第 1..7 个八度。基频通常落在 C2–C4（人声/吉他/键盘的中音区），
+# 低八度是贝斯与底鼓的隆隆声，高八度几乎全是泛音——泛音会把三和弦「染」成七和弦
+# 或挂留和弦（四音里多一个渗漏能量就够翻盘），所以显式压低。
+_HARMONIC_OCTAVE_WEIGHTS: tuple[float, ...] = (0.10, 0.55, 1.00, 0.95, 0.70, 0.42, 0.20)
+
+
+def _harmonic_chroma(librosa: Any, y: Any, sr: int, np: Any, tuning: float) -> Any:
+    """按八度加权的谐波抑制 chroma：自己做 CQT 折叠，而不是直接用 ``chroma_cqt``。
+
+    ``chroma_cqt`` 把 7 个八度等权折叠，等价于「泛音和基频一样重要」。真实的和弦音
+    能量集中在中音区，高次谐波只是同一音级在不同八度上的复制——等权折叠不会打乱音级
+    排序，但会让**非和弦音通过泛音链获得额外能量**（例如 G 的三次谐波是 D，Em7 的五次
+    谐波会点亮 F#）。给每个八度一个权重后，这类「借泛音插队」的候选会被压下去。
+
+    返回形状 ``(12, frames)`` 的逐帧 L2 归一化 chroma。
+    """
+    bins_per_octave = 36
+    n_octaves = len(_HARMONIC_OCTAVE_WEIGHTS)
+    fmin = librosa.note_to_hz("C1")
+    cqt = np.abs(
+        librosa.cqt(
+            y=y,
+            sr=sr,
+            hop_length=HOP_LENGTH,
+            fmin=fmin,
+            n_bins=n_octaves * bins_per_octave,
+            bins_per_octave=bins_per_octave,
+            tuning=tuning,
+        )
+    )
+    weights = np.zeros(cqt.shape[0], dtype=np.float64)
+    for octave in range(n_octaves):
+        start = octave * bins_per_octave
+        weights[start : start + bins_per_octave] = _HARMONIC_OCTAVE_WEIGHTS[octave]
+    weighted = cqt * weights[:, None]
+
+    chroma = np.zeros((12, weighted.shape[1]), dtype=np.float64)
+    # bins_per_octave=36 → 每个半音 3 个 bin，bin // 3 是该八度内的半音序号
+    for semitone_start in range(0, weighted.shape[0], 3):
+        pitch_class = (semitone_start // 3) % 12
+        chroma[pitch_class] += weighted[semitone_start : semitone_start + 3].sum(axis=0)
+    norm = np.linalg.norm(chroma, axis=0, keepdims=True)
+    return chroma / np.maximum(norm, 1e-9)
+
+
+def _smooth_chord_sequence(
+    states: list[dict[str, Any]],
+    *,
+    min_confidence: float = 0.62,
+) -> tuple[list[dict[str, Any]], int]:
+    """和弦序列的中值滤波：吃掉「只占一个槽位、前后同名」的孤立抖动。
+
+    这类槽位几乎总是节拍网格与起音对不齐造成的（鼓点尾音、滑音经过），不是真的换和弦。
+    但**高置信度**的孤立和弦要保留——那可能是真实的一小节过门和弦。
+    """
+    if len(states) < 3:
+        return states, 0
+    result = [dict(item) for item in states]
+    changed = 0
+    for index in range(1, len(result) - 1):
+        previous = result[index - 1]
+        current = result[index]
+        following = result[index + 1]
+        if previous.get("symbol") != following.get("symbol"):
+            continue
+        if current.get("symbol") == previous.get("symbol"):
+            continue
+        if float(current.get("slot_confidence") or 0.0) >= min_confidence:
+            continue
+        result[index] = dict(previous)
+        changed += 1
+    return result, changed
+
+
 def _detect_bass_pitch(bass_slot: Any, root_pc: int, np: Any) -> tuple[int | None, float]:
     """判断该槽位的实际低音是否与根音不同（转位/斜杠和弦）。
 
@@ -1024,6 +1098,8 @@ def recognize_chords(
     feature_fusion: bool = True,
     repetition_pass: bool = False,
     slot_trim: float = _SLOT_TRIM,
+    harmonic_weight: bool = True,
+    sequence_smoothing: bool = True,
     stats: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """按拍输出和弦事件列表。"""
@@ -1039,7 +1115,7 @@ def recognize_chords(
     if not slot_times:
         return []
 
-    # 1) 谐波分量 → 调音补偿 → CQT chroma
+    # 1) 谐波分量 → 调音补偿 → CQT chroma（可选：按八度加权的谐波抑制，见 _harmonic_chroma）
     try:
         y_harm = librosa.effects.harmonic(y, margin=3.0)
     except Exception:  # pragma: no cover
@@ -1049,10 +1125,19 @@ def recognize_chords(
         tuning = _safe_tuning(librosa, y_harm, sr, np)
     except Exception:  # pragma: no cover
         tuning = 0.0
-    chroma = librosa.feature.chroma_cqt(
-        y=y_harm, sr=sr, hop_length=HOP_LENGTH, tuning=tuning,
-        bins_per_octave=36, n_chroma=12,
-    )
+    chroma_source = "chroma_cqt"
+    chroma = None
+    if harmonic_weight:
+        try:
+            chroma = _harmonic_chroma(librosa, y_harm, sr, np, tuning)
+            chroma_source = "harmonic-weighted"
+        except Exception:  # pragma: no cover - CQT 失败就退回标准 chroma
+            chroma = None
+    if chroma is None:
+        chroma = librosa.feature.chroma_cqt(
+            y=y_harm, sr=sr, hop_length=HOP_LENGTH, tuning=tuning,
+            bins_per_octave=36, n_chroma=12,
+        )
 
     # 2) 低音 chroma：优先 bass stem，否则带通
     bass_source = "mix-bandpass"
@@ -1131,6 +1216,8 @@ def recognize_chords(
     if stats is not None:
         stats.update(repetition_stats)
         stats["feature_fusion"] = bool(feature_fusion)
+        stats["harmonic_weight"] = bool(harmonic_weight)
+        stats["chroma_source"] = chroma_source
         stats["slots"] = len(slot_times)
     # 滞回：小节中途换和弦必须赢过当前和弦 _CHANGE_HYSTERESIS 分
     states = apply_change_hysteresis(
@@ -1181,6 +1268,13 @@ def recognize_chords(
                 pitch, strength = _detect_bass_pitch(bass_matrix[:, index], root_pc, np)
         bass_pitch.append(pitch)
         bass_strength.append(float(strength))
+
+    # 5b) 序列中值滤波：吃掉「只占一槽、前后同名」的孤立抖动（高置信度的过门保留）
+    smoothed_count = 0
+    if sequence_smoothing:
+        states, smoothed_count = _smooth_chord_sequence(states)
+        if stats is not None:
+            stats["sequence_smoothed_slots"] = int(smoothed_count)
 
     # 6) 合并 + 清理
     median_beat = 0.5

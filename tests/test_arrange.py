@@ -400,8 +400,12 @@ def test_pickup_bar() -> None:
     assert validate_score(result)["ok"] is True
 
 
-def test_triplet_quantization_uses_fraction_duration() -> None:
-    """1/3 网格上的音不写成 0.25/0.5，而是 "1/3" 这类分数字符串（三连音）。"""
+def test_triplet_quantization_uses_fraction_duration(monkeypatch) -> None:
+    """开启三连音开关时，1/3 网格上的音写成 "1/3" 这类分数字符串。
+
+    默认关闭三连音（见 `_quantize_melody` 的说明）：导出层与网页渲染器只可靠支持二分网格。
+    """
+    monkeypatch.setenv("AITSM_MELODY_TRIPLETS", "1")
     bpm = BPM
     notes = []
     # 前两拍各 1 拍，第 3 拍开始三连音：2.0, 2.3333, 2.6667
@@ -424,6 +428,33 @@ def test_triplet_quantization_uses_fraction_duration() -> None:
     assert any(isinstance(value, str) and value.endswith("/3") for value in durations), durations
     beats = [note["beat"] for note in vocals]
     assert any(abs(value - round(value * 3) / 3) < 0.01 for value in beats)
+    assert validate_score(result)["ok"] is True
+
+
+def test_triplet_is_snapped_to_binary_grid_by_default(monkeypatch) -> None:
+    """默认不开三连音：1/3 拍位置吸到最近的 1/4 拍，时值都是二进制可记谱值。"""
+    monkeypatch.delenv("AITSM_MELODY_TRIPLETS", raising=False)
+    bpm = BPM
+    notes = [
+        {"start": beat_time(0, bpm), "end": beat_time(1, bpm), "midi": 60, "confidence": 0.9},
+        {"start": beat_time(1, bpm), "end": beat_time(2, bpm), "midi": 62, "confidence": 0.9},
+    ]
+    for index, offset in enumerate((2.0, 2.0 + 1 / 3, 2.0 + 2 / 3)):
+        notes.append(
+            {
+                "start": beat_time(offset, bpm),
+                "end": beat_time(offset + 1 / 3, bpm),
+                "midi": 64 + index,
+                "confidence": 0.9,
+            }
+        )
+    analysis = make_analysis(bars=2, melody_notes=notes)
+    result = arrange(analysis, {})
+    vocals = iter_vocals(result)
+    durations = [note.get("dur") for note in vocals]
+    assert not any(isinstance(value, str) and value.endswith("/3") for value in durations), durations
+    for note in vocals:
+        assert abs(note["beat"] * 4 - round(note["beat"] * 4)) < 1e-6, note
     assert validate_score(result)["ok"] is True
 
 

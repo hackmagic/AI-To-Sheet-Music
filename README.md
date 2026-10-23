@@ -84,12 +84,13 @@ work/mysong/
 | 维度 | 结果 | 依据 |
 | --- | --- | --- |
 | 三首合成曲（3/4、4/4 摇滚、无人声） | 综合 **85.1/100**（修复前 72.7）；BPM 误差 0%、拍号全对、调性全对、和弦 **100%** | [docs/07-synthetic-eval.md](docs/07-synthetic-eval.md) |
-| 真实歌曲（229s 英文流行） | quality **0.824**、BPM 92.47 / 4/4、D 大调 conf 0.84、**55 个和弦事件**（mean_conf 0.57）、12 段、**326 个旋律音** | [docs/05-acceptance.md](docs/05-acceptance.md) |
+| 真实歌曲（229s 英文流行） | quality **0.821**、BPM 92.47 / 4/4、D 大调 conf 0.82、**69 个和弦事件**（mean_conf 0.586）、11 段、**395 个旋律音** | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 歌词 | 字符级 CER **0.49–0.54**（medium；small 约 0.64）；同一配置跑三次差 0.05，因为分轨不是比特可复现 | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 中文歌（216s 慢歌） | 59 小节 / 6 段、D 大调 conf 0.57；歌词 lev_cer **0.669** / recall **0.835** / precision **0.606**（中文专属清洗后） | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | MusicXML 落地 | 过官方 XSD + **MuseScore Studio 4.7.5 实机打开**：双谱表、和弦、逐字歌词、段落、`♩=92` 全部正确；**不带 `-f` 的严格导入 exit 0**（4 份谱面），可导 PDF/PNG | [docs/05-acceptance.md](docs/05-acceptance.md) |
 | 成本 | 4 分钟歌 CPU 冷启动约 9 分钟（分轨 5 分钟 + 歌词 2.5 分钟）；`--quality high` 约 45 分钟，`max` 1.5–2 小时 | [docs/08-quality-tiers.md](docs/08-quality-tiers.md) |
-| 和弦识别 | 特征融合（槽位中值 + 谱归一化）后调内三和弦干净率 **93.9% → 98.0%**、跨分轨一致率 **55.2% → 57.4%**；平均置信度仍在 0.57–0.58（瓶颈是方法本身，换更大模型无效） | [docs/09-chord-tuning.md](docs/09-chord-tuning.md) |
+| 和弦识别 | 特征融合（槽位中值 + 谱归一化）后调内三和弦干净率 **93.9% → 98.0%**、跨分轨一致率 **55.2% → 57.4%**；平均置信度仍在 0.58（瓶颈是方法本身，换更大模型无效） | [docs/09-chord-tuning.md](docs/09-chord-tuning.md) |
+| 节奏与和声证据 | HMM 节奏量化把「音符时值等于合法音符形状」的比例 **63% → 95%**（谱面 100% 落在 1/4 拍网格、网页零「时值无法精确记谱」告警）；谐波加权让和弦置信度 +1.7%、三和弦纯度 +1.8 点，代价是跨分轨一致率 −7.4 点 | [docs/10-rhythm-and-harmony.md](docs/10-rhythm-and-harmony.md) |
 
 合成曲只用于验证**信号层**（BPM / 拍号 / 调性 / 和弦），合成人声是正弦波所以不评歌词与旋律；真实歌曲的段落边界与歌词仍需人工校对。
 
@@ -174,11 +175,11 @@ skill 会把整条管线跑在**独立子进程**里（避免 torch/whisper 影�
 ## 测试
 
 ```bash
-.venv/Scripts/python -m pytest tests/ -q   # 520 条：管线、和弦、指法、导出（含记谱合法性）、service、插件脚本
+.venv/Scripts/python -m pytest tests/ -q   # 568 条：管线、节奏量化、和弦、指法、导出（含记谱合法性）、service、插件脚本
 node tests/web-editor.test.mjs             # 34 条：编辑器纯数据层（独立历史、撤销/重做、段落重编号）
 ```
 
-覆盖：和弦符号解析与等音、指法生成合法性、调性/移调矩阵、小节量化与延音、段落映射、schema 校验、MusicXML 结构（含官方 XSD、速度标记取整与去重、`direction` 子元素顺序）、MIDI SMF 往返、歌词清洗（含中文署名行/静音幻觉/碎行/繁简）、音节对齐、manifest 合并与引擎元信息、插件脚本对旧/新 manifest 的兼容。
+覆盖：和弦符号解析与等音、指法生成合法性、调性/移调矩阵、小节量化与延音、**HMM 节奏量化（可记谱性/小节求和/和弦锚点）**、**旋律带通与 F0 平滑**、**谐波加权 chroma 与序列平滑**、段落映射、schema 校验、MusicXML 结构（含官方 XSD、速度标记取整与去重、`direction` 子元素顺序）、MIDI SMF 往返、歌词清洗（含中文署名行/静音幻觉/碎行/繁简）、音节对齐、manifest 合并与引擎元信息、插件脚本对旧/新 manifest 的兼容。
 
 ## 许可
 

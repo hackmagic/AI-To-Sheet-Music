@@ -35,6 +35,7 @@ __all__ = [
     "hz_to_midi",
     "midi_to_hz",
     "median_filter_values",
+    "smooth_f0_track",
     "fix_octave_jumps",
     "constrain_pitch_range",
     "round_pitch_values",
@@ -128,6 +129,70 @@ def median_filter_values(values: Sequence[float | None], kernel: int = 5) -> lis
         ]
         result.append(_median(window) if window else value)
     return result
+
+
+def smooth_f0_track(
+    values: Sequence[float | None],
+    *,
+    kernel: int = 5,
+    max_deviation: float = 1.5,
+    min_run: int = 2,
+) -> tuple[list[float | None], int]:
+    """F0 轨迹的「智能中值」平滑：只修孤立毛刺，不动真实音符。
+
+    与 :func:`median_filter_values` 的区别是**不做无条件中值替换**。整段取中值会把
+    短音符（八分、十六分）抹平、把颤音压成直线；而人类歌唱的误差恰好是「孤立跳变」——
+    单帧或两帧的倍频/半频误判。所以这里只处理「与邻域中值偏离 > ``max_deviation``
+    半音、且连续长度 < ``min_run`` 帧」的片段，其余原样保留。
+
+    返回 (新序列, 被修正的帧数)。
+    """
+    if kernel < 3 or len(values) < 3:
+        return list(values), 0
+    radius = kernel // 2
+    result: list[float | None] = list(values)
+    reference: list[float | None] = []
+    for index, value in enumerate(values):
+        if value is None:
+            reference.append(None)
+            continue
+        window = [
+            other
+            for other in values[max(0, index - radius) : index + radius + 1]
+            if other is not None
+        ]
+        reference.append(_median(window) if window else value)
+
+    fixed = 0
+    index = 0
+    total = len(result)
+    while index < total:
+        current = result[index]
+        if current is None or reference[index] is None:
+            index += 1
+            continue
+        if abs(current - float(reference[index])) <= max_deviation:
+            index += 1
+            continue
+        # 找出这一串「偏离邻域中值」的连续帧
+        run_end = index
+        while run_end + 1 < total:
+            following = result[run_end + 1]
+            following_ref = reference[run_end + 1]
+            if following is None or following_ref is None:
+                break
+            if abs(following - float(following_ref)) <= max_deviation:
+                break
+            run_end += 1
+        length = run_end - index + 1
+        if length < max(1, int(min_run)):
+            for position in range(index, run_end + 1):
+                target = reference[position]
+                if target is not None:
+                    result[position] = round(float(target), 3)
+                    fixed += 1
+        index = run_end + 1
+    return result, fixed
 
 
 def fix_octave_jumps(
@@ -957,22 +1022,97 @@ def _load_audio(path: str, duration: float | None) -> tuple[Any, int, Any, Any]:
     return y, int(sr), np, librosa
 
 
+def _bandpass_audio(
+    y: Any, sr: int, *, np: Any, low: float | None = None, high: float | None = None
+) -> tuple[Any, str]:
+    """给 pyin 之前的音频做零相位带通，压掉伴奏残留与次声/齿音噪声。
+
+    为什么需要：Demucs 分轨后的 vocals 里仍混着低频（贝斯克星）与高频（镲片、齿音）。
+    pyin 对这些成分也会给出「像模像样的」f0 候选，表现为低八度误判和沙沙的碎音。
+
+    为什么不直接把上限压到 300 Hz（有些文献对男声这样做）：本项目主旋律音域上限是
+    C6（1046 Hz），带通上限低于最高基频会**直接删掉高音**。这里取
+    ``low=65 Hz``（低于 C2 的所有成分都是噪声）与 ``high=1.2 kHz``（只保留基频与
+    第一泛音，第二泛音以上对 f0 判断没有帮助，反而会诱发倍频误判）。
+
+    返回 (滤波后音频, 说明字符串)；scipy 不可用或滤波失败时原样返回。
+    """
+    import os as _os
+
+    if str(_os.environ.get("AITSM_F0_BANDPASS", "1")).strip().lower() in {"0", "false", "no", "off"}:
+        return y, "disabled"
+    low_hz = float(low if low is not None else _env_float("AITSM_F0_BANDPASS_LOW", 65.0))
+    high_hz = float(high if high is not None else _env_float("AITSM_F0_BANDPASS_HIGH", 1200.0))
+    if high_hz <= low_hz or high_hz >= sr / 2.0:
+        return y, "skipped"
+    try:
+        from scipy.signal import butter, sosfiltfilt  # type: ignore
+    except Exception:  # pragma: no cover - scipy 缺失
+        return y, "no-scipy"
+    try:
+        sos = butter(2, [low_hz, high_hz], btype="bandpass", fs=sr, output="sos")
+        filtered = sosfiltfilt(sos, np.asarray(y, dtype=float))
+    except Exception as exc:  # pragma: no cover - 数值异常
+        LOGGER.warning("f0 前置带通失败（%s），使用原始音频", exc)
+        return y, "failed"
+    return filtered.astype(np.float32, copy=False), f"bandpass({low_hz:.0f}-{high_hz:.0f}Hz)"
+
+
+def _env_flag(name: str, default: bool) -> bool:
+    """读布尔环境变量；未设置/空串用默认值，``0/false/no/off`` 视为关闭。"""
+    import os as _os
+
+    raw = _os.environ.get(name)
+    if raw is None or not str(raw).strip():
+        return default
+    return str(raw).strip().lower() not in {"0", "false", "no", "off"}
+
+
+def _env_float(name: str, default: float) -> float:
+    import os as _os
+
+    raw = _os.environ.get(name)
+    if raw is None or not str(raw).strip():
+        return default
+    try:
+        value = float(str(raw).strip())
+    except ValueError:
+        return default
+    return value if math.isfinite(value) and value > 0 else default
+
+
 def _estimate_f0(
     y: Any, sr: int, *, np: Any, librosa: Any
 ) -> tuple[Any, Any, str, list[str]]:
     """pyin 提 f0；失败时降级 piptrack。返回 (f0, voiced_prob, engine, warnings)。"""
     warnings: list[str] = []
+    transition = _env_float("AITSM_F0_MAX_TRANSITION", 60.0)
     try:
-        f0, _voiced_flag, voiced_prob = librosa.pyin(
-            y=y,
-            fmin=DEFAULT_FMIN,
-            fmax=DEFAULT_FMAX,
-            sr=sr,
-            frame_length=DEFAULT_FRAME_LENGTH,
-            hop_length=DEFAULT_HOP_LENGTH,
-            center=True,
-            fill_na=np.nan,
-        )
+        try:
+            f0, _voiced_flag, voiced_prob = librosa.pyin(
+                y=y,
+                fmin=DEFAULT_FMIN,
+                fmax=DEFAULT_FMAX,
+                sr=sr,
+                frame_length=DEFAULT_FRAME_LENGTH,
+                hop_length=DEFAULT_HOP_LENGTH,
+                center=True,
+                max_transition_rate=transition,
+                switch_prob=_env_float("AITSM_F0_SWITCH_PROB", 0.02),
+                fill_na=np.nan,
+            )
+        except TypeError:
+            # 老版本 librosa 没这些关键字：退回默认参数，别为了参数丢掉 f0
+            f0, _voiced_flag, voiced_prob = librosa.pyin(
+                y=y,
+                fmin=DEFAULT_FMIN,
+                fmax=DEFAULT_FMAX,
+                sr=sr,
+                frame_length=DEFAULT_FRAME_LENGTH,
+                hop_length=DEFAULT_HOP_LENGTH,
+                center=True,
+                fill_na=np.nan,
+            )
         return f0, voiced_prob, "pyin", warnings
     except Exception as exc:
         warnings.append(f"pyin 失败（{exc}），降级为 piptrack 音高估计")
@@ -1073,8 +1213,41 @@ def _detect_onsets(y: Any, sr: int, *, np: Any, librosa: Any, warnings: list[str
 # ---------------------------------------------------------------------------
 
 
+def _quantize_or_fallback(
+    notes: Sequence[dict],
+    beats: dict | None,
+    *,
+    until: float | None,
+    harmony_onsets: Sequence[float] | None,
+    warnings: list[str],
+) -> tuple[list[dict], dict]:
+    """优先用 metrical HMM 量化；不可用/出错时退回就近吸附，绝不因此丢掉旋律。"""
+    try:
+        from .quantize import quantize_notes_hmm, quantizer_enabled
+    except Exception as exc:  # pragma: no cover - 模块缺损
+        warnings.append(f"节奏量化模块不可用（{exc}），退回就近吸附")
+        return quantize_notes(notes, beats, until=until)
+    if not quantizer_enabled():
+        return quantize_notes(notes, beats, until=until)
+    try:
+        quantized, stats = quantize_notes_hmm(
+            notes, beats, until=until, harmony_onsets=harmony_onsets
+        )
+    except Exception as exc:  # pragma: no cover - 数值异常
+        LOGGER.warning("HMM 量化失败（%s），退回就近吸附", exc)
+        warnings.append(f"节奏量化（HMM）失败（{type(exc).__name__}），退回就近吸附")
+        return quantize_notes(notes, beats, until=until)
+    if not quantized:
+        return quantize_notes(notes, beats, until=until)
+    return quantized, stats
+
+
 def transcribe_melody(
-    vocals_wav: str, beats: dict, *, duration: float | None = None
+    vocals_wav: str,
+    beats: dict,
+    *,
+    duration: float | None = None,
+    harmony_onsets: Sequence[float] | None = None,
 ) -> dict:
     """从（人声）音频提取单声部主旋律，并量化到节拍网格。
 
@@ -1082,6 +1255,8 @@ def transcribe_melody(
         vocals_wav: 人声 stem 或整曲 WAV 路径。
         beats: analyze_beats 的输出（使用 beats/bpm/beats_per_bar）。
         duration: 音频时长（秒），None 表示用文件全部。
+        harmony_onsets: 和弦变化时刻（秒）；量化时作为「乐句起点」的额外证据
+            （伴奏换和弦处几乎总是旋律的起音），缺失则只用节拍重音先验。
 
     返回:
         {"notes": [...], "range": {...}, "warnings": [...]}；失败时 notes=[] 并给出原因。
@@ -1126,8 +1301,14 @@ def transcribe_melody(
         warnings.append(f"能量计算失败（{exc}），跳过静音门限")
         rms = None
 
+    audio_for_f0, bandpass_info = _bandpass_audio(y, sr, np=np)
+    if bandpass_info.startswith("bandpass"):
+        result["bandpass"] = bandpass_info
+        LOGGER.info("f0 前置带通：%s", bandpass_info)
     try:
-        f0, voiced_prob, engine, engine_warnings = _estimate_f0(y, sr, np=np, librosa=librosa)
+        f0, voiced_prob, engine, engine_warnings = _estimate_f0(
+            audio_for_f0, sr, np=np, librosa=librosa
+        )
     except RuntimeError as exc:
         warnings.append(str(exc))
         return result
@@ -1173,7 +1354,12 @@ def transcribe_melody(
             continue
         midis.append(hz_to_midi(value))
 
-    midis = median_filter_values(midis, kernel=5)
+    # 智能中值：只修「一两帧的倍频/半频毛刺」，不抹平短音符与颤音（见 smooth_f0_track）
+    if _env_flag("AITSM_F0_SMOOTH", True):
+        midis, smoothed = smooth_f0_track(midis, kernel=5, max_deviation=1.5, min_run=2)
+    else:
+        smoothed = 0
+    midis = median_filter_values(midis, kernel=3)
     midis, octave_fixed = fix_octave_jumps(midis)
     midis, range_shifted, range_dropped = constrain_pitch_range(midis)
     midis = round_pitch_values(midis)
@@ -1193,14 +1379,17 @@ def transcribe_melody(
     notes = _merge_adjacent_same_pitch(absorb_ornament_notes(notes), max_gap=0.02)
     # 量化前先消掉 onset 校正造成的音符重叠，避免量化时整体后推
     notes = trim_note_overlaps(notes)
-    notes, quantize_stats = quantize_notes(
+    notes, quantize_stats = _quantize_or_fallback(
         notes,
         beats,
         until=duration if duration and duration > 0 else total_seconds,
+        harmony_onsets=harmony_onsets,
+        warnings=warnings,
     )
     result["notes"] = notes
     result["range"] = note_range(notes)
     result["quantize"] = quantize_stats
+    result["f0_smoothed_frames"] = int(smoothed)
 
     if octave_fixed:
         warnings.append(f"八度修正 {octave_fixed} 帧（pyin 常见八度误判）")

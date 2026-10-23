@@ -48,6 +48,19 @@ _SKIP_SYLLABLE_COST = 0.7  # 丢弃一个音节的代价
 _SKIP_NOTE_COST = 0.4  # 一个音符不挂歌词的代价
 _MELISMA_PENALTY = 0.25  # 一字多音每多一个音的代价（略低于丢弃音符，优先保留旋律）
 _SHARE_PENALTY = 0.3  # 一音多字每多一个字的代价（略低于丢弃音节，优先保留歌词）
+
+# --- 音乐约束（Whisper 时间戳只当「软锚点」，不是真值） --------------------------
+# Whisper 是语音模型，对歌唱的时间戳有 0.2–1.0 s 的系统性误差，副歌重复段尤其容易
+# 整段错位。如果按「时间差越小越对」直接信它，会把错位的歌词焊死。所以：
+#  * 时间差超过 _ANCHOR_CAP 后不再增加代价（再远也不更差）——留给音乐结构去决定；
+#  * 音符起音落在节拍上给一点奖励（歌唱的咬字几乎总在拍点/拍点上）；
+#  * 跨越长休止（换气、间奏）的一字多音给惩罚。
+_ANCHOR_CAP = 0.42  # 秒：超过这个偏差后时间证据饱和
+_BEAT_BONUS = 0.10  # 起音落在拍点上的奖励
+_BEAT_TOLERANCE_RATIO = 0.18  # 拍长比例：|起音-拍点| < 18% 拍长算「在拍上」
+_REST_PENALTY = 0.30  # 一字多音跨过长休止的惩罚（高于「这个音不挂词」的 0.4 的一半以上：
+#                      谱面上把 a 拖过 2 秒间奏是明显错误，宁可不给那个音挂词）
+_REST_THRESHOLD_RATIO = 0.75  # 相邻音间隔超过 0.75 拍算「长休止」
 _INF = float("inf")
 
 
@@ -122,10 +135,20 @@ def _match_cost(
     syllable_end: float,
     note_start: float,
     note_end: float,
+    *,
+    beat_bonus: float = 0.0,
+    rest_count: int = 0,
 ) -> float:
-    """音节与（可能跨多个音的）音符跨度之间的匹配代价，越小越好。"""
-    start_diff = abs(note_start - syllable_start)
-    end_diff = abs(note_end - syllable_end)
+    """音节与（可能跨多个音的）音符跨度之间的匹配代价，越小越好。
+
+    时间证据是**饱和**的：偏差超过 ``_ANCHOR_CAP`` 后代价不再增长。这条规则把 Whisper
+    的时间戳从「真值」降级为「软锚点」——当它整段错位（副歌重复、清唱段落）时，DP 不会
+    为了凑时间把歌词塞到错误的音符上，而是交给节拍与休止约束去决定。
+
+    ``beat_bonus`` 与 ``rest_count`` 由调用方按音符预先算好（避免在 DP 内层重复算）。
+    """
+    start_diff = min(abs(note_start - syllable_start), _ANCHOR_CAP)
+    end_diff = min(abs(note_end - syllable_end), _ANCHOR_CAP)
     overlap = max(0.0, min(syllable_end, note_end) - max(syllable_start, note_start))
     duration = max(syllable_end - syllable_start, 1e-3)
     overlap_ratio = min(1.0, overlap / duration)
@@ -133,6 +156,8 @@ def _match_cost(
         _MATCH_START_WEIGHT * start_diff
         + _MATCH_END_WEIGHT * end_diff
         - _MATCH_OVERLAP_WEIGHT * overlap_ratio
+        + beat_bonus
+        + _REST_PENALTY * min(2, int(rest_count))
     )
 
 
@@ -243,8 +268,13 @@ def align_syllables_to_notes(
     *,
     max_melisma: int = MAX_MELISMA,
     max_share: int = MAX_SHARE,
+    beat_times: Sequence[float] | None = None,
+    beat_period: float | None = None,
 ) -> list[tuple]:
     """单调 DP：把一行音节对齐到一组音符。
+
+    ``beat_times`` / ``beat_period`` 给出节拍位置：音符起音落在拍点上会有奖励，
+    跨越长休止的一字多音会被惩罚。不传则退回纯时间匹配（保持向后兼容）。
 
     返回动作列表（按时间顺序），每个元素是元组：
     - ``("syllable", i, j, q)``：音节 i 覆盖音符 j..j+q-1；
@@ -263,6 +293,31 @@ def align_syllables_to_notes(
 
     syllable_spans = [(_syllable_start(item), _syllable_end(item)) for item in syllables]
     note_spans = [(_note_start(item), _note_end(item)) for item in notes]
+
+    # --- 音乐约束预计算 -----------------------------------------------------
+    period = float(beat_period) if beat_period and beat_period > 0 else 0.5
+    anchors = sorted(float(value) for value in (beat_times or []))
+    tolerance = _BEAT_TOLERANCE_RATIO * period
+    beat_bonus: list[float] = []
+    for onset, _end in note_spans:
+        if anchors and min(abs(onset - anchor) for anchor in anchors) <= tolerance:
+            beat_bonus.append(-_BEAT_BONUS)
+        else:
+            beat_bonus.append(0.0)
+    rest_threshold = _REST_THRESHOLD_RATIO * period
+    gap_flags: list[int] = []
+    for index in range(max(0, note_count - 1)):
+        gap = max(0.0, note_spans[index + 1][0] - note_spans[index][1])
+        gap_flags.append(1 if gap >= rest_threshold else 0)
+    rest_prefix = [0] * (note_count + 1)
+    for index, flag in enumerate(gap_flags):
+        rest_prefix[index + 1] = rest_prefix[index] + flag
+    # 注意 rest_prefix[k] 统计的是「前 k 个音符之间的间隔」，所以音符 j..j+q-1
+    # 内部的休止数 = rest_prefix[j+q-1] - rest_prefix[j]
+
+    def _rests_inside(start: int, span: int) -> int:
+        last = start + span - 1
+        return max(0, rest_prefix[last] - rest_prefix[start])
 
     # dp[i][j]：已处理 i 个音节、j 个音符的最小代价；back 记录前驱动作
     dp = [[_INF] * (note_count + 1) for _ in range(syllable_count + 1)]
@@ -297,7 +352,14 @@ def align_syllables_to_notes(
                 note_end = note_spans[j + q - 1][1]
                 cost = (
                     current
-                    + _match_cost(syllable_start, syllable_end, note_start, note_end)
+                    + _match_cost(
+                        syllable_start,
+                        syllable_end,
+                        note_start,
+                        note_end,
+                        beat_bonus=beat_bonus[j],
+                        rest_count=_rests_inside(j, q),
+                    )
                     + _MELISMA_PENALTY * (q - 1)
                 )
                 if cost < dp[i + 1][j + q]:
@@ -311,7 +373,13 @@ def align_syllables_to_notes(
                 span_end = syllable_spans[i + p - 1][1]
                 cost = (
                     current
-                    + _match_cost(span_start, span_end, note_spans[j][0], note_spans[j][1])
+                    + _match_cost(
+                        span_start,
+                        span_end,
+                        note_spans[j][0],
+                        note_spans[j][1],
+                        beat_bonus=beat_bonus[j],
+                    )
                     + _SHARE_PENALTY * (p - 1)
                 )
                 if cost < dp[i + p][j + 1]:
@@ -432,6 +500,12 @@ def align_lyrics_to_melody(melody: dict, lyrics: list[dict], beats: dict) -> dic
 
     syllables, lines = syllables_from_lyrics(lyrics)
     period = _beat_period(beats)
+    beat_times: list[float] = []
+    if isinstance(beats, dict):
+        for value in beats.get("beats") or []:
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                beat_times.append(float(value))
+    beat_times.sort()
 
     alignment: dict = {
         "lines": len(lines),
@@ -443,6 +517,7 @@ def align_lyrics_to_melody(melody: dict, lyrics: list[dict], beats: dict) -> dic
         "melisma": 0,
         "shared": 0,
         "unmatched": [],
+        "beat_anchors": len(beat_times),
     }
     result["alignment"] = alignment
 
@@ -472,7 +547,12 @@ def align_lyrics_to_melody(melody: dict, lyrics: list[dict], beats: dict) -> dic
             )
             continue
         line_notes = [notes[index] for index in line_note_indices]
-        ops = align_syllables_to_notes(line_syllables, line_notes)
+        ops = align_syllables_to_notes(
+            line_syllables,
+            line_notes,
+            beat_times=beat_times,
+            beat_period=period,
+        )
         line_stats = apply_alignment(line_notes, line_syllables, ops)
         for key in stats:
             stats[key] += line_stats.get(key, 0)

@@ -27,3 +27,6 @@ tests/output/
 Thumbs.db
 .idea/
 .vscode/
+
+# CodeGraph 本地索引
+.codegraph/

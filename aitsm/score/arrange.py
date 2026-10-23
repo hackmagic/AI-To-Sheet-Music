@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import math
+import os
 from typing import Any, Iterable, Sequence
 
 from . import strum as strum_lib
@@ -712,14 +713,20 @@ def _triplet_proximity(value: float) -> float:
 
 
 def _quantize_melody(value: float, *, bar_len: float) -> float:
-    """把旋律位置量化到 1/4 或 1/3 网格（三连音优先）。"""
-    triplet = round(value * 3.0) / 3.0
-    quarter = round(value * 4.0) / 4.0
-    if _triplet_proximity(value) < 0.02 and _triplet_proximity(value) <= abs(value - quarter):
-        result = triplet
-    else:
-        result = quarter
-    # 不四舍五入：1/3 网格必须保持精确值，否则 format_duration 认不出三连音
+    """把旋律位置量化到 1/4 拍网格（默认），三连音需显式开启。
+
+    为什么默认不做三连音：导出层（MusicXML）与网页渲染器都只可靠支持二分网格，
+    1/3 网格会被拆成连音或被吸附到十六分音符——`renderer.js` 会打出
+    「时值无法精确记谱」的告警，导出的 MusicXML 也要靠连音凑。
+    真需要三连音时设 ``AITSM_MELODY_TRIPLETS=1``，此时保持精确的 1/3 值。
+    """
+    if os.environ.get("AITSM_MELODY_TRIPLETS", "0").strip().lower() in {"1", "true", "yes", "on"}:
+        triplet = round(value * 3.0) / 3.0
+        quarter = round(value * 4.0) / 4.0
+        if _triplet_proximity(value) < 0.02 and _triplet_proximity(value) <= abs(value - quarter):
+            # 不四舍五入：1/3 网格必须保持精确值，否则 format_duration 认不出三连音
+            return max(0.0, min(round(triplet, 9), bar_len))
+    result = round(value * 4.0) / 4.0
     return max(0.0, min(round(result, 9), bar_len))
 
 

@@ -618,6 +618,7 @@ def _transcribe_melody(
     duration: float,
     lyrics: dict[str, Any] | None,
     warnings: list[dict[str, Any]],
+    chord_events: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any] | None:
     if not vocals_wav:
         warnings.append(_warn("melody", "没有人声轨，跳过旋律识别。", level="info", code="lyrics.no_vocals"))
@@ -628,8 +629,19 @@ def _transcribe_melody(
     except ImportError as exc:
         warnings.append(_warn("melody", f"旋律模块不可用（{exc}），已跳过。", code="melody.module_missing"))
         return None
+    # 和弦变化时刻是旋律乐句起点的免费证据，交给量化器做多声部一致（见 pipeline/quantize.py）
+    harmony_onsets: list[float] = []
+    for event in chord_events or []:
+        if not isinstance(event, dict):
+            continue
+        try:
+            harmony_onsets.append(float(event.get("start")))
+        except (TypeError, ValueError):
+            continue
     try:
-        melody = melody_mod.transcribe_melody(vocals_wav, beats, duration=duration)
+        melody = melody_mod.transcribe_melody(
+            vocals_wav, beats, duration=duration, harmony_onsets=harmony_onsets
+        )
     except Exception as exc:
         warnings.append(_warn("melody", f"旋律识别失败：{type(exc).__name__}: {exc}", level="error", code="melody.failed"))
         return None
@@ -773,6 +785,8 @@ def run_pipeline(
         bass_wav=stems_paths.get("bass"),
         feature_fusion=os.environ.get("AITSM_CHORD_FUSION", "1").lower() not in {"0", "false", "no"},
         repetition_pass=os.environ.get("AITSM_CHORD_REPETITION", "0").lower() in {"1", "true", "yes"},
+        harmonic_weight=os.environ.get("AITSM_CHORD_HARMONIC", "1").lower() not in {"0", "false", "no"},
+        sequence_smoothing=os.environ.get("AITSM_CHORD_SMOOTHING", "1").lower() not in {"0", "false", "no"},
         stats=chord_stats,
     )
     stage_end(
@@ -780,8 +794,11 @@ def run_pipeline(
         extra={
             "count": len(chords),
             "source": "instrumental" if harmony_wav is not analysis_wav else "mix",
-            # 这两项决定了「同一条音频为什么这次比上次稳」，必须能追溯
+            # 这几项决定了「同一条音频为什么这次比上次稳」，必须能追溯
             "feature_fusion": chord_stats.get("feature_fusion"),
+            "harmonic_weight": chord_stats.get("harmonic_weight"),
+            "chroma_source": chord_stats.get("chroma_source"),
+            "sequence_smoothed_slots": chord_stats.get("sequence_smoothed_slots"),
             "repetition_touched_slots": chord_stats.get("touched_slots"),
             "slots": chord_stats.get("slots"),
         },
@@ -886,7 +903,10 @@ def run_pipeline(
               engine=(lyrics or {}).get("engine", "none"),
               ok=bool(lyrics and lyrics.get("lines")))
     started = stage_begin("melody")
-    melody = _transcribe_melody(vocal_source, beats, total_seconds, lyrics, warnings)
+    melody = _transcribe_melody(
+        vocal_source, beats, total_seconds, lyrics, warnings,
+        chord_events=chords if isinstance(chords, list) else None,
+    )
     stage_end("melody", started,
               engine=(melody or {}).get("engine", "none"),
               ok=bool(melody and melody.get("notes")))
