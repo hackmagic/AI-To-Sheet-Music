@@ -142,12 +142,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="通过 GitHub API 推送提交")
     parser.add_argument("--apply", action="store_true", help="真正推送（默认 dry-run）")
     parser.add_argument("--force", action="store_true", help="允许非快进（慎用）")
+    parser.add_argument("--base", default=None, help="以哪个远端 SHA 为基线（默认读 branches/main）")
     args = parser.parse_args()
 
     slug = repo_slug()
     info = local_commit_info("HEAD")
-    remote_ref = gh(f"repos/{slug}/git/ref/heads/main")
-    remote_sha = remote_ref["object"]["sha"]
+    if args.base:
+        remote_sha = args.base
+    else:
+        remote_ref = gh(f"repos/{slug}/git/ref/heads/main")
+        remote_sha = remote_ref["object"]["sha"]
 
     print(f"仓库      {slug}")
     print(f"远端 main {remote_sha}")
