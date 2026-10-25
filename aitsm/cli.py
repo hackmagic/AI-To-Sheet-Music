@@ -2,6 +2,7 @@
 
     python -m aitsm.cli serve                    启动 Web 服务
     python -m aitsm.cli generate <audio> --out d  直接生成弹唱谱
+    python -m aitsm.cli bench <dir> --out d       多曲目转录基准（对比每层引擎）
     python -m aitsm.cli demo --out d              用内置示例跑一遍前端数据
     python -m aitsm.cli voicings                  生成 web/voicings.json
     python -m aitsm.cli doctor                    环境自检
@@ -125,6 +126,56 @@ def cmd_generate(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_bench(args: argparse.Namespace) -> int:
+    """多曲目基准：同一套参数跑一批音频，汇总每层引擎与质量分。"""
+    from .benchmark import expand_sources, run_benchmark
+
+    sources = [Path(item).expanduser() for item in args.sources]
+    out_dir = Path(args.out).expanduser().resolve()
+    paths = expand_sources(sources)
+    if not paths:
+        print(f"没有找到音频文件：{', '.join(str(item) for item in sources)}", file=sys.stderr)
+        return 2
+
+    options = {
+        "start_sec": args.start,
+        "duration_sec": args.duration,
+        "device": args.device,
+        "language": args.language,
+        "whisper_model": args.whisper_model,
+        "no_lyrics": args.no_lyrics or None,
+    }
+    options = {key: value for key, value in options.items() if value is not None}
+    if args.whisper_model:
+        os.environ["AITSM_WHISPER_MODEL"] = args.whisper_model
+
+    print(f"基准：{len(paths)} 首 -> {out_dir}")
+
+    def progress(stage: str, percent: float, message: str) -> None:
+        bar = "#" * int(percent / 4)
+        print(f"\r[{stage:<6}] {bar:<25} {percent:5.1f}% {message[:44]:<44}", end="", flush=True)
+
+    report = run_benchmark(sources, out_dir=out_dir, options=options, progress=progress)
+    print()
+    summary = report.get("summary") or {}
+    mean = summary.get("mean_overall")
+    mean_text = f"{float(mean) * 100:.1f}" if isinstance(mean, (int, float)) else "—"
+    print(
+        f"完成：成功 {summary.get('succeeded', 0)}/{summary.get('count', 0)}"
+        f"，失败 {summary.get('failed', 0)}，平均总分 {mean_text}"
+    )
+    degraded = summary.get("degraded_counts") or {}
+    if degraded:
+        print("降级层：" + "，".join(f"{key}×{value}" for key, value in sorted(degraded.items())))
+    outputs = report.get("outputs") or {}
+    for name, path in outputs.items():
+        print(f"  {name:<9} {path}")
+    for item in report.get("items") or []:
+        if not item.get("ok"):
+            print(f"  失败：{item.get('name')} — {item.get('error')}")
+    return 0 if not summary.get("failed") else 1
+
+
 def cmd_demo(args: argparse.Namespace) -> int:
     """把示例谱面复制到指定目录，便于前端/打印自测。"""
     import shutil
@@ -159,7 +210,59 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         print(f"{name:<12}{'可用' if ok else '缺失（相关阶段将降级）'}")
     schemas = [p.name for p in (REPO_ROOT / "schemas").glob("*.json")]
     print(f"schemas     {', '.join(sorted(schemas)) or '缺失'}")
+    _print_v2_backends()
+    _print_deployment()
     return 0
+
+
+def _print_v2_backends() -> None:
+    """v2 四层专用模型的就绪情况（只看本地，不联网）。"""
+    print("— v2 专用模型 —")
+    try:
+        from .transcribe import qwen_backend
+
+        info = qwen_backend.probe()
+        detail = info["reason"] or f"qwen-asr {info['version']}（pin {info['pinned_version']}）"
+        if info["available"] and not info["version_matches_pin"]:
+            detail += "｜版本与实测 pin 不同，注意 API 可能变化"
+        mark = "可用" if info["available"] else "降级"
+        print(f"{'人声 VocalParse':<16}{mark}｜{detail}")
+    except Exception as exc:  # noqa: BLE001
+        print(f"{'人声 VocalParse':<16}降级｜{exc}")
+
+    for label, module_name in (
+        ("伴奏 SheetSage2", "aitsm.transcribe.accompaniment"),
+        ("量化 DuET", "aitsm.fusion.quantize"),
+        ("分离 htdemucs_ft", "aitsm.separation.engine"),
+    ):
+        try:
+            module = __import__(module_name, fromlist=["is_available", "onnx_available"])
+            if module_name.endswith("separation.engine"):
+                ok = bool(module.onnx_available())
+                detail = "ONNX 权重已就绪" if ok else "未配置 AITSM_DEMUCS_ONNX_DIR 或无权重"
+            else:
+                ok = bool(module.is_available())
+                detail = "" if ok else "权重目录/依赖缺失"
+            mark = "可用" if ok else "降级"
+            print(f"{label:<16}{mark}" + (f"｜{detail}" if detail else ""))
+        except Exception as exc:  # noqa: BLE001
+            print(f"{label:<16}降级｜{exc}")
+    print("→ 四层全可用时 degraded_layers 为空；任一降级都会写进 symbolic.provenance")
+
+
+def _print_deployment() -> None:
+    """部署约束检查：多 worker + 大模型会 OOM。"""
+    from .deployment import check_deployment, model_memory_report
+
+    report = model_memory_report()
+    print("— 部署 —")
+    print(
+        f"模型常驻内存 约 {report['total_gb']} GB"
+        f"（含预留 {report['with_reserve_gb']} GB / 建议上限 {report['ceiling_gb']} GB）"
+    )
+    result = check_deployment()
+    prefix = {"ok": "OK", "info": "·", "warn": "!", "error": "X"}.get(result["level"], "·")
+    print(f"[{prefix}] {result['message']}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -201,6 +304,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="质量档：standard 默认；high 用微调分轨（slow）；max 再加多次位移与 large-v3 歌词（very slow，CPU 上可能 30 分钟以上）",
     )
     gen.set_defaults(func=cmd_generate)
+
+    bench = sub.add_parser("bench", help="多曲目转录基准")
+    bench.add_argument("sources", nargs="+", help="音频文件或目录（目录只收一层）")
+    bench.add_argument("--out", default="work/bench", help="输出目录（每首一个子目录）")
+    bench.add_argument("--start", type=float, default=None, help="只分析起始秒（调试，全批共用）")
+    bench.add_argument("--duration", type=float, default=None, help="只分析多少秒（调试，全批共用）")
+    bench.add_argument("--device", default=None, choices=["auto", "cuda", "cpu"])
+    bench.add_argument("--language", default=None, help="歌词语言：auto/zh/en/ja …")
+    bench.add_argument("--whisper-model", default=None, help="faster-whisper 模型")
+    bench.add_argument("--no-lyrics", action="store_true")
+    bench.set_defaults(func=cmd_bench)
 
     demo = sub.add_parser("demo", help="导出示例谱面")
     demo.add_argument("--out", default="work/demo")

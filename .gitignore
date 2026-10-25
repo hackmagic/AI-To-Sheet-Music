@@ -14,6 +14,10 @@ work/
 .cache/
 web/voicings.json.tmp
 
+# 模型权重与第三方源码（体积大，用 scripts/fetch_models.py 获取）
+models/
+vendor/
+
 # 测试/探针遗留（应在源头用 tmp_path 清理，这里兜底）
 aitsm-probe-*/
 aitsm-melody-*/
@@ -30,3 +34,6 @@ Thumbs.db
 
 # CodeGraph 本地索引
 .codegraph/
+
+# 整曲 demo 运行产物（体积大，用 work/demo_full_song.py 本地生成）
+artifacts/demo-full/

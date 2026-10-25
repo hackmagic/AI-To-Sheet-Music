@@ -138,6 +138,24 @@ def get_manifest(job_id: str) -> JSONResponse:
     return _serve_json(job_id, "manifest.json")
 
 
+@app.get("/api/jobs/{job_id}/symbolic")
+def get_symbolic(job_id: str) -> JSONResponse:
+    """v2 符号契约（转录层输出：节拍/调性/和弦/段落/旋律/歌词 + provenance）。"""
+    return _serve_json(job_id, "symbolic.json")
+
+
+@app.get("/api/jobs/{job_id}/payload")
+def get_payload(job_id: str) -> JSONResponse:
+    """前端渲染 payload（MusicXML + ABC + timing + 指法图）。"""
+    return _serve_json(job_id, "payload.json")
+
+
+@app.get("/api/jobs/{job_id}/timing")
+def get_timing(job_id: str) -> JSONResponse:
+    """绝对时间轴（小节/音符/和弦/歌词的秒），供同步播放与第三方消费。"""
+    return _serve_json(job_id, "timing.json")
+
+
 def _serve_json(job_id: str, filename: str) -> JSONResponse:
     job = JOBS.get(job_id)
     if job is None:
@@ -152,6 +170,10 @@ EXPORT_FILES = {
     "musicxml": ("score.musicxml", "application/vnd.recordare.musicxml+xml"),
     "midi": ("score.mid", "audio/midi"),
     "json": ("score.json", "application/json"),
+    "payload": ("payload.json", "application/json"),
+    "timing": ("timing.json", "application/json"),
+    # 转录层原生 MusicXML（含 <technical>/<harmony>/<lyric>，未经编配层增强）
+    "symbolic": ("symbolic.musicxml", "application/vnd.recordare.musicxml+xml"),
 }
 
 
@@ -184,6 +206,8 @@ def voicings() -> JSONResponse:
 
 @app.get("/api/health")
 def health() -> JSONResponse:
+    from .devices import detect_devices
+
     return JSONResponse(
         {
             "status": "ok",
@@ -191,6 +215,8 @@ def health() -> JSONResponse:
             "engines": check_optional_engines(),
             "ffmpeg": SETTINGS.ffmpeg,
             "work_root": str(SETTINGS.work_root),
+            # 前端据此决定「CPU / GPU」下拉框的默认值与可用性
+            "devices": detect_devices(),
         }
     )
 

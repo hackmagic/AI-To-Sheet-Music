@@ -25,8 +25,10 @@ from aitsm.pipeline import beats as beats_mod
 from aitsm.pipeline import chords as chords_mod
 from aitsm.pipeline import ingest as ingest_mod
 from aitsm.pipeline import keydet as keydet_mod
-from aitsm.pipeline import separate as separate_mod
 from aitsm.pipeline import structure as structure_mod
+from aitsm.pipeline import accompaniment_stage
+from aitsm.pipeline import symbolic_stage
+from aitsm.separation import engine as separation_engine
 
 ANALYSIS_SCHEMA_ID = "aitsm.analysis/v1"
 MANIFEST_SCHEMA_ID = "aitsm.manifest/v1"
@@ -666,6 +668,66 @@ def _transcribe_melody(
     return melody
 
 
+def _transcribe_vocal_joint(
+    vocals_wav: str | None,
+    beats: dict[str, Any],
+    duration: float,
+    options: dict[str, Any],
+    warnings: list[dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, Any]] | None:
+    """架构首选路径：VocalParse 一次联合解码歌词 + 音高 + 时值。
+
+    只有权重真的在本地（``is_available()``）时才走这里；否则返回 ``None``，
+    由调用方走「Whisper 词锚点 + pYIN 旋律 + 强制对齐」的显式降级链路。
+    """
+    if not vocals_wav:
+        return None
+    try:
+        from aitsm.transcribe import vocal as vocal_adapter
+    except Exception:
+        return None
+    try:
+        if not vocal_adapter.is_available():
+            return None
+    except Exception:
+        return None
+    try:
+        result = vocal_adapter.transcribe_vocal(
+            vocals_wav,
+            duration=duration,
+            language=str(options.get("language") or "auto"),
+            beatgrid=beats,
+            device=str(options.get("device") or "auto"),
+            whisper_model=str(options.get("whisper_model") or "medium"),
+        )
+    except Exception as exc:
+        warnings.append(_warn(
+            "lyrics", f"VocalParse 调用失败，退回三段式：{type(exc).__name__}: {exc}",
+            code="vocal.joint_failed",
+        ))
+        return None
+    notes = [note.to_dict() for note in result.notes]
+    lines = [line.to_dict() for line in result.lyrics]
+    for message in result.warnings or []:
+        warnings.append(_warn("lyrics", str(message), level="info", code="vocal.degraded"))
+    lyrics: dict[str, Any] = {
+        "available": bool(lines),
+        "lines": lines,
+        "engine": result.engine or "none",
+        "language": str(options.get("language") or "auto"),
+        "joint": True,
+    }
+    melody: dict[str, Any] = {
+        "available": bool(notes),
+        "notes": notes,
+        "engine": result.engine or "none",
+        "alignment": dict(result.alignment or {}),
+        "warnings": [str(item) for item in (result.warnings or [])],
+        "joint": True,
+    }
+    return lyrics, melody
+
+
 # --------------------------------------------------------------------------- #
 # 主流程
 # --------------------------------------------------------------------------- #
@@ -692,6 +754,23 @@ def run_pipeline(
     )
     duration_opt = duration_sec if duration_sec > 0 else None
     device = str(options.get("device") or "auto")
+    # 设备可用性校验：请求 GPU 但本机不可用时，明确告警并回落 CPU——
+    # 否则用户会以为在用 GPU，实际却在等 CPU 跑 80 分钟。
+    from aitsm.devices import device_note as _device_note
+    from aitsm.devices import resolve_device as _resolve_device
+
+    resolved_device = _resolve_device(device)
+    _device_message = _device_note(device, resolved_device)
+    device = resolved_device
+    if _device_message:
+        warnings.append(
+            _warn(
+                "device",
+                _device_message,
+                level="warn" if (options.get("device") or "").lower().startswith("cuda") and device != "cuda" else "info",
+                code="device.resolved",
+            )
+        )
     want_separation = bool(options.get("separate", True)) and not bool(options.get("no_separate", False))
 
     def stage_begin(name: str) -> float:
@@ -730,19 +809,26 @@ def run_pipeline(
         _emit(progress, "separate", 10.0, "分离人声/鼓/贝斯/伴奏")
         started = stage_begin("separate")
         try:
-            separated = separate_mod.separate(analysis_wav, work, device=device)
-            stems_paths = dict(separated.get("stems") or {})
+            # 走 v2 分离层：ONNX → torch Demucs → HPSS 的降级链与 provenance
+            # 都在 aitsm.separation 里决定，这里只消费契约结果。
+            separated = separation_engine.separate(analysis_wav, work, device=device)
+            stems_paths = {name: path for name, path in (separated.stems or {}).items() if path}
             stems_info = {
-                "engine": separated.get("engine") or "none",
-                "model": separated.get("model"),
-                "device": separated.get("device"),
-                "cached": separated.get("cached", False),
+                "engine": separated.engine or "none",
+                "model": separated.model,
+                "device": separated.device,
+                "cached": separated.cached,
                 **{stem: path for stem, path in stems_paths.items()},
-                "hq_stems": separated.get("hq_stems") or {},
+                "hq_stems": (separated.detail or {}).get("hq_stems")
+                            or (separated.detail or {}).get("stems_hq") or {},
+                "shifts": (separated.detail or {}).get("shifts"),
+                "overlap": (separated.detail or {}).get("overlap"),
+                "requested_model": separated.REQUESTED,
             }
-            warnings.extend(_normalize_warnings("separate", separated.get("warnings")))
+            warnings.extend(_normalize_warnings("separate", separated.warnings))
             stage_end("separate", started, engine=stems_info.get("engine"),
-                      extra={"device": separated.get("device"), "cached": separated.get("cached", False)})
+                      extra={"device": separated.device, "cached": separated.cached,
+                             "model": separated.model})
             _emit(progress, "separate", 62.0, f"分轨完成（{stems_info.get('engine')}）")
         except Exception as exc:
             stage_end("separate", started, ok=False)
@@ -753,115 +839,186 @@ def run_pipeline(
         warnings.append(_warn("separate", "options 关闭了分轨，和弦/歌词精度可能下降。", level="info", code="separate.disabled"))
         _emit(progress, "separate", 62.0, "已跳过分轨")
 
-    # ---------------- 3. beats ----------------
-    _emit(progress, "beats", 64.0, "检测节拍与拍号")
-    started = stage_begin("beats")
-    beats = beats_mod.analyze_beats(analysis_wav)
-    warnings.extend(_normalize_warnings("beats", beats.get("warnings")))
-    stage_end("beats", started, engine="librosa",
-              extra={"bpm": beats.get("bpm"), "time_signature": beats.get("time_signature")})
-    _emit(progress, "beats", 72.0, f"{beats.get('bpm')} BPM / {beats.get('time_signature')}")
+    # ---------------- 3~6. 伴奏联合转录（SheetSage2 优先，音频管线降级） ----------------
+    # 架构第 1B 层：节拍/调性/和弦/段落最好来自**同一次联合解码**，否则
+    # 「局部和弦对、全局调性漂移」这类矛盾只能靠下游猜测。这里先试 SheetSage2，
+    # 拿不到再逐段走原管线；两条路径产出的 dict 形状完全一致，下游逻辑不用改。
+    sage_result = None
+    if options.get("sheetsage2", True) is not False and accompaniment_stage.env_enabled():
+        _emit(progress, "transcribe", 63.0, "伴奏联合转录（SheetSage2）")
+        started = stage_begin("sheetsage2")
+        sage_result = accompaniment_stage.try_sheetsage2(
+            analysis_wav, work_dir=work, device=device, warnings=[], progress=progress
+        )
+        if sage_result is not None:
+            stage_end(
+                "sheetsage2", started, engine=str(sage_result.engine),
+                extra={
+                    "bpm": sage_result.beats.bpm,
+                    "time_signature": sage_result.beats.time_signature,
+                    "chords": len(sage_result.chords),
+                    "sections": len(sage_result.sections),
+                },
+            )
+        else:
+            stage_end("sheetsage2", started, engine="none", ok=False)
 
-    # ---------------- 4. key（先纯音频，后续用和弦证据复核） ----------------
-    _emit(progress, "key", 73.0, "估计调性")
-    started = stage_begin("key")
-    key = keydet_mod.detect_key(analysis_wav)
-    warnings.extend(_normalize_warnings("key", key.get("warnings")))
-    stage_end("key", started, engine="krumhansl")
-    _emit(progress, "key", 78.0, key.get("name") or f"{key.get('tonic')} {key.get('mode')}")
+    if sage_result is not None:
+        sage = accompaniment_stage.analysis_dicts(sage_result)
+        beats = sage["beats"]
+        key = sage["key"]
+        chords = sage["chords"]
+        sections = sage["sections"]
+        sage_warnings = [str(item) for item in (sage_result.warnings or [])]
+        # 拍号自洽性校验的告警也走同一条通道（analysis_dicts 会带出来）
+        sage_warnings.extend(str(item) for item in (sage.get("warnings") or []))
+        for message in sage_warnings:
+            warnings.append(_warn("sheetsage2", message, level="info", code="sheetsage2.warning"))
+        _emit(progress, "beats", 72.0, f"{beats.get('bpm')} BPM / {beats.get('time_signature')}（SheetSage2）")
+        _emit(progress, "key", 78.0, f"{key.get('name')}（SheetSage2）")
+        _emit(progress, "chords", 90.0, f"{len(chords)} 个和弦事件（SheetSage2）")
+        _emit(progress, "structure", 96.0, f"{len(sections)} 个段落（SheetSage2）")
+        stage_records.append({
+            "name": "beats", "elapsed_seconds": 0.0, "ok": True, "engine": "sheetsage2",
+            "bpm": beats.get("bpm"), "time_signature": beats.get("time_signature"),
+        })
+        stage_records.append({"name": "key", "elapsed_seconds": 0.0, "ok": True, "engine": "sheetsage2"})
+        stage_records.append({
+            "name": "chords", "elapsed_seconds": 0.0, "ok": True, "engine": "sheetsage2",
+            "count": len(chords), "source": "sheetsage2",
+        })
+        stage_records.append({
+            "name": "structure", "elapsed_seconds": 0.0, "ok": True, "engine": "sheetsage2",
+            "count": len(sections),
+        })
+        if not chords:
+            warnings.append(_warn("chords", "SheetSage2 未给出和弦，继续用空和弦出谱。",
+                                  level="warn", code="chords.no_chords"))
+    else:
+        # ---------------- 3. beats ----------------
+        _emit(progress, "beats", 64.0, "检测节拍与拍号")
+        started = stage_begin("beats")
+        beats = beats_mod.analyze_beats(analysis_wav)
+        warnings.extend(_normalize_warnings("beats", beats.get("warnings")))
+        stage_end("beats", started, engine="librosa",
+                  extra={"bpm": beats.get("bpm"), "time_signature": beats.get("time_signature")})
+        _emit(progress, "beats", 72.0, f"{beats.get('bpm')} BPM / {beats.get('time_signature')}")
 
-    # ---------------- 5. chords ----------------
-    _emit(progress, "chords", 79.0, "识别和弦")
-    started = stage_begin("chords")
-    # 优先用「去掉人声」的伴奏轨算 chroma：人声旋律会被当成和弦外音，把三和弦误判成
-    # 七和弦/挂留，是 confidence 偏低的主要来源之一。
-    harmony_wav = _build_instrumental(stems_paths, work) or analysis_wav
-    chord_stats: dict[str, Any] = {}
-    # 和弦识别内部有两个可实验开关（默认值由 seconds 级 A/B 决定，见 docs/09）：
-    # AITSM_CHORD_FUSION=0 关掉中值/谱归一化特征融合（回到旧的均值聚合）；
-    # AITSM_CHORD_REPETITION=1 打开重复一致性第二遍（实测负收益，默认关）。
-    chords = chords_mod.recognize_chords(
-        harmony_wav, beats, key=key, total_seconds=total_seconds,
-        bass_wav=stems_paths.get("bass"),
-        feature_fusion=os.environ.get("AITSM_CHORD_FUSION", "1").lower() not in {"0", "false", "no"},
-        repetition_pass=os.environ.get("AITSM_CHORD_REPETITION", "0").lower() in {"1", "true", "yes"},
-        harmonic_weight=os.environ.get("AITSM_CHORD_HARMONIC", "1").lower() not in {"0", "false", "no"},
-        sequence_smoothing=os.environ.get("AITSM_CHORD_SMOOTHING", "1").lower() not in {"0", "false", "no"},
-        stats=chord_stats,
-    )
-    stage_end(
-        "chords", started, engine="chroma-template+viterbi",
-        extra={
-            "count": len(chords),
-            "source": "instrumental" if harmony_wav is not analysis_wav else "mix",
-            # 这几项决定了「同一条音频为什么这次比上次稳」，必须能追溯
-            "feature_fusion": chord_stats.get("feature_fusion"),
-            "harmonic_weight": chord_stats.get("harmonic_weight"),
-            "chroma_source": chord_stats.get("chroma_source"),
-            "sequence_smoothed_slots": chord_stats.get("sequence_smoothed_slots"),
-            "repetition_touched_slots": chord_stats.get("touched_slots"),
-            "slots": chord_stats.get("slots"),
-        },
-    )
-    if not chords:
-        warnings.append(_warn("chords", "未识别到任何和弦。", level="warn", code="chords.no_chords"))
-    elif len(chords) >= 3:
-        mean_confidence = sum(float(item.get("confidence") or 0.0) for item in chords) / len(chords)
-        if mean_confidence < _CHORDS_LOW_CONFIDENCE:
-            warnings.append(_warn(
-                "chords",
-                f"和弦整体置信度偏低（平均 {mean_confidence:.2f} < {_CHORDS_LOW_CONFIDENCE:.2f}），"
-                "转位/七和弦可能需要人工校对。",
-                code="chords.low_confidence",
-            ))
-    _emit(progress, "chords", 90.0, f"识别到 {len(chords)} 个和弦事件")
+        # ---------------- 4. key（先纯音频，后续用和弦证据复核） ----------------
+        _emit(progress, "key", 73.0, "估计调性")
+        started = stage_begin("key")
+        key = keydet_mod.detect_key(analysis_wav)
+        warnings.extend(_normalize_warnings("key", key.get("warnings")))
+        stage_end("key", started, engine="krumhansl")
+        _emit(progress, "key", 78.0, key.get("name") or f"{key.get('tonic')} {key.get('mode')}")
 
-    # ---------------- 5b. 调性复核（和弦证据能消除关系大小调歧义） ----------------
-    if chords:
-        started = stage_begin("key_refine")
-        try:
-            refined = keydet_mod.detect_key(analysis_wav, chords=chords)
-            warnings.extend(_normalize_warnings("key_refine", refined.get("warnings")))
-            if (refined.get("tonic_pc"), refined.get("mode")) != (key.get("tonic_pc"), key.get("mode")):
+        # ---------------- 5. chords ----------------
+        _emit(progress, "chords", 79.0, "识别和弦")
+        started = stage_begin("chords")
+        # 优先用「去掉人声」的伴奏轨算 chroma：人声旋律会被当成和弦外音，把三和弦误判成
+        # 七和弦/挂留，是 confidence 偏低的主要来源之一。
+        harmony_wav = _build_instrumental(stems_paths, work) or analysis_wav
+        chord_stats: dict[str, Any] = {}
+        # 和弦识别内部有两个可实验开关（默认值由 seconds 级 A/B 决定，见 docs/09）：
+        # AITSM_CHORD_FUSION=0 关掉中值/谱归一化特征融合（回到旧的均值聚合）；
+        # AITSM_CHORD_REPETITION=1 打开重复一致性第二遍（实测负收益，默认关）。
+        chords = chords_mod.recognize_chords(
+            harmony_wav, beats, key=key, total_seconds=total_seconds,
+            bass_wav=stems_paths.get("bass"),
+            feature_fusion=os.environ.get("AITSM_CHORD_FUSION", "1").lower() not in {"0", "false", "no"},
+            repetition_pass=os.environ.get("AITSM_CHORD_REPETITION", "0").lower() in {"1", "true", "yes"},
+            harmonic_weight=os.environ.get("AITSM_CHORD_HARMONIC", "1").lower() not in {"0", "false", "no"},
+            sequence_smoothing=os.environ.get("AITSM_CHORD_SMOOTHING", "1").lower() not in {"0", "false", "no"},
+            stats=chord_stats,
+        )
+        stage_end(
+            "chords", started, engine="chroma-template+viterbi",
+            extra={
+                "count": len(chords),
+                "source": "instrumental" if harmony_wav is not analysis_wav else "mix",
+                # 这几项决定了「同一条音频为什么这次比上次稳」，必须能追溯
+                "feature_fusion": chord_stats.get("feature_fusion"),
+                "harmonic_weight": chord_stats.get("harmonic_weight"),
+                "chroma_source": chord_stats.get("chroma_source"),
+                "sequence_smoothed_slots": chord_stats.get("sequence_smoothed_slots"),
+                "repetition_touched_slots": chord_stats.get("touched_slots"),
+                "slots": chord_stats.get("slots"),
+            },
+        )
+        if not chords:
+            warnings.append(_warn("chords", "未识别到任何和弦。", level="warn", code="chords.no_chords"))
+        elif len(chords) >= 3:
+            mean_confidence = sum(float(item.get("confidence") or 0.0) for item in chords) / len(chords)
+            if mean_confidence < _CHORDS_LOW_CONFIDENCE:
                 warnings.append(_warn(
-                    "key_refine",
-                    f"调性经和弦证据修正：{key.get('name')} → {refined.get('name')}",
-                    level="info", code="key.refined",
+                    "chords",
+                    f"和弦整体置信度偏低（平均 {mean_confidence:.2f} < {_CHORDS_LOW_CONFIDENCE:.2f}），"
+                    "转位/七和弦可能需要人工校对。",
+                    code="chords.low_confidence",
                 ))
-            key = refined
-            stage_end("key_refine", started, engine="krumhansl+chord-functions")
-        except Exception as exc:
-            stage_end("key_refine", started, ok=False)
-            warnings.append(_warn("key_refine", f"调性复核失败，沿用初判：{exc}", code="key.refine_failed"))
+        _emit(progress, "chords", 90.0, f"识别到 {len(chords)} 个和弦事件")
+
+        # ---------------- 5b. 调性复核（和弦证据能消除关系大小调歧义） ----------------
+        if chords:
+            started = stage_begin("key_refine")
+            try:
+                refined = keydet_mod.detect_key(analysis_wav, chords=chords)
+                warnings.extend(_normalize_warnings("key_refine", refined.get("warnings")))
+                if (refined.get("tonic_pc"), refined.get("mode")) != (key.get("tonic_pc"), key.get("mode")):
+                    warnings.append(_warn(
+                        "key_refine",
+                        f"调性经和弦证据修正：{key.get('name')} → {refined.get('name')}",
+                        level="info", code="key.refined",
+                    ))
+                key = refined
+                stage_end("key_refine", started, engine="krumhansl+chord-functions")
+            except Exception as exc:
+                stage_end("key_refine", started, ok=False)
+                warnings.append(_warn("key_refine", f"调性复核失败，沿用初判：{exc}", code="key.refine_failed"))
 
     # ---------------- 6. structure ----------------
     _emit(progress, "structure", 91.0, "切分歌曲结构")
-    started = stage_begin("structure")
-    try:
-        sections = structure_mod.analyze_structure(analysis_wav, beats, chords, total_seconds)
-    except Exception as exc:
-        sections = structure_mod.fallback_layout(total_seconds, beats)
-        warnings.append(_warn("structure", f"结构分析失败，使用通用曲式兜底：{type(exc).__name__}: {exc}",
-                              level="error", code="structure.failed"))
-    stage_end("structure", started, engine="ssm+novelty", extra={"count": len(sections)})
-    if len(sections) <= 1:
-        warnings.append(_warn("structure", "只切出 1 个段落，结构证据不足。", code="structure.degenerate"))
-    coarse_sections = _find_coarse_sections(sections, beats)
-    if coarse_sections:
-        labels = "、".join(label for _start, _end, label in coarse_sections[:4])
-        warnings.append(_warn(
-            "structure",
-            f"段落可能切得不够细：{labels} 超过 {_MAX_SECTION_BARS} 小节（谱面连续重复同一和弦进行，"
-            "对弹唱无影响，仅提示结构信息可能不够细）。",
-            level="info", code="structure.coarse",
-        ))
-    if _looks_uniform_structure(sections, chords, beats=beats):
-        warnings.append(_warn(
-            "structure",
-            "全曲各段落的能量与和弦进行高度一致，未检测到明显段落边界"
-            "（可能是整曲同一循环，或编曲缺少段间对比）；段落标注仅供参考。",
-            level="info", code="structure.uniform",
-        ))
+    if sage_result is not None:
+        # 段落来自 SheetSage2 的联合解码（structure.lab），质量告警照常跑
+        started = stage_begin("structure_quality")
+        if len(sections) <= 1:
+            warnings.append(_warn("structure", "只切出 1 个段落，结构证据不足。", code="structure.degenerate"))
+        coarse_sections = _find_coarse_sections(sections, beats)
+        if coarse_sections:
+            labels = "、".join(label for _start, _end, label in coarse_sections[:4])
+            warnings.append(_warn(
+                "structure",
+                f"段落可能切得不够细：{labels} 超过 {_MAX_SECTION_BARS} 小节。",
+                level="info", code="structure.coarse",
+            ))
+        stage_end("structure_quality", started, engine="sheetsage2", extra={"count": len(sections)})
+    else:
+        started = stage_begin("structure")
+        try:
+            sections = structure_mod.analyze_structure(analysis_wav, beats, chords, total_seconds)
+        except Exception as exc:
+            sections = structure_mod.fallback_layout(total_seconds, beats)
+            warnings.append(_warn("structure", f"结构分析失败，使用通用曲式兜底：{type(exc).__name__}: {exc}",
+                                  level="error", code="structure.failed"))
+        stage_end("structure", started, engine="ssm+novelty", extra={"count": len(sections)})
+        if len(sections) <= 1:
+            warnings.append(_warn("structure", "只切出 1 个段落，结构证据不足。", code="structure.degenerate"))
+        coarse_sections = _find_coarse_sections(sections, beats)
+        if coarse_sections:
+            labels = "、".join(label for _start, _end, label in coarse_sections[:4])
+            warnings.append(_warn(
+                "structure",
+                f"段落可能切得不够细：{labels} 超过 {_MAX_SECTION_BARS} 小节（谱面连续重复同一和弦进行，"
+                "对弹唱无影响，仅提示结构信息可能不够细）。",
+                level="info", code="structure.coarse",
+            ))
+        if _looks_uniform_structure(sections, chords, beats=beats):
+            warnings.append(_warn(
+                "structure",
+                "全曲各段落的能量与和弦进行高度一致，未检测到明显段落边界"
+                "（可能是整曲同一循环，或编曲缺少段间对比）；段落标注仅供参考。",
+                level="info", code="structure.uniform",
+            ))
     _emit(progress, "structure", 96.0, f"切出 {len(sections)} 个段落")
 
     # ---------------- 7. lyrics / melody（可选，队友实现） ----------------
@@ -877,40 +1034,54 @@ def run_pipeline(
     _emit(progress, "lyrics", 96.5, "识别歌词与旋律")
     started = stage_begin("lyrics")
     lyric_language = str(options.get("language") or "auto")
-    # 模型大小通过环境变量传导（音频层不直接依赖 ASR 实现细节）：
-    # CLI/API 传 whisper_model 时临时覆盖，跑完恢复，避免污染同进程的其它任务。
-    whisper_model = str(options.get("whisper_model") or "").strip()
-    previous_model = os.environ.get("AITSM_WHISPER_MODEL")
-    if whisper_model:
-        os.environ["AITSM_WHISPER_MODEL"] = whisper_model
     skip_asr = bool(options.get("skip_lyrics")) or os.environ.get("AITSM_SKIP_ASR", "").lower() in {"1", "true", "yes"}
-    if skip_asr:
-        # ASR 引擎不可用（例如模型需要联网下载）时，重试会白等好几分钟，
-        # 这里给调试/离线场景一个明确的跳过开关。
-        warnings.append(_warn("lyrics", "按配置跳过歌词识别（skip_lyrics/AITSM_SKIP_ASR）。",
-                              level="info", code="lyrics.skipped"))
-        lyrics = {"available": False, "lines": [], "engine": "none", "language": lyric_language}
+    joint: tuple[dict[str, Any], dict[str, Any]] | None = None
+    if not skip_asr:
+        joint = _transcribe_vocal_joint(vocal_source, beats, total_seconds, options, warnings)
+
+    if joint is not None:
+        # 架构首选：VocalParse 联合解码，歌词与旋律共享同一次前向
+        lyrics, melody = joint
+        stage_end("lyrics", started, engine=(lyrics or {}).get("engine", "none"),
+                  ok=bool((lyrics or {}).get("lines")), extra={"joint": True})
+        stage_end("melody", started, engine=(melody or {}).get("engine", "none"),
+                  ok=bool((melody or {}).get("notes")), extra={"joint": True})
+        _emit(progress, "melody", 98.0, "歌词与旋律处理完成（VocalParse 联合解码）")
     else:
-        try:
-            lyrics = _transcribe_lyrics(vocal_source, total_seconds, warnings, language=lyric_language)
-        finally:
-            if whisper_model:
-                if previous_model is None:
-                    os.environ.pop("AITSM_WHISPER_MODEL", None)
-                else:
-                    os.environ["AITSM_WHISPER_MODEL"] = previous_model
-    stage_end("lyrics", started,
-              engine=(lyrics or {}).get("engine", "none"),
-              ok=bool(lyrics and lyrics.get("lines")))
-    started = stage_begin("melody")
-    melody = _transcribe_melody(
-        vocal_source, beats, total_seconds, lyrics, warnings,
-        chord_events=chords if isinstance(chords, list) else None,
-    )
-    stage_end("melody", started,
-              engine=(melody or {}).get("engine", "none"),
-              ok=bool(melody and melody.get("notes")))
-    _emit(progress, "melody", 98.0, "歌词与旋律处理完成")
+        # 显式降级：Whisper 词锚点 + pYIN 旋律 + 强制对齐
+        # 模型大小通过环境变量传导（音频层不直接依赖 ASR 实现细节）：
+        # CLI/API 传 whisper_model 时临时覆盖，跑完恢复，避免污染同进程的其它任务。
+        whisper_model = str(options.get("whisper_model") or "").strip()
+        previous_model = os.environ.get("AITSM_WHISPER_MODEL")
+        if whisper_model:
+            os.environ["AITSM_WHISPER_MODEL"] = whisper_model
+        if skip_asr:
+            # ASR 引擎不可用（例如模型需要联网下载）时，重试会白等好几分钟，
+            # 这里给调试/离线场景一个明确的跳过开关。
+            warnings.append(_warn("lyrics", "按配置跳过歌词识别（skip_lyrics/AITSM_SKIP_ASR）。",
+                                  level="info", code="lyrics.skipped"))
+            lyrics = {"available": False, "lines": [], "engine": "none", "language": lyric_language}
+        else:
+            try:
+                lyrics = _transcribe_lyrics(vocal_source, total_seconds, warnings, language=lyric_language)
+            finally:
+                if whisper_model:
+                    if previous_model is None:
+                        os.environ.pop("AITSM_WHISPER_MODEL", None)
+                    else:
+                        os.environ["AITSM_WHISPER_MODEL"] = previous_model
+        stage_end("lyrics", started,
+                  engine=(lyrics or {}).get("engine", "none"),
+                  ok=bool(lyrics and lyrics.get("lines")))
+        started = stage_begin("melody")
+        melody = _transcribe_melody(
+            vocal_source, beats, total_seconds, lyrics, warnings,
+            chord_events=chords if isinstance(chords, list) else None,
+        )
+        stage_end("melody", started,
+                  engine=(melody or {}).get("engine", "none"),
+                  ok=bool(melody and melody.get("notes")))
+        _emit(progress, "melody", 98.0, "歌词与旋律处理完成")
 
     # ---------------- 8. 组装 analysis ----------------
     _emit(progress, "assemble", 99.0, "组装并校验 analysis.json")
@@ -948,6 +1119,7 @@ def run_pipeline(
             **({"demucs_model": stems_info.get("model")} if stems_info.get("model") else {}),
             # 分轨质量旋钮决定「这一份结果有多贵」，必须能追溯到具体参数
             "separate": {
+                "requested": stems_info.get("requested_model") or "htdemucs_ft",
                 "engine": stems_info.get("engine"),
                 "model": stems_info.get("model"),
                 "device": stems_info.get("device"),
@@ -968,6 +1140,32 @@ def run_pipeline(
                 "engine": (melody or {}).get("engine", "none"),
                 "note_count": len((melody or {}).get("notes") or []),
             },
+            # v2 架构：伴奏联合转录（SheetSage2）是否真的接管了节拍/调性/和弦/段落
+            "sheetsage2": {
+                "requested": "SheetSage2",
+                "engine": str(sage_result.engine) if sage_result is not None else "none",
+                "available": sage_result is not None,
+                "joined": sage_result is not None,
+                **(
+                    {
+                        "bpm": sage_result.beats.bpm,
+                        "time_signature": sage_result.beats.time_signature,
+                        "chords": len(sage_result.chords),
+                        "sections": len(sage_result.sections),
+                        "abc_length": len(sage_result.abc or ""),
+                    }
+                    if sage_result is not None
+                    else {}
+                ),
+            },
+            # v2 架构：人声联合转录的 requested vs 实际实现，降级一眼可见
+            "vocal": {
+                "requested": "VocalParse",
+                "engine": (lyrics or {}).get("engine") if joint is not None else "whisper+pyin",
+                "joint": joint is not None,
+                "note_count": len((melody or {}).get("notes") or []),
+                "line_count": len((lyrics or {}).get("lines") or []),
+            },
         },
         "warnings": warnings,
         "meta": {
@@ -976,10 +1174,10 @@ def run_pipeline(
             "options": options,
             "engines": {
                 "separation": stems_info.get("engine"),
-                "beats": "librosa.beat",
-                "key": "krumhansl+chords",
-                "chords": "chroma-template+viterbi",
-                "structure": "ssm+novelty",
+                "beats": "sheetsage2" if sage_result is not None else "librosa.beat",
+                "key": "sheetsage2" if sage_result is not None else "krumhansl+chords",
+                "chords": "sheetsage2" if sage_result is not None else "chroma-template+viterbi",
+                "structure": "sheetsage2" if sage_result is not None else "ssm+novelty",
             },
         },
     }
@@ -1004,8 +1202,43 @@ def run_pipeline(
         ))
         analysis["warnings"] = warnings
 
+    # ---------------- 8.5 v2 符号契约（fusion → SymbolicScore → MusicXML） ----------------
+    # 架构分界点：到这行为止都是「音频 → 符号」的转录层；从这行往下，
+    # 编配层只吃 SymbolicScore / symbolic.musicxml，不再碰波形。
+    _emit(progress, "symbolic", 99.2, "生成符号总谱（MusicXML）")
+    started = stage_begin("symbolic")
+    symbolic: dict[str, Any] = {"available": False, "paths": {}, "warnings": []}
+    if options.get("symbolic", True) is not False:
+        try:
+            symbolic = symbolic_stage.build_symbolic(analysis, work)
+            for message in symbolic.get("warnings") or []:
+                warnings.append(_warn("symbolic", str(message), level="info", code="symbolic.degraded"))
+            stage_end(
+                "symbolic", started,
+                engine="fusion.skeleton" if symbolic.get("available") else "none",
+                ok=bool(symbolic.get("available")),
+                extra={"paths": symbolic.get("paths") or {},
+                       "degraded_layers": symbolic.get("degraded_layers") or []},
+            )
+        except Exception as exc:
+            stage_end("symbolic", started, ok=False)
+            warnings.append(_warn(
+                "symbolic", f"符号契约生成失败，编配层将退回 analysis.json：{type(exc).__name__}: {exc}",
+                level="error", code="symbolic.failed",
+            ))
+    else:
+        stage_end("symbolic", started, engine="none")
+        warnings.append(_warn("symbolic", "options 关闭了符号契约生成。", level="info",
+                              code="symbolic.disabled"))
+    analysis["symbolic"] = symbolic
+    analysis["warnings"] = warnings
+
     total_elapsed = round(time.monotonic() - pipeline_started, 3)
     analysis["meta"]["total_elapsed_seconds"] = total_elapsed
+    # 各层耗时占比：GPU 迁移时据此决定「先迁哪一层」，而不是盲目全迁。
+    # 数据来自 stage_records（每阶段都有 elapsed_seconds），不额外计时。
+    analysis["meta"]["stage_timings"] = timings
+    analysis["meta"]["timing_breakdown"] = _timing_breakdown(stage_records, total_elapsed)
 
     analysis_path = work / "analysis.json"
     _write_json(analysis_path, analysis)
@@ -1038,6 +1271,7 @@ def run_pipeline(
             "manifest": str(work / "manifest.json"),
             "playback_audio": ingested["playback_wav"],
             "stems": stems_paths,
+            "symbolic": (analysis.get("symbolic") or {}).get("paths") or {},
         },
         "tools": analysis["tools"],
         "quality": analysis.get("quality"),
@@ -1051,6 +1285,56 @@ def run_pipeline(
     analysis["meta"]["manifest_json"] = str(manifest_path)
     _emit(progress, "done", 100.0, "分析完成")
     return analysis
+
+
+def _timing_breakdown(records: list[dict[str, Any]], total_seconds: float) -> dict[str, Any]:
+    """把逐阶段耗时汇成「按层看」的占比表。
+
+    目的明确：**迁 GPU 时知道先迁谁**。``vocalparse`` 在 CPU 上常常占一半以上，
+    而 ``duet``/``arrangement`` 基本可以留在 CPU。
+    """
+    layer_of = {
+        "ingest": "ingest",
+        "separate": "separation",
+        "sheetsage2": "accompaniment",
+        "beats": "accompaniment",
+        "key": "accompaniment",
+        "key_refine": "accompaniment",
+        "chords": "accompaniment",
+        "structure": "accompaniment",
+        "structure_quality": "accompaniment",
+        "lyrics": "vocal",
+        "melody": "vocal",
+        "symbolic": "symbolic",
+        "assemble": "assemble",
+    }
+    by_layer: dict[str, float] = {}
+    by_stage: dict[str, float] = {}
+    for record in records:
+        name = str(record.get("name") or "")
+        elapsed = float(record.get("elapsed_seconds") or 0.0)
+        if not name:
+            continue
+        by_stage[name] = round(by_stage.get(name, 0.0) + elapsed, 3)
+        layer = layer_of.get(name, "other")
+        by_layer[layer] = round(by_layer.get(layer, 0.0) + elapsed, 3)
+
+    total = float(total_seconds) or 1.0
+    ranked = sorted(by_layer.items(), key=lambda item: -item[1])
+    return {
+        "total_seconds": round(total_seconds, 3),
+        "by_layer_seconds": dict(ranked),
+        "by_layer_share": {name: round(value / total, 4) for name, value in ranked},
+        "by_stage_seconds": dict(sorted(by_stage.items(), key=lambda item: -item[1])),
+        "slowest_layer": ranked[0][0] if ranked else "",
+        # 一行结论：省得每次人工算
+        "gpu_hint": (
+            f"最耗时的是 {ranked[0][0]}（{ranked[0][1]:.1f}s，"
+            f"{ranked[0][1] / total * 100:.0f}%），迁 GPU 应优先考虑它"
+            if ranked
+            else "无阶段耗时数据"
+        ),
+    }
 
 
 def _as_float(value: Any, default: float) -> float:

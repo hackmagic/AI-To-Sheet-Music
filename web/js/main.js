@@ -6,9 +6,11 @@
  */
 
 import { ScoreRenderer } from './renderer.js';
+import { renderWithFallback } from './abcjs-fallback.js';
 import { ScorePlayer } from './player.js';
 import { ApiClient, waitForJob } from './api.js';
 import { transposeScore } from './transpose.js';
+import { normalizePayload, attachTimeline, pickAbc } from './payload.js';
 import { PrintController } from './print.js';
 import { createEditor, countEdits, buildExport } from './editor.js';
 import * as ui from './ui.js';
@@ -31,6 +33,8 @@ const VOICINGS_URL = new URL('../voicings.json', import.meta.url).href;
 const state = {
   raw: null,
   view: null,
+  abc: '',
+  payload: null,
   transpose: 0,
   capo: 0,
   options: { diagrams: true, tab: true, lyrics: true, metronome: false },
@@ -39,6 +43,7 @@ const state = {
   audioUrl: null,
   voicingJson: null,
   voicingPromise: null,
+  devices: null,
   busy: false,
   lastWidth: 0,
 };
@@ -66,6 +71,7 @@ async function init() {
   bindKeyboard();
   bindResize();
   bindPrintLifecycle();
+  loadDevices();
 
   const params = new URLSearchParams(location.search);
   // 允许用 URL 参数预设显示开关（也方便自动化测试）：
@@ -89,6 +95,22 @@ async function init() {
       console.warn('自定义 score 加载失败', err);
     }
   }
+  // ?job=<id>：直接打开某个已完成任务（可分享链接，也方便自动化验收）
+  const jobId = params.get('job');
+  if (jobId) {
+    try {
+      const [score, payload] = await Promise.all([
+        api.getScore(jobId),
+        api.getPayload(jobId).catch(() => null),
+      ]);
+      state.jobId = jobId;
+      applyScore(score, { audioUrl: api.audioUrlFor({ id: jobId, artifacts: null }, score), payload });
+      return;
+    } catch (err) {
+      console.warn('按 job 加载失败，回退示例谱', err);
+      ui.toast('任务未就绪或不存在，已加载示例谱', { kind: 'info' });
+    }
+  }
   if (params.get('demo') !== '0') await loadDemo({ silent: true });
 }
 
@@ -100,7 +122,7 @@ function cacheDom() {
     'pos-time', 'progress-track', 'progress-fill', 'progress-marks', 'speed-range',
     'speed-value', 'play-source', 'upload-modal', 'dropzone', 'file-input',
     'upload-progress', 'stages', 'upload-meter', 'upload-msg', 'toasts', 'print-root',
-    'audio', 'opt-key', 'opt-capo', 'opt-difficulty', 'paper',
+    'audio', 'opt-key', 'opt-capo', 'opt-difficulty', 'opt-device', 'device-note', 'paper',
     'edit-badge', 'btn-editor',
   ]) {
     dom[id] = $(id);
@@ -240,15 +262,90 @@ async function loadDemo({ silent = false } = {}) {
   return false;
 }
 
-function applyScore(score, { audioUrl = null } = {}) {
+/**
+ * 探测推理设备（CPU / GPU）并同步到上传弹窗的下拉框。
+ *
+ * 为什么要问后端而不是前端猜：GPU 能不能用取决于 torch 是不是 CUDA 编译版，
+ * 浏览器端完全看不到。后端 /api/health 的 devices 字段是唯一可信来源。
+ */
+async function loadDevices() {
+  const select = dom['opt-device'];
+  const note = dom['device-note'];
+  try {
+    const health = await api.health();
+    state.devices = health?.devices || null;
+  } catch (err) {
+    state.devices = null;
+    if (note) {
+      note.hidden = false;
+      note.dataset.level = 'warn';
+      note.textContent = '无法探测推理设备（后端未连接），将使用 CPU。';
+    }
+    return;
+  }
+  const devices = state.devices;
+  if (!devices) return;
+
+  if (select) {
+    select.value = 'auto';
+    const gpuOption = select.querySelector('option[value="cuda"]');
+    if (gpuOption) {
+      // 无 GPU 时仍允许选（用户可能就是想确认回落行为），但标注不可用
+      gpuOption.textContent = devices.gpu_usable ? 'GPU（可用）' : 'GPU（本机不可用）';
+    }
+  }
+  updateDeviceNote();
+}
+
+/** 根据当前选择 + 后端探测结果，给出「实际会用哪个设备、为什么」的提示 */
+function updateDeviceNote() {
+  const note = dom['device-note'];
+  const select = dom['opt-device'];
+  if (!note || !select) return;
+  const devices = state.devices;
+  const wanted = select.value;
+
+  if (!devices) {
+    note.hidden = true;
+    return;
+  }
+  note.hidden = false;
+
+  if (wanted === 'cuda' && !devices.gpu_usable) {
+    note.dataset.level = 'warn';
+    note.textContent = `GPU 不可用：${devices.summary}。本次会回落 CPU，整曲约需 10–80 分钟。`;
+    return;
+  }
+  if (wanted === 'cuda' && devices.gpu_usable) {
+    note.dataset.level = 'ok';
+    note.textContent = `将使用 GPU：${devices.summary}`;
+    return;
+  }
+  if (wanted === 'auto') {
+    note.dataset.level = devices.gpu_usable ? 'ok' : 'warn';
+    note.textContent = devices.gpu_usable
+      ? `自动选择 GPU：${devices.summary}`
+      : `自动使用 CPU（${devices.summary}）。CPU 上整曲较慢，可先试片段。`;
+    return;
+  }
+  note.dataset.level = 'warn';
+  note.textContent = `强制使用 CPU。整曲在 CPU 上约需 10–80 分钟（VocalParse 是主要耗时）。`;
+}
+
+function applyScore(score, { audioUrl = null, payload = null } = {}) {
   state.raw = score;
+  // payload（aitsm.payload/v1）优先：ABC 由后端统一生成，时间轴也以它为准。
+  // 拿不到 payload 时退回 score.json 自带字段，行为与之前完全一致。
+  state.payload = normalizePayload(payload);
+  state.abc = pickAbc(state.payload, score);
   state.transpose = 0;
   state.capo = Number(score?.meta?.capo) || 0;
   // 显式传入的地址优先；其次是谱面里写的 URL 形态地址（如 /jobs/demo/playback.mp3）。
   // 绝对本地路径（D:\...\playback.mp3）在浏览器里没有意义，一律忽略。
   const declared = score?.meta?.source?.audio_url;
   const fallback = typeof declared === 'string' && declared.startsWith('/') ? declared : null;
-  const resolved = audioUrl || fallback;
+  const fromPayload = state.payload?.audioUrl?.startsWith('/') ? state.payload.audioUrl : null;
+  const resolved = audioUrl || fromPayload || fallback;
   state.audioUrl = resolved;
   state.jobId = state.jobId || null;
 
@@ -285,11 +382,14 @@ function render() {
   if (!state.raw) return;
   const base = Number(state.raw.meta?.capo) || 0;
   const shift = displayShift();
-  const view = transposeScore(state.raw, shift, {
+  const view0 = transposeScore(state.raw, shift, {
     capo: state.capo,
     baseCapo: base,
     soundingShift: state.transpose,
   });
+  // payload 的绝对时间轴覆盖转录层估算的小节起止秒（播放与高亮以它为准）；
+  // 只改视图不改 raw，编辑/导出仍是原始数据。
+  const view = state.payload ? attachTimeline(view0, state.payload) : view0;
   // 给每个音符补一个稳定 id，播放高亮与渲染定位共用
   for (const bar of view.bars || []) {
     for (const [i, note] of (bar.vocal || []).entries()) {
@@ -315,6 +415,7 @@ function render() {
   } catch (err) {
     console.error(err);
     ui.toast(`谱面渲染失败：${err.message}`, { kind: 'error', timeout: 6000 });
+    fallbackRender(err);
     return;
   }
 
@@ -338,6 +439,19 @@ function render() {
   });
 
   printer.invalidate();
+}
+
+/**
+ * VexFlow 渲染失败时的最后一道兜底：把谱面自带的 ABC 交给 abcjs。
+ * abcjs 懒加载、离线环境下会降级为可读提示；这里不抛错、不阻塞主流程。
+ */
+function fallbackRender(err) {
+  if (!state.abc) return;
+  renderWithFallback(dom.score, state.abc, { clear: true, reason: err?.message || '' })
+    .then((ok) => {
+      if (ok) ui.toast('已切换到 abcjs 备用渲染器显示简版谱面', { kind: 'ok', timeout: 5000 });
+    })
+    .catch((error) => console.warn('[fallback] abcjs 兜底失败', error));
 }
 
 /* ─────────────────────────── 交互 ─────────────────────────── */
@@ -405,6 +519,8 @@ function bindToolbar() {
     state.capo = Number(event.target.value) || 0;
     render();
   });
+
+  dom['opt-device']?.addEventListener('change', () => updateDeviceNote());
 }
 
 function setTranspose(next) {
@@ -565,6 +681,7 @@ async function startJob(file) {
   // 后端契约：null 表示让分析器自己判断
   const keySel = dom['opt-key']?.value || 'auto';
   const capoSel = dom['opt-capo']?.value || 'auto';
+  const device = dom['opt-device']?.value || 'auto';
   const options = {
     key: keySel === 'auto' ? null : keySel,
     capo: capoSel === 'auto' ? null : Number(capoSel),
@@ -572,7 +689,8 @@ async function startJob(file) {
     style: 'pop',
     transpose: state.transpose,
     include_tab: true,
-    device: 'auto',
+    // 设备选择透传给后端；后端会再校验一次，不可用时回落 CPU 并写进 warnings
+    device,
     language: 'auto',
   };
 
@@ -587,7 +705,17 @@ async function startJob(file) {
     });
     ui.updateStages({ ...done, status: 'done', stage: 'arranging', progress: 1 });
     const score = await api.getScore(created.id);
-    applyScore(score, { audioUrl: api.audioUrlFor({ id: created.id, artifacts: done?.artifacts }, score) });
+    // payload 可缺省（老后端 / 生成失败）：失败只降级，不影响谱面显示
+    let payload = null;
+    try {
+      payload = await api.getPayload(created.id);
+    } catch (err) {
+      console.warn('渲染 payload 不可用，退回 score.json', err);
+    }
+    applyScore(score, {
+      audioUrl: api.audioUrlFor({ id: created.id, artifacts: done?.artifacts }, score),
+      payload,
+    });
     ui.closeModal(dom['upload-modal']);
     ui.toast('解析完成，谱面已生成', { kind: 'ok' });
   } catch (err) {
@@ -718,6 +846,7 @@ Object.defineProperty(window, '__aitsm', {
     get player() { return player; },
     get printer() { return printer; },
     get editor() { return editor; },
+    get payload() { return state.payload; },
     loadDemo,
     applyScore,
     render,

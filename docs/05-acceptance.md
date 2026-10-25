@@ -263,6 +263,21 @@ BPM 判定 67.0（`beats.tempo_octave` 把 136 → 68 的半拍修正），调�
 
 截图：`work/shots/medium-score.png`、`work/shots/medium-lyrics.png`
 
+### v2 payload 链路（真实任务 + playwright 实测）
+
+14 s 真实片段（`work/e2e-clip.wav`，取自 229 s 的《第一站 Beyond This Station》20–34 s）
+走 `serve` → `POST /api/jobs` → 页面 `?job=<id>`：
+
+| 检查项 | 结果 |
+| --- | --- |
+| payload 到达前端 | ✅ `window.__aitsm.payload` 非空，时间轴 6 小节 |
+| 视图时间轴被覆盖 | ✅ `bars[0].start_sec`、`bars[1].start_sec` 与 `payload.timing` 一致 |
+| 渲染 | ✅ 2 个 system / 6 个可点小节 / **0 console error** |
+| 播放时长 | ✅ 14 s，与音频一致 |
+| 新端点 | ✅ `/payload` 200、`/timing` 200、`/export/timing` 200 |
+
+截图：`work/e2e-payload-page.png`（当前演示模型不支持看图，文件留给人工复核）。
+
 ## 已知问题（诚实记录）
 
 ### ✅ 已修复

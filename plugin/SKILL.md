@@ -117,7 +117,10 @@ python scripts/generate.py "<音频文件>" --out <输出目录>
 必须包含这四项：
 
 1. **基本信息**：调性（原曲检测调）、capo、BPM、拍号、小节数、段落结构、难度
-2. **文件路径**：`score.json`（网页）、`score.musicxml`（MuseScore / Guitar Pro）、`score.mid`
+2. **文件路径**：`score.json`（网页）、`score.musicxml`（MuseScore / Guitar Pro）、`score.mid`；
+   若目录里还有 `symbolic.json` / `symbolic.musicxml` / `payload.json`，说明它们分别是
+   「转录层符号契约（含每层 requested/engine）」「转录层原始 MusicXML」「网页渲染数据」，
+   排查走音时先看 `symbolic.json` 的 `provenance`，不要把它当成交付主文件
 3. **真实限制**，精确到位置。示例：
    - 「第 32–33 小节和弦置信度 0.51，建议对照原曲确认」
    - 「歌词为自动识别，平均置信度 0.30，建议以原曲为准；02:14–02:48 那几行尤其需要校对」

@@ -34,6 +34,16 @@ python -m venv .venv
 .venv/Scripts/python -m aitsm.cli generate song.mp3 --out work/mysong
 ```
 
+### 多曲目基准
+
+```bash
+.venv/Scripts/python -m aitsm.cli bench samples/ --out work/bench
+```
+
+每首曲子写一个子目录，最后汇总成 `benchmark.json` 与 `benchmark.md`：逐曲列出
+分离/人声/伴奏/量化四层实际用的引擎（`⚠` = 没跑到架构首选组件）、质量分与规模。
+等 VocalParse / SheetSage2 / DuET / htdemucs_ft 权重到位后，重跑同一批目录即可对比提升。
+
 产物：
 
 ```text
@@ -60,6 +70,89 @@ work/mysong/
 --device cpu              # auto / cuda / cpu
 ```
 
+### v2 分层与可选模型（缺权重也能跑）
+
+流水线拆成「转录层 → 符号契约 → 编配层 → 渲染」四段。每层都记录 `requested`
+（架构首选组件）与 `engine`（本机实际跑的），降级会写进 `symbolic.json` 的
+`provenance` 和 `manifest.degraded`，不会静默掉质量：
+
+| 层 | 架构首选 | 本机实测 |
+| --- | --- | --- |
+| 分离 | htdemucs_ft（可走 demucs-onnx） | ✅ **`demucs-onnx`（htdemucs_ft）** |
+| 人声联合转录 | VocalParse（词+音高+时值+BPM 一个 decoder） | ✅ **`vocalparse` 已跑通**（需 `qwen-asr` 包） |
+| 伴奏联合转录 | SheetSage2 | ✅ **`sheetsage2` 已跑通** |
+| 骨架融合 + 量化 | SheetSage2 拍点 + DuET | ✅ **`duet` 已跑通** |
+| 编配（纯符号） | DP 指法 + TART rerank + 规则节奏型 + 可选 LLM 评审 | `dp` + `tart-heuristic` |
+| 渲染 | MusicXML + payload + VexFlow，abcjs 兜底 | 同上 |
+
+四层专用模型全部实测跑通，`degraded_layers` 为空。CPU 上 16s 音频全流程约 11 分钟
+（VocalParse 占大头），开 GPU 会快很多。
+
+因此任务目录里会多出：
+
+```text
+  symbolic.json       # 转录层符号契约（节拍/调性/和弦/段落/旋律/歌词 + provenance）
+  symbolic.musicxml   # 转录层原生 MusicXML（未做 TAB）
+  payload.json        # 网页渲染数据（MusicXML + ABC + timing + 指法图）
+  timing.json         # 绝对时间轴（小节/音符/和弦/歌词的秒），同步播放与第三方消费
+```
+
+网页会把 `payload.json` 一起取下来：ABC 兜底用它的版本，播放与小节高亮用它的
+时间轴；`/api/jobs/{id}/payload`、`/api/jobs/{id}/timing` 也可直接给外部消费。
+
+#### 下载并启用专用模型
+
+```bash
+# 一键下载（默认走 hf-mirror.com，幂等，可只选部分）
+.venv/Scripts/python.exe scripts/fetch_models.py --list
+.venv/Scripts/python.exe scripts/fetch_models.py --only sheetsage2 duet
+
+# 下载完会打印这些环境变量：
+export AITSM_SHEETSAGE2_DIR=$PWD/models/SheetSage2   # m-a-p/SheetSage2
+export AITSM_DUET_DIR=$PWD/models/DuET               # Wayne42/DuET
+export AITSM_VOCALPARSE_DIR=$PWD/models/VocalParse   # pymaster/VocalParse（4.1GB）
+export AITSM_DEMUCS_ONNX_DIR=$PWD/models/htdemucs_ft_onnx  # StemSplitio/htdemucs-ft-onnx
+export HF_HOME=$PWD/.cache/hf                        # 用户目录不可写时必需
+```
+
+`scripts/fetch_models.py` 会关掉 HF 的 Xet 传输（部分 Windows 环境报 `I/O error 5`），
+下载后校验关键文件是否齐全，失败会明确报错而不是留一份半成品。
+
+> **版本要求**：SheetSage2 按 `transformers` 4.x 导出，本仓库实测在 **4.57.6**
+> 下可加载（5.x 会因 `BartDecoder` 签名变化失败）。
+>
+> **VocalParse 额外需要一个包**：Qwen3-ASR 的建模代码不在 transformers 里，必须装
+> `qwen-asr`（PyPI 上有，**不是** `vocalparse`——那个包从来不存在于 PyPI）：
+>
+> ```bash
+> .venv/Scripts/python.exe -m pip install --index-url https://pypi.org/simple/ qwen-asr
+> ```
+>
+> 它的 `__init__` 会连带导入 `nagisa`/`gradio`，本仓库的适配器改为按文件路径只加载
+> `configuration/processing/modeling` 三个子模块，因此无需装那两套推理封装依赖。
+
+**模型获取方式：**
+
+```bash
+export HF_ENDPOINT=https://hf-mirror.com
+
+# 专用模型（HF 下载）
+huggingface-cli download pymaster/VocalParse --local-dir ./models/VocalParse
+huggingface-cli download m-a-p/SheetSage2 --local-dir ./models/SheetSage2  
+huggingface-cli download Wayne42/DuET --local-dir ./models/DuET
+git clone https://hf-mirror.com/StemSplitio/htdemucs-ft-onnx.git models/demucs-onnx
+
+# 编配层增强组件（GitHub，无独立 HF 仓库）
+git clone https://github.com/RiccardoVib/Noise2Fret.git  # Noise2Fret 五项损失函数
+# TART 代码与权重从论文关联 GitHub 获取（第三阶段 T5 弦品分配器）
+```
+
+第三方大模型**只**做编配层的符号评审（指法重排建议 / 和弦替代），默认关闭：
+`AITSM_LLM_URL=... AITSM_LLM_ADVISOR=1`。细节见 [docs/11-v2-pipeline.md](docs/11-v2-pipeline.md)；
+依赖边界、部署约束（**不要用多 worker**，会 OOM）、GPU 迁移路径与
+TART/Noise2Fret 的实测可用性见 [docs/12-operations.md](docs/12-operations.md)；
+整曲实测质量（76 分钟 CPU、拍号/段落修复记录）见 [docs/13-demo-quality.md](docs/13-demo-quality.md)。
+
 ### 打开网页乐谱
 
 ```bash
@@ -68,6 +161,26 @@ work/mysong/
 ```
 
 上传音频即可看到进度、乐谱、质量面板；也可以点「加载示例谱」先看效果——`/api/demo` 默认返回**整首真实交付谱**（`artifacts/score.json`，88 小节 / 英文原词），加 `?sample=1` 才回退到 12 小节的手写样例。
+
+### 选 CPU 还是 GPU
+
+上传弹窗里有一个**设备**下拉（自动 / CPU / GPU）。它读的是后端 `/api/health` 的
+`devices` 字段，而不是前端猜——因为 GPU 能不能用取决于 **torch 是不是 CUDA 编译版**。
+
+典型情况：机器有 NVIDIA 卡但 `torch` 是 CPU 版，界面会显示
+「GPU（本机不可用）」并在选择时给出黄色说明，**不会让你以为在用 GPU 却等 CPU 跑一小时**。
+
+启用 GPU：
+
+```bash
+# 先卸载 CPU 版，再装 CUDA 版（以 cu124 为例）
+.venv/Scripts/python.exe -m pip uninstall -y torch torchaudio
+.venv/Scripts/python.exe -m pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
+# 重启服务后 /api/health 的 devices.gpu_usable 会变成 true
+```
+
+> VocalParse 迁 GPU 时用 **`bf16`**（Qwen 系列在 fp16 下偶有数值不稳定）；
+> 特征提取若留 CPU 会成为新瓶颈。详见 [docs/12-operations.md](docs/12-operations.md)。
 
 ## 网页端能做什么
 
