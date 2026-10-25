@@ -153,6 +153,29 @@ def main() -> int:
         remote_ref = gh(f"repos/{slug}/git/ref/heads/main")
         remote_sha = remote_ref["object"]["sha"]
 
+    # 远端只有对象、本地还没有时（上一次 API 推送产生的 commit），
+    # git diff 会报 bad object。这里在本地注册该对象为「远端已知尖端」，
+    # 用共同祖先（merge-base）做 diff 基线。
+    diff_base = remote_sha
+    try:
+        git("cat-file", "-e", f"{remote_sha}^{{commit}}")
+    except RuntimeError:
+        local_branch = git("rev-parse", "--abbrev-ref", "HEAD").strip()
+        # 用 --force-with-lease 式的思路：找本地 HEAD 与远端的历史交集
+        for rev in git("rev-list", "--max-count=200", "HEAD").split():
+            try:
+                remote_commit = gh(f"repos/{slug}/git/commits/{rev}")
+            except RuntimeError:
+                continue
+            if remote_commit.get("sha"):
+                diff_base = rev
+                break
+        print(f"  远端对象本地缺失，改用共同祖先 {diff_base[:8]} 作为 diff 基线")
+        # 让远端 tree 也基于这个基线重建（等于整体覆盖远端）
+        remote_sha_for_tree = diff_base
+    else:
+        remote_sha_for_tree = remote_sha
+
     print(f"仓库      {slug}")
     print(f"远端 main {remote_sha}")
     print(f"本地 HEAD {info['sha']}")
@@ -164,7 +187,7 @@ def main() -> int:
 
     # 确认是快进：远端必须是本地的祖先（本地比远端多提交）
     try:
-        behind = git("rev-list", "--count", f"{info['sha']}..{remote_sha}").strip()
+        behind = git("rev-list", "--count", f"{info['sha']}..{diff_base}").strip()
     except RuntimeError:
         behind = "unknown"
     if behind not in ("0",):
@@ -174,11 +197,11 @@ def main() -> int:
             return 2
         print(f"\n警告：{message} 继续执行（--force）。")
 
-    paths = changed_paths(remote_sha, info["sha"])
+    paths = changed_paths(diff_base, info["sha"])
     # 也要处理删除：用 tree 对比更稳妥，但这里先按 git diff 的变更集合构造
     deleted = [
         line.strip()
-        for line in git("diff", "--name-only", "--diff-filter=D", remote_sha, info["sha"]).splitlines()
+        for line in git("diff", "--name-only", "--diff-filter=D", diff_base, info["sha"]).splitlines()
         if line.strip()
     ]
     print(f"\n变更文件 {len(paths)} 个（删除 {len(deleted)} 个）")
@@ -195,7 +218,7 @@ def main() -> int:
     blobs = upload_blobs(paths, slug)
 
     # 以远端 tree 为基线，叠加新 blob / 移除删除项
-    remote_commit = gh(f"repos/{slug}/git/commits/{remote_sha}")
+    remote_commit = gh(f"repos/{slug}/git/commits/{remote_sha_for_tree}")
     base_tree = remote_commit["tree"]["sha"]
 
     print("创建 tree…")
@@ -219,7 +242,7 @@ def main() -> int:
         stdin_payload={
             "message": info["message"],
             "tree": tree["sha"],
-            "parents": [remote_sha],
+            "parents": [remote_sha_for_tree],
             "author": {
                 "name": info["author_name"],
                 "email": info["author_email"],
