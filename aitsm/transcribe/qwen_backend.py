@@ -80,10 +80,32 @@ def installed_version() -> str | None:
 
 
 def _package_root() -> Path | None:
-    spec = importlib.util.find_spec("qwen_asr")
-    if spec is None or not spec.submodule_search_locations:
-        return None
-    return Path(list(spec.submodule_search_locations)[0])
+    """``qwen_asr`` 的真实安装根目录。
+
+    **不能只在 ``sys.modules`` / ``meta_path`` 里找**：第一次
+    :func:`load_backend` 会把「空壳父包」放进 ``sys.modules``，之后
+    ``importlib.util.find_spec("qwen_asr")`` 会读到那个壳的 ``__spec__``
+    （``None``）并抛 ``ValueError``；``meta_path`` 里的
+    ``PathFinder.find_spec`` 同样会复用 ``sys.modules`` 条目而返回 ``None``。
+
+    实测后果：同进程**第二次** ``probe()`` / ``load_backend()`` 直接崩
+    ——即「服务跑完第一个任务，第二个任务必失败」（P0）。
+    由 ``tests/test_vocalparse_integration.py`` 的真实加载测试抓到。
+
+    解法：**绕开导入系统，直接沿 ``sys.path`` 做文件系统查找**。
+    """
+    import sys as _sys
+
+    for entry in list(_sys.path):
+        if not entry:
+            continue
+        try:
+            candidate = Path(entry) / "qwen_asr"
+        except (OSError, ValueError):  # pragma: no cover - 非法路径项
+            continue
+        if (candidate / "__init__.py").is_file():
+            return candidate
+    return None
 
 
 def check_import_paths() -> dict[str, Any]:
@@ -156,13 +178,27 @@ def load_backend() -> dict[str, ModuleType]:
     if not info["ok"]:
         raise QwenBackendError(info["reason"] or "qwen_asr 后端不可用")
     backend = Path(info["backend"])
+    root = Path(info["root"])
 
-    # 造空壳父包，让三个子模块的相对导入（`from .configuration_...`）成立
-    for name in ("qwen_asr", "qwen_asr.core", "qwen_asr.core.transformers_backend"):
-        if name not in sys.modules:
-            module = ModuleType(name)
-            module.__path__ = [str(backend)] if name.endswith("transformers_backend") else []
-            sys.modules[name] = module
+    # 造空壳父包，让三个子模块的相对导入（`from .configuration_...`）成立。
+    #
+    # **关键**：``__path__`` 必须指向真实目录，不能留空列表。留空的后果是
+    # ``sys.modules["qwen_asr"]`` 变成一个无 ``__path__`` 的空壳，后续
+    # ``PathFinder.find_spec('qwen_asr')`` 会复用它而不再搜索 → 返回 None
+    # → 第二次 probe/load 误判成「未安装」（实测 P0：同进程第二个任务必失败）。
+    shell_paths = {
+        "qwen_asr": [str(root)],
+        "qwen_asr.core": [str(root / "core")],
+        "qwen_asr.core.transformers_backend": [str(backend)],
+    }
+    for name, search_paths in shell_paths.items():
+        existing = sys.modules.get(name)
+        if existing is not None and getattr(existing, "__path__", None):
+            continue
+        module = ModuleType(name)
+        module.__path__ = list(search_paths)
+        module.__package__ = name
+        sys.modules[name] = module
 
     loaded: dict[str, ModuleType] = {}
     for stem in REQUIRED_MODULES:

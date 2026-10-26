@@ -744,8 +744,14 @@ def _generate_once(
     chunk: Any,
     torch: Any,
     device_name: str,
+    max_new_tokens: int | None = None,
 ) -> str:
-    """对一段音频跑一次 generate，返回解码后的 token 串。"""
+    """对一段音频跑一次 generate，返回解码后的 token 串。
+
+    ``max_new_tokens`` 可由调用方收窄（``AITSM_VOCALPARSE_MAX_TOKENS`` 或集成测试
+    显式传入）。为什么要留这个口子：CPU 上 2048 token 的生成要几分钟，
+    而测试只需要验证「模型能加载并产出结构合法的 token」，不需要完整长度。
+    """
     # 必须用仓库自带的 chat template 拼出带 <|audio_start|>…占位符的文本，
     # 否则 processor 会报 "You need to specify either a text input"（实测）。
     messages = [
@@ -764,9 +770,34 @@ def _generate_once(
         for key, value in dict(inputs).items()
     }
     prompt_length = int(inputs["input_ids"].shape[-1]) if "input_ids" in inputs else 0
+    limit = _max_new_tokens(max_new_tokens)
     with torch.inference_mode():
-        generated = model.generate(**inputs, max_new_tokens=2048)
+        generated = model.generate(**inputs, max_new_tokens=limit)
     return str(processor.batch_decode(generated[:, prompt_length:], skip_special_tokens=True)[0])
+
+
+def _max_new_tokens(explicit: int | None = None) -> int:
+    """生成 token 上限：显式参数 → ``AITSM_VOCALPARSE_MAX_TOKENS`` → 2048。
+
+    2048 是正常歌曲一段 30s 的合理上限；测试/调试时收窄到 128 能把 CPU 耗时
+    从几分钟压到十几秒，同时仍足以验证「模型能加载并产出可解析的 token」。
+    """
+    if explicit is not None:
+        try:
+            value = int(explicit)
+            if value > 0:
+                return value
+        except (TypeError, ValueError):
+            pass
+    raw = (os.environ.get("AITSM_VOCALPARSE_MAX_TOKENS") or "").strip()
+    if raw:
+        try:
+            value = int(raw)
+            if value > 0:
+                return value
+        except ValueError:
+            pass
+    return 2048
 
 
 def _dominant_bpm(events: Sequence[VocalEvent]) -> float | None:

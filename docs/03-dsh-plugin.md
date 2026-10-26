@@ -115,6 +115,39 @@ def main() -> int:
 - [ ] 副歌 57-70 和弦置信度 0.42，可能是同一条进行反复
 - [ ] 第 35-52 小节被判为「主歌 3」长达 18 小节，可能应再切分
 
+### 耗时分布（判断「哪一层在拖慢」）
+
+`analysis.json` 的 `meta.timing_breakdown` 直接给出结论，不需要人工算：
+
+```jsonc
+{
+  "total_seconds": 4547.2,
+  "by_layer_seconds": {"vocal": 3300.1, "separation": 950.3, "accompaniment": 130.2,
+                       "symbolic": 5.1, "assemble": 1.0},
+  "by_layer_share":   {"vocal": 0.7257, "separation": 0.2090, "accompaniment": 0.0286, ...},
+  "slowest_layer": "vocal",
+  "gpu_hint": "最耗时的是 vocal（3300.1s，73%），迁 GPU 应优先考虑它"
+}
+```
+
+**交付时怎么用**：
+
+- 用户嫌慢 → 先看 `slowest_layer`。若是 `vocal`（VocalParse），说明瓶颈在 2B 模型，
+  解决方案是 GPU 或减小时长/窗口；
+- 若是 `separation`，说明 ONNX 分轨的 chunk 数太多（长歌常见）；
+- `by_layer_share` 加起来是 1.0；`arrangement` 与 `duet` 通常占比极小，可忽略。
+
+**GPU 迁移的已知结论**（详见 `docs/12-operations.md` §5）：
+
+| 项 | 结论 |
+| --- | --- |
+| 优先迁谁 | **只迁 VocalParse**（8.5 GB，占整曲 73% 耗时）；DuET/SheetSage2 收益小，留 CPU 省显存 |
+| 精度类型 | **`bf16`，不要 `fp16`**（Qwen 系列在 fp16 下偶有数值不稳定） |
+| 别忘的瓶颈 | 音频特征提取若留在 CPU 会成为新瓶颈，**一并迁 GPU**（或用 torchaudio 的 GPU 版） |
+| 迁完怎么验 | 同一段音频对比前后 `timing_breakdown.by_layer_seconds`，确认收益真实发生 |
+
+> 导出 `report.md` 时建议附一行：`最慢层 vocal（73%）`，比只报「总耗时 76 分钟」有用。
+
 ## 已做的改编
 - 原曲有失真吉他双轨，已合并为单轨扫弦
 - 前奏 9 小节保留了和弦进行，吉他动机未转 TAB（信号不足）
@@ -134,6 +167,18 @@ def main() -> int:
 
 **红线不变**：信号缺失就留空 + 告警，不猜、不隐藏降级、不宣称准确率。
 新增一条：**不要把 `symbolic.provenance.engine != requested` 的情况说成"已用上专用模型"**。
+
+### 编配层增强组件的实现边界（交付时必须讲清）
+
+| 组件 | 实际是什么 | 必须怎么表述 |
+| --- | --- | --- |
+| `tart_rerank.py`（`engine="tart-heuristic"`） | **启发式弦品分配**：按手跨、空弦利用、把位连续性对 DP 候选做两轮坐标下降 | 只能叫「**启发式重排（heuristic）**」。**与 TART 论文（Gupta et al., arXiv:2609.11904, ISMIR 2026）的 AudioFret T5 模型无任何实现继承关系**——不接收音频、不含 T5、不含学到的权重 |
+| TART 官方代码 | **截至检索（2026-10）未公开发布**：论文无仓库链接、HF 无模型页、GitHub 搜不到 | 不能说「用了 TART」。接口已预留（`is_available()` / `rerank()`），等作者放出后可直接接 |
+| `playability.py` | **纯 numpy 移植 Noise2Fret 的五项损失公式**（音级/把位/五度圈/弦相似性/手跨） | 只能叫「可演奏性度量」。**不依赖其扩散模型权重**——该仓库实测无 `.pt/.ckpt/.safetensors` |
+| `llm_advisor.py` + `replan.py` | 大模型只输出**结构化 JSON 的权重调整**，由 DP 重解；不写弦品 | 采纳时才说「大模型影响了指法权重」，并注明 `engines.fingering == "dp+llm-weights"`；未采纳就说「建议未被采纳」 |
+
+**引擎表写法要求**：任何列出「TART rerank」的地方，必须同时标注 `heuristic`，
+例如 `TART rerank (heuristic)`，绝不能只写 `TART rerank` 让人误以为跑了论文模型。
 
 ## 打包与分发
 
