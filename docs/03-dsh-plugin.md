@@ -51,11 +51,13 @@ description: 把音频/视频文件转成可自弹自唱的吉他弹唱谱（五
 - 全程本地、免费、不外传音频。
 
 ## 开始执行
-1. 先运行 `python scripts/doctor.py` 检查环境（ffmpeg / torch / demucs / faster-whisper）。
+1. 先运行 `python plugin/scripts/doctor.py` 检查环境（ffmpeg / torch / demucs / faster-whisper；
+   v2 还会报 `transformers` / `qwen-asr` / 各专用模型权重是否就绪）。
    缺重型依赖时告知用户质量会下降，并询问是否继续（不要静默降级）。
 2. 确认输入文件存在、时长在限制内（>10 分钟先提示耗时）。
-3. 运行 `python scripts/generate.py <audio> --out <dir> [--key] [--capo] [--difficulty]`。
-4. 读 `manifest.json` 与 `score.json.quality`，判断哪些环节需要向用户说明。
+3. 运行 `python plugin/scripts/generate.py <audio> --out <dir> [--key] [--capo] [--difficulty] [--device auto|cpu|cuda]`。
+4. 读 `manifest.json`、`score.json.quality` 与 **`symbolic.json.provenance`**，
+   判断哪些环节需要向用户说明（v2 的降级信息主要在 provenance 里）。
 
 ## 质量把关（必须做）
 读 `references/quality.md`。至少检查：
@@ -102,8 +104,10 @@ def main() -> int:
 
 ## 产物
 - score.json（网页乐谱）
-- score.musicxml（MuseScore / Guitar Pro）
+- score.musicxml（MuseScore / Guitar Pro，含五线谱 + TAB）
 - score.mid
+- symbolic.json（★ 符号契约，`provenance` 里逐层写明 requested vs engine）
+- payload.json / timing.json（★ 网页渲染数据与绝对时间轴）
 - 查看：`python scripts/serve.py`
 
 ## 需要你确认的
@@ -115,6 +119,21 @@ def main() -> int:
 - 原曲有失真吉他双轨，已合并为单轨扫弦
 - 前奏 9 小节保留了和弦进行，吉他动机未转 TAB（信号不足）
 ```
+
+### v2 专用模型下的报告差异（skill 需要注意）
+
+装了专用模型后，产物与口径有变化，`generate.py` / `report.md` 应据实反映：
+
+| 项 | v1 内核 | v2 专用模型 |
+| --- | --- | --- |
+| 引擎 | `whisper+pyin` / `beats+chroma` | `vocalparse` / `sheetsage2` / `duet` / `demucs-onnx` |
+| 降级信息 | 只看 `manifest.degraded` | **外加 `symbolic.provenance`**（逐层 `requested` vs `engine`） |
+| 和弦位置 | 有逐事件 `confidence`，可指到具体小节 | SheetSage2 **不输出逐事件置信度** → 不能再说「第 N 小节和弦置信度 0.42」，只能说「该段和弦来自联合解码，无法逐小节打分」 |
+| 耗时 | 4 分钟歌约 9–10 分钟 | **整曲约 76 分钟（CPU）**，VocalParse 占 73% |
+| 设备 | 无 | 可通过 `--device` 传 `auto`/`cpu`/`cuda`；GPU 不可用时后端会回落并写 `device.resolved` 告警 |
+
+**红线不变**：信号缺失就留空 + 告警，不猜、不隐藏降级、不宣称准确率。
+新增一条：**不要把 `symbolic.provenance.engine != requested` 的情况说成"已用上专用模型"**。
 
 ## 打包与分发
 

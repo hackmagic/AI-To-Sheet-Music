@@ -328,3 +328,199 @@ XML 自身合法、XSD 也过，但宿主软件按 `<type>` 重排小节就装�
 
 输出会列出 ffmpeg/ffprobe 路径、各引擎可用性、模型缓存、schema 文件、工作目录。
 
+---
+
+# v2 专用模型链路的坑（实测记录）
+
+以下坑都是 v2 接入四个专用模型时**实际踩到并已修复**的。共同教训：
+「权重能下载」≠「能加载」≠「能跑」≠「输出可信」——这四件事要分别验证。
+
+## 25. `vocalparse` 这个包**从来不存在于 PyPI**
+
+**症状**：`pip install vocalparse` → 404；找不到 VocalParse 的安装方式。
+
+**真相**：VocalParse 不是独立分发的 pip 包。它是基于 **Qwen3-ASR** 的微调权重，
+而 Qwen3-ASR 的**建模代码**由 `qwen-asr` 包分发（PyPI 上有，最新 0.0.6）。
+
+**解法**：
+
+```bash
+.venv/Scripts/python.exe -m pip install --only-binary :all: qwen-asr==0.0.6
+```
+
+**重要**：只装 `transformers` 时 `qwen3_asr` 这个 model_type 能被识别，但通用
+`Qwen3ASRForConditionalGeneration` 按 `vocab=151936 / output_dim=3584` 建图，
+与 checkpoint 的 `152101 / 2048` 冲突——实测 **315 个 key MISSING**。
+
+## 26. Qwen3-ASR 权重前缀与通用类不匹配
+
+**症状**：`size mismatch`、大量 `MISSING`，加载后推理输出乱码。
+
+**原因**：VocalParse 的 checkpoint 是 **Thinker 结构**：
+
+- 键名 `thinker.audio_tower.*` / `thinker.model.*` / `thinker.lm_head.*`；
+- audio `output_dim = 2048`（通用类期望 3584）；
+- 词表 `152101`（基础 151936 + 约 165 个 AST token：`<P_n>` / `<NOTE_x>` / `<BPM_n>`）；
+- `config.json` **没有** `rope_scaling`，但建模代码要求它存在。
+
+**解法**（`aitsm/transcribe/vocal.py`）：
+
+```python
+from qwen_asr...modeling_qwen3_asr import Qwen3ASRThinkerForConditionalGeneration
+config = Qwen3ASRConfig.from_pretrained(dir).thinker_config
+config.text_config.vocab_size = 152101
+config.text_config.rope_scaling = {"type": "mrope", "mrope_section": [24, 20, 20]}
+# 键映射：thinker.audio_tower.→audio_tower.  thinker.model.→model.  thinker.lm_head.→lm_head.
+# lm_head 与 embed_tokens tied（checkpoint 里根本没有 lm_head）
+```
+
+`mrope_section=[24,20,20]` 不是猜的，是 `qwen_asr` 建模代码自己的缺省值；
+设错会让位置编码**静默失效**，音符时序系统性偏移。适配器现在会在加载前断言它。
+
+## 27. `import qwen_asr` 会拉 `nagisa` + `gradio`
+
+**症状**：`ModuleNotFoundError: No module named 'nagisa'`；`pip install nagisa` 卡住（Windows）。
+
+**原因**：包 `__init__` 连带导入推理封装（强制对齐要 `nagisa`）与 demo 依赖（`gradio`），
+这些对建模推理毫无作用。
+
+**解法**：**按文件路径**只加载三个建模子模块，不执行 `__init__`：
+
+```python
+# 造三个空壳父包，让相对导入成立，再 exec_module
+for name in ("qwen_asr", "qwen_asr.core", "qwen_asr.core.transformers_backend"): ...
+spec = importlib.util.spec_from_file_location(full_name, backend / f"{stem}.py")
+```
+
+**必须配版本 pin + 路径探测**：`qwen-asr` 仍是 0.0.x，子模块路径随时可能变。
+`aitsm/transcribe/qwen_backend.py` 把版本号、子模块名、词表大小、mrope 集中成常量，
+`check_import_paths()` 在**探测阶段**就能发现路径变化（而不是推理中途抛 ImportError）。
+
+## 28. DuET 的 `vocabulary.json` 在 Windows 检出成 CRLF
+
+**症状**：`ValueError: Model vocabulary does not match the installed package.`
+
+**原因**：DuET 用 sha256 校验 `vocabulary.json`，而 git 在 Windows 上把 LF 检出成 CRLF，
+哈希自然对不上。
+
+**解法**：把该文件按 **LF** 重写；仓库内 `vendor/DuET/src/duet/vocabulary.json` 已转 LF。
+CI/新机器检出后要确认（`git config core.autocrlf` 不应用于该文件）。
+
+## 29. `duet-score` 装不上（Windows 构建目录权限）
+
+**症状**：`error: could not create 'build\lib\duet': 拒绝访问`；`WinError 5`。
+
+**解法**：不 pip 安装，把源码放 `vendor/DuET`，由 `aitsm/fusion/duet.py` 把
+`vendor/DuET/src` 加进 `sys.path` 直接用（`gitignore` 已忽略 `vendor/`）。
+
+## 30. SheetSage2 的 `BartDecoder` 签名变化（transformers 5.x）
+
+**症状**：`TypeError: BartDecoder.__init__() got an unexpected keyword argument 'embed_tokens'`
+
+**原因**：SheetSage2 权重按 **transformers 4.45.2** 导出，5.x 移除了该参数。
+
+**解法**：锁 `transformers==4.57.6`（同时满足 VocalParse 的 4.57.6 与 SheetSage2）。
+这是 `requirements.txt` 里必须精确 pin 的两处之一。
+
+## 31. SheetSage2 的 `trust_remote_code` 连不上 Hub
+
+**症状**：`OSError: We couldn't connect to 'https://hf-mirror.com/' ... couldn't find them in cached files`
+（明明权重已下到本地目录）。
+
+**原因**：`trust_remote_code=True` 走 HF 动态模块缓存，其目录结构（`transformers_modules/<repo>/<hash>`）
+与本地权重目录名不匹配，于是它以为要重新联网。
+
+**解法**：**本地包导入**——把权重目录复制成
+`<HF_HOME>/pkgs/ss2/sheetsage2/`（含 `__init__.py`），然后
+`from sheetsage2.modeling_sheetsage2 import SheetSage2Model`。`trust_remote_code` 只作兜底。
+
+## 32. SheetSage2 把 4/4 判成 2/4
+
+**症状**：整曲 229 秒被切成 **181 个「小节」**（每小节 1.26 秒），谱面小节数翻倍、和弦落位全错。
+
+**原因**：`beat.lab` 里拍点间隔 0.64s（93.75 BPM），强拍间隔 1.28s。模型据此报 `2/4`——
+它自身是**自洽**的（强拍/拍点 = 2:1，确实符合 2/4），所以不能靠这个判据发现。
+真正破绽是**每小节秒数**：2/4 且 < 1.6s/小节，意味着把八分音符当成了拍。
+
+**解法**（`pipeline/accompaniment_stage._sanity_check_meter`）：
+
+1. 判据用「每小节秒数」+「声明的拍号是否在常见集合」；
+2. 回退 **4/4**，**BPM 保持不变**（93.75 是对的；若按 `bar_seconds/4` 反推会得到 187.5，
+   那是八分音符速度）；
+3. downbeats 隔一个取一个 → 91 小节 × 2.55s ≈ 229s，与整曲时长吻合；
+4. 「少见但自洽」的拍号（如 5/4）**只提示不改写**，不能把正确结果改错。
+
+**交叉验证**：旧 librosa 管线独立判 4/4 / 92.47 BPM，与 93.75 几乎一致，差异只在拍号。
+
+## 33. SheetSage2 的段落名不在 schema 枚举里
+
+**症状**：`analysis 未通过 schema 校验（3 处）：sections/6/kind: 'pre-chorus' is not one of [...]`
+
+**原因**：SheetSage2 输出 `pre-chorus`（带连字符），schema 只认 `prechorus`。
+
+**解法**：`_normalize_section_kind()` 把 `pre-chorus` / `pre chorus` / `post-chorus` /
+`breakdown` / `guitar solo` 等变体映射到标准 kind；**未知标签一律落 `other`，不猜**。
+
+## 34. 段落能量默认值被当成真实数据
+
+**症状**：20 个段落全部用同一个节奏型（`pop8`），谱面毫无层次。
+
+**原因**：`contracts.Section.energy` 默认 0.5，而 SheetSage2 不提供段落能量，
+适配器又只在 `energy` 为空时才取先验 → 「默认值 0.5」被当成真实测量值。
+
+**解法**：按 `kind` 给**类型先验**（intro 0.20 / verse 0.45 / prechorus 0.60 /
+chorus 0.75 / interlude 0.35 / bridge 0.50 ...）。修复后前奏→分解、副歌→摇滚扫弦。
+
+## 35. 多进程部署会 OOM
+
+**症状**：`uvicorn --workers 4` 时机器被打爆。
+
+**原因**：VocalParse 是 2B 参数，加载后常驻约 **8.5 GB**；4 个 worker 各加载一份 ≈ 34 GB。
+
+**解法**：**单 worker + 内部队列**（uvicorn 默认就是 1）。要横向扩展就把 VocalParse
+拆成独立推理服务，模型只加载一份。`aitsm/deployment.py` 把这条约束做成了可执行检查，
+`cli doctor` 会打印模型内存估算与部署建议。详见 `12-operations.md` §2。
+
+## 36. 连续转录两段时第二段降级
+
+**症状**：同一进程先后转录两段音频，第二段回落 `whisper+pyin`。
+
+**原因**：每次调用都重新加载 2B 权重（约 8 GB），内存压力导致后续失败。
+
+**解法**：`_MODEL_CACHE` 按「权重目录 + 设备」缓存，同进程复用。
+
+## 37. 设备选择：有显卡 ≠ 能用 GPU
+
+**症状**：机器有 RTX 4060，但 `torch.cuda.is_available()` 为 False。
+
+**原因**：装的是 `torch 2.x+cpu`（编译时没带 CUDA）。这两件事必须**分别告知用户**：
+「没有卡」和「有卡但 torch 是 CPU 版」的解法完全不同。
+
+**解法**：`aitsm/devices.py` 同时读 torch 与 `nvidia-smi`，`/api/health.devices.summary`
+给出人话结论；前端下拉在无 GPU 时标注「GPU（本机不可用）」并说明原因；
+后端 `resolve_device()` 校验并回落 CPU，写 `device.resolved` 告警。
+**绝不假装在用 GPU。**
+
+## 38. 一份 2.5 GB 的 CUDA torch 不能随便降级
+
+**说明**：启用 GPU 需要 `--index-url .../cu124` 的 torch（本机 2.6.0+cu124，约 2.5 GB），
+而从 2.14.1 降下来会波及已验证的 demucs / transformers / qwen-asr 组合。
+
+**做法**：v2 交付时**没有**擅自降级；改为如实报告 GPU 不可用 + 给出启用命令。
+真要启用时建议新建一个 venv 验证，而不是在已验证环境里直接替换。
+
+## 39. GitHub HTTPS 被阻断时怎么推送
+
+**症状**：`git push` → `Failed to connect to github.com:443`（curl 也返回 `000`），
+但 `gh api` 正常（`api.github.com` 返回 200）。
+
+**解法**：`scripts/push_via_api.py` 走 **Git Data API**（blob → tree → commit → ref）。
+其中两个必须注意的点：
+
+1. **内容要塞 stdin**：base64 后的文件内容做成命令行参数会触发
+   `WinError 206（文件名或扩展名太长）`，必须 `gh api --input -` 从 stdin 传 JSON；
+2. **必须读 git 对象库**（`git cat-file blob HEAD:path`）而不是工作区文件：
+   工作区是 CRLF、git 里是 LF，直接上传工作区字节会让远端 blob sha 与本地提交不一致。
+
+API 重建的 commit sha 与本地不同（tree 相同）。恢复直连后
+`git fetch origin && git reset --mixed origin/main` 对齐即可。

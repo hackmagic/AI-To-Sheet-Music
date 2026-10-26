@@ -18,7 +18,7 @@ v2 的硬约束是：
 
 | 层 | 架构首选 | 代码入口 | 本机可用条件 |
 | --- | --- | --- | --- |
-| 0 分离 | htdemucs_ft | `aitsm/separation/engine.py::separate` | 有 torch+demucs；或 `AITSM_DEMUCS_ONNX_DIR` + `demucs_onnx` |
+| 0 分离 | htdemucs_ft | `aitsm/separation/engine.py::separate` | `AITSM_DEMUCS_ONNX_DIR` 指向含 `bag_infer.py` 的权重目录（只需 numpy+onnxruntime+soundfile）；否则 torch+demucs |
 | 1A 人声联合转录 | VocalParse | `aitsm/transcribe/vocal.py::transcribe_vocal` | `AITSM_VOCALPARSE_DIR` + transformers 本地权重 |
 | 1B 伴奏联合转录 | SheetSage2 | `aitsm/transcribe/accompaniment.py::transcribe_accompaniment` | `AITSM_SHEETSAGE2_DIR` + transformers |
 | 2 骨架融合 + 量化 | SheetSage2 拍点 + DuET | `aitsm/fusion/skeleton.py::fuse`、`aitsm/fusion/quantize.py::quantize_symbolic` | `AITSM_DUET_DIR` + transformers |
@@ -122,25 +122,73 @@ audio
 | `m-a-p/SheetSage2` | ✅ | 0.23 GB | 代码 + 权重同仓（142 文件），另有 GGUF 版 |
 | `Wayne42/DuET` | ✅ | 0.43 GB | 自定义导出格式，需配 GitHub 代码 |
 | `adefossez/HTDemucs-ft` | ✅ | 4 个 safetensors | 官方 torch 权重，需 demucs 加载 |
-| `StemSplitio/htdemucs-ft-onnx` | ✅ | 四轨 ONNX ×2（fp32/fp16） | `demucs-onnx` 路径 |
+| `StemSplitio/htdemucs-ft-onnx` | ✅ | 四轨 ONNX ×2（fp32/fp16）+ 官方 `bag_infer.py` | 首选路径；**不需要** `demucs_onnx` 包（`bag_infer` 只用 numpy+onnxruntime+soundfile） |
 | `Wayne42/DuET-demo` | ⚠️ 401 | — | 是 Space 不是 model 仓库，API 查模型会 401 |
 | TART / Noise2Fret | ❌ 无 HF | — | 只有 GitHub 代码，无独立模型仓库 |
 
 ## 5. 运行时开关
 
+### 5.1 模型权重与后端（v2 核心）
+
 | 环境变量 | 作用 |
 | --- | --- |
-| `AITSM_DEMUCS_ONNX_DIR` | 指向含 `*.onnx` 的目录，走 demucs-onnx 推理（免完整 PyTorch） |
-| `AITSM_DEMUCS_MODEL` | 显式覆盖分离模型名，默认 `htdemucs` |
+| `AITSM_DEMUCS_ONNX_DIR` | 指向含 `*.onnx` + `bag_infer.py` 的目录，走 ONNX 推理（免完整 PyTorch） |
+| `AITSM_DEMUCS_MODEL` | 显式覆盖分离模型名，默认 `htdemucs`；`--quality high/max` 会设成 `htdemucs_ft` |
+| `AITSM_DEMUCS_SHIFTS` | 随机位移次数（越大越稳越慢） |
+| `AITSM_DEMUCS_OVERLAP` | 分段重叠率（0–0.95） |
 | `AITSM_VOCALPARSE_DIR` | VocalParse 权重目录 |
 | `AITSM_SHEETSAGE2_DIR` | SheetSage2 权重目录 |
 | `AITSM_SHEETSAGE2_PKG_DIR` | SheetSage2 代码副本目录（默认 `<HF_HOME>/pkgs/ss2`） |
 | `AITSM_SHEETSAGE2_FIRST` | 设 `0` 关闭「SheetSage2 接管节拍/调性/和弦/段落」，强制旧管线 |
 | `AITSM_DUET_DIR` | DuET 量化权重目录 |
 | `AITSM_DUET_VENDOR` | DuET 源码根（默认 `vendor/DuET`） |
-| `AITSM_LLM_URL` | 第三方大模型 HTTP 端点；未设置时编配层不联网 |
-| `AITSM_LLM_ADVISOR` | 设为 `1` 才启用 LLM 评审（默认关） |
+| `AITSM_TART_DIR` | TART 权重目录（**本机不可用**；缺权重时 rerank 走 `tart-heuristic`） |
 | `HF_HOME` | HF 缓存根；本机指向仓库内 `.cache/hf`（用户目录不可写） |
+
+### 5.2 推理设备
+
+| 环境变量 | 作用 |
+| --- | --- |
+| `AITSM_DEVICE` | 默认推理设备 `auto` / `cpu` / `cuda`；也可在页面上选（`options.device`） |
+| `AITSM_WHISPER_DEVICE` | 仅歌词 ASR 的设备覆盖 |
+| `AITSM_WHISPER_MODEL` | 歌词模型档位（`tiny`/`base`/`small`/`medium`/`large-v3`） |
+| `AITSM_WHISPER_COMPUTE` | ASR 计算类型（如 `float16`/`int8`） |
+
+设备解析顺序：`options.device` → `AITSM_DEVICE` → `auto` → `aitsm.devices.resolve_device()`
+校验（GPU 不可用则回落 CPU 并写 `device.resolved` 告警）。
+
+### 5.3 编配层 LLM 顾问（默认关）
+
+| 环境变量 | 作用 |
+| --- | --- |
+| `AITSM_LLM_URL` | 第三方大模型 HTTP 端点；未设置时编配层**不联网** |
+| `AITSM_LLM_ADVISOR` | 设为 `1` 才启用 LLM 评审（默认关） |
+| `AITSM_LLM_MODEL` | 请求里使用的模型名 |
+| `AITSM_LLM_API_KEY` | 鉴权头 |
+
+### 5.4 降级路径的调参开关（v1 内核，保留）
+
+| 环境变量 | 作用 |
+| --- | --- |
+| `AITSM_CHORD_FUSION` / `_HARMONIC` / `_SMOOTHING` / `_REPETITION` | 和弦识别特征融合 / 谐波加权 / 序列平滑 / 重复一致性 |
+| `AITSM_RHYTHM_QUANTIZER` | 量化器选择（`hmm` 等） |
+| `AITSM_QUANTIZE_MAX_SHIFT` | HMM 允许的最大位移（拍） |
+| `AITSM_MELODY_TRIPLETS` / `_LOW_MIDI` / `_HIGH_MIDI` | 旋律三连音开关与音域约束 |
+| `AITSM_F0_BANDPASS` / `_LOW` / `_HIGH` / `_SMOOTH` / `_MAX_TRANSITION` / `_SWITCH_PROB` | 基频带通与平滑参数 |
+| `AITSM_SKIP_ASR` | 跳过歌词识别（离线调试） |
+| `AITSM_KEEP_TRADITIONAL` | 中文歌词不转简体 |
+
+### 5.5 服务与任务
+
+| 环境变量 | 作用 |
+| --- | --- |
+| `AITSM_HOST` / `AITSM_PORT` | 服务监听地址/端口 |
+| `AITSM_WORK_DIR` | 工作根目录（默认 `work/`） |
+| `AITSM_MAX_UPLOAD_MB` / `AITSM_MAX_DURATION_SEC` | 上传体积/时长上限 |
+| `AITSM_WORKERS` / `AITSM_MAX_WORKERS` | 任务线程数（**注意**：这是任务并发，不是 uvicorn worker；大模型下不要开多个 uvicorn worker，见 `12-operations.md`） |
+| `AITSM_KEEP_JOBS` | 保留多少个历史任务目录 |
+| `AITSM_FFMPEG` / `AITSM_FFPROBE` | 显式指定二进制路径 |
+| `AITSM_ENABLE_SEPARATION` / `_LYRICS` / `_MELODY` | 各阶段总开关（等价于 CLI 的 `--no-*`） |
 
 `--quality {standard,high,max}` 只调分离/ASR 的精度旋钮，不改分层结构。
 
@@ -206,11 +254,14 @@ timing.json = { bars[{index,start,end}], notes[{start,end,midi,lyric,bar}],
 
 ## 8. 验收
 
-- `pytest tests/ -q` → 738 passed（含 v2 新增 11 个测试文件）。
+- `pytest tests/ -q` → **921 passed, 1 skipped**（v2 新增 23 个测试文件；
+  skipped 那条是「本地无 VocalParse 权重时跳过真实权重校验」，离线环境正常）。
 - 前端纯数据层：`node tests/web-payload.test.mjs` → 12 passed；`node tests/web-editor.test.mjs` → 34 passed。
-- 真实音频（229s 片段）→ `symbolic.json` + `symbolic.musicxml`（158 KB，89 小节，
-  每小节 divisions 总和 == 96）+ `payload.json` + `timing.json`。
-- 端到端冒烟脚本：`work/v2_e2e_run.py`（16s 截取，CPU，`whisper_model=small`）。
+- 量化 + 契约冒烟（artifacts/analysis.json）→ `symbolic.json` + `symbolic.musicxml`
+  （158 KB，89 小节，每小节 divisions 总和 == 96）。
+- 整曲真实交付（229s，四层全开）→ 90 小节 / 164 和弦落位 / 质量 0.94，
+  `analysis` 与 `score` 双双通过校验，详见 [`13-demo-quality.md`](13-demo-quality.md)。
+- 端到端脚本：`work/v2_e2e_run.py`（16s 截取，CPU）、`work/demo_full_song.py`（整曲）。
 
 ## 9. 多曲目基准
 
