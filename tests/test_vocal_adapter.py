@@ -289,25 +289,24 @@ def test_is_available_requires_qwen_asr(
 
     实测：只装 transformers 时 ``thinker.*`` 键全部对不上（315 个 MISSING），
     因为 Qwen3-ASR 的建模代码由 ``qwen-asr`` 包分发。
+
+    注意：``is_available()`` 最终走 ``qwen_backend.probe()``，而后者用**文件系统
+    查找**而不是 ``importlib.util.find_spec``（后者会被空壳父包污染而误判，
+    见 tests/test_qwen_backend_reload.py）。所以这里 monkeypatch ``_package_root``。
     """
-    import importlib.util as util
+    from aitsm.transcribe import qwen_backend
 
     model_dir = tmp_path / "vocalparse"
     model_dir.mkdir()
     (model_dir / "config.json").write_text("{}", encoding="utf-8")
     monkeypatch.setenv(V.VOCALPARSE_DIR_ENV, str(model_dir))
 
-    real_find_spec = util.find_spec
+    real_root = qwen_backend._package_root
 
-    def fake_find_spec(name, *args, **kwargs):
-        if name == "qwen_asr":
-            return None
-        return real_find_spec(name, *args, **kwargs)
-
-    monkeypatch.setattr(util, "find_spec", fake_find_spec)
+    monkeypatch.setattr(qwen_backend, "_package_root", lambda: None)
     assert V.is_available() is False
 
-    monkeypatch.setattr(util, "find_spec", real_find_spec)
+    monkeypatch.setattr(qwen_backend, "_package_root", real_root)
     assert V.is_available() is True
     assert V.vocalparse_dir() == model_dir
 

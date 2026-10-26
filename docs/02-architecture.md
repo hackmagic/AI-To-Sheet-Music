@@ -87,6 +87,7 @@ AI-To-Sheet-Music/
 │   ├── js/{main,api,renderer,chorddiagram,player,transpose,print,editor,ui,music}.js
 │   ├── js/payload.js        # ★ payload 归一化 / 时间轴覆盖
 │   ├── js/abcjs-fallback.js # ★ VexFlow 失败时的 abcjs 兜底
+│   ├── js/musicxml.js      # ★ 本地解析导入的 MusicXML（DOMParser，无依赖）
 │   └── vendor/vexflow.js    # 从 npm 复制，离线可用
 ├── samples/                 # 手工构造的示例 score/analysis，供前端独立开发
 ├── tests/                   # 45 个测试文件（921 条 pytest + 46 条 node）
@@ -298,6 +299,9 @@ def run_benchmark(sources, *, out_dir, options=None, runner=None, progress=None)
   纯函数、node 可测，负责把 `payload.json` 归一化并用它的时间轴覆盖视图。
 - `renderer.js`：VexFlow 渲染。每系统 = 主旋律五线谱（Treble）+ 歌词（StaveText）+ 和弦符号（ChordSymbol/TextNote）+ 可选 TAB 谱表。小节按 time signature 排布，4 小节/行。
 - `abcjs-fallback.js`（★）：VexFlow 渲染失败时懒加载 abcjs（先本地 vendor 再 CDN）兜底。
+- `musicxml.js`（★）：用浏览器 `DOMParser` 本地解析用户导入的 MusicXML（MuseScore / Guitar Pro 导出），
+  产出与后端 payload 兼容的 score 形状后走同一渲染链路；不支持的布局/多 part/装饰音**如实告警**，
+  不引入 vexml 等 npm 依赖（前端无构建步骤）。
 - `chorddiagram.js`：纯 SVG 和弦框（6 弦 5 品，含横按、空弦/闷弦标记）。
 - `player.js`：WebAudio 合成（旋律方波/三角波 + 和弦扫弦噪声包络 + 节拍器），按 score 事件调度；可选 `<audio>` 原曲同步，光标行高亮。
 - `transpose.js`：和弦符号移调、旋律音高移调、capo 重算、重新选指法（读 voicings.json）。
