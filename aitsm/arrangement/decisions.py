@@ -30,6 +30,7 @@ from .fingering_dp import (
     plan_cost,
 )
 from .llm_advisor import AdvisorResult, LLMAdvisor
+from .replan import replan_with_advice
 from .strumming_rules import StrumDecision, recommend
 from .tart_rerank import active_engine as tart_active_engine, rerank
 
@@ -50,6 +51,8 @@ class ArrangementPlan:
     total_cost: float = 0.0
     engines: dict[str, str] = field(default_factory=dict)
     advisor: dict[str, Any] = field(default_factory=lambda: {"engine": "off"})
+    #: LLM 建议 → 调权重 → 重跑 DP 的结果（applied / delta / cost 对比）
+    advisor_replan: dict[str, Any] | None = None
     warnings: list[str] = field(default_factory=list)
     schema: str = PLAN_SCHEMA
 
@@ -63,6 +66,7 @@ class ArrangementPlan:
             "total_cost": round(float(self.total_cost), 4),
             "engines": dict(self.engines),
             "advisor": self.advisor,
+            "advisor_replan": self.advisor_replan,
             "warnings": list(self.warnings),
         }
 
@@ -260,6 +264,7 @@ def build_plan(
         warnings.append("谱面没有段落信息，节奏型为空")
 
     advisor_payload: dict[str, Any] = {"engine": "off"}
+    advisor_replan: dict[str, Any] | None = None
     if advisor is not None:
         try:
             advisor_payload = _advisor_payload(
@@ -269,6 +274,36 @@ def build_plan(
         except Exception as exc:  # 顾问层承诺不抛，这里再兜一层
             advisor_payload = {"engine": "rules", "advisory": True, "error": str(exc)}
             warnings.append(f"顾问调用失败（{type(exc).__name__}: {exc}）")
+
+        # 闭环：LLM 的结构化评审 → 调整成本权重 → 重跑 DP → 只采纳更优者。
+        # 没给 cost_adjustments 或重解更差时，choices 保持原样。
+        try:
+            review = (advisor_payload.get("review") or {}).get("data") or {}
+            replan = replan_with_advice(
+                parsed.chords,
+                choices,
+                advisor_payload=review if isinstance(review, Mapping) else None,
+                tuning=tuning,
+                melody_notes=parsed.melody,
+                key=parsed.key,
+                max_candidates=max_candidates,
+                weights=weight_map,
+            )
+            advisor_replan = replan.to_dict()
+            if replan.applied:
+                choices = replan.choices
+                weight_map = dict(replan.weights)
+                engines["fingering"] = "dp+llm-weights"
+                warnings.append(
+                    "已按大模型建议调整成本权重并重解（"
+                    + "，".join(f"{k}{v:+.3f}" for k, v in replan.delta.items())
+                    + "）"
+                )
+            for message in replan.warnings:
+                warnings.append(str(message))
+        except Exception as exc:  # noqa: BLE001 - 闭环失败退回原结果
+            advisor_replan = {"applied": False, "error": str(exc)}
+            warnings.append(f"按顾问建议重解失败（{type(exc).__name__}: {exc}），保留原结果")
 
     try:
         total = plan_cost(choices, weights=weight_map)
@@ -291,6 +326,7 @@ def build_plan(
         total_cost=total,
         engines=engines,
         advisor=advisor_payload,
+        advisor_replan=advisor_replan,
         warnings=warnings,
     )
 

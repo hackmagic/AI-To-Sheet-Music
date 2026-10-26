@@ -166,11 +166,12 @@
         <button class="btn btn--icon" data-act="close-upload" title="关闭" aria-label="关闭">✕</button>
       </header>
 
-      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="选择或拖入音频文件">
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="选择或拖入音频或 MusicXML 文件">
         <div class="dropzone__glyph" aria-hidden="true">♪</div>
         <p class="dropzone__main">把音频拖到这里，或<u>点击选择文件</u></p>
         <p class="dropzone__sub">mp3 · wav · flac · m4a · ogg · aac · mp4 / mov / mkv（≤100MB，≤10 分钟）</p>
-        <input type="file" id="file-input" accept="audio/*,video/*,.mp3,.wav,.flac,.m4a,.ogg,.aac,.mp4,.mov,.mkv,.webm" hidden />
+        <p class="dropzone__sub">也支持 <strong>.musicxml / .xml</strong>（MuseScore、Guitar Pro 导出的谱，本地解析，不上传）</p>
+        <input type="file" id="file-input" accept="audio/*,video/*,.mp3,.wav,.flac,.m4a,.ogg,.aac,.mp4,.mov,.mkv,.webm,.musicxml,.xml,.mxl" hidden />
       </div>
 
       <div class="upload-opts">

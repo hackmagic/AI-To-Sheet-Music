@@ -669,8 +669,67 @@ function bindUpload() {
   });
 }
 
+/* ─────────────────────────── MusicXML 导入 ─────────────────────────── */
+
+/** 文件名是否是 MusicXML（`.musicxml` / `.xml` / `.mxl`） */
+function isMusicXMLFile(file) {
+  return /\.(musicxml|xml|mxl)$/i.test(String(file?.name || ''));
+}
+
+/**
+ * 本地解析 MusicXML 并渲染。
+ *
+ * 不联网、不上传：读文本 → `parseMusicXML()` → 得到 `aitsm.score/v1` 兼容对象
+ * → 走与后端任务完全相同的 `applyScore()` 渲染链路。
+ *
+ * 解析不完整时把 `warnings` 原样弹出（**不隐藏降级**）：不支持的布局、多 part、
+ * 装饰音、关系大小调歧义等都会列出来。
+ */
+async function importMusicXML(file) {
+  state.busy = true;
+  try {
+    const raw = await file.text();
+    const { parseMusicXML } = await import('./musicxml.js');
+    const { score, warnings } = parseMusicXML(raw);
+
+    if (!score) {
+      ui.toast(`MusicXML 解析失败：${warnings[0] || '未知原因'}`, { kind: 'error', timeout: 7000 });
+      return;
+    }
+
+    score.meta.title = score.meta.title || file.name.replace(/\.[^.]+$/, '');
+    state.jobId = null;
+    state.audioUrl = null;
+    applyScore(score, { payload: null });
+
+    // 解析告警必须展示：用户要能判断「这份谱读全了没有」
+    if (warnings.length) {
+      const head = `已导入 ${file.name}，但有 ${warnings.length} 处未完全支持`;
+      ui.toast(`${head}：${warnings.slice(0, 2).join('；')}`, { kind: 'info', timeout: 9000 });
+      score.meta.warnings = [...(score.meta.warnings || []), ...warnings.map((text) => ({
+        level: 'info', code: 'musicxml.import', message: text, stage: 'import',
+      }))];
+    } else {
+      ui.toast(`已导入 ${file.name}（MusicXML，本地解析）`, { kind: 'ok' });
+    }
+  } catch (err) {
+    console.error('MusicXML 导入失败', err);
+    ui.toast(`MusicXML 导入失败：${err.message}`, { kind: 'error', timeout: 6000 });
+  } finally {
+    state.busy = false;
+  }
+}
+
 async function startJob(file) {
   if (state.busy) return;
+
+  // MusicXML 走**本地解析**，不上传后端：用户可能直接从 MuseScore / Guitar Pro
+  // 导出了谱，不需要重新扒音频。解析失败时再退回「当音频上传」的原路径。
+  if (isMusicXMLFile(file)) {
+    await importMusicXML(file);
+    return;
+  }
+
   state.busy = true;
   dom['upload-modal'].hidden = false;
   ui.openModal(dom['upload-modal']);

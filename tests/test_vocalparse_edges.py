@@ -132,6 +132,50 @@ def test_intro_like_output_has_high_rest_ratio():
     assert rests / len(events) > 0.5, "前奏的主要事件应是休止"
 
 
+def test_intro_cross_validation_with_sheetsage2_label():
+    """交叉验证（评审提示 5）：前奏片段必须**同时**满足两侧证据。
+
+    真实观测：16s 前奏片段上 VocalParse 只解出 2 个音，而 SheetSage2 独立地
+    把同一段判为 ``intro``。若未来换模型或改解析器导致「前奏被误判成有人声」，
+    这条会立刻失败——比单看某一侧的音符数更可信。
+    """
+    from aitsm.contracts import AccompanimentResult, BeatGrid, KeySignature, Section
+    from aitsm.pipeline.accompaniment_stage import analysis_dicts
+
+    # ---- 左侧证据：VocalParse 解出的音符数 ----
+    events = V.parse_vocalparse_tokens(_INTRO_LIKE_OUTPUT)
+    notes = V.vocal_events_to_notes(events, None)
+    assert len(notes) < 5, f"前奏片段不应解出大量音符，实际 {len(notes)}"
+
+    # ---- 右侧证据：SheetSage2 把这段判为 intro ----
+    grid = BeatGrid(
+        bpm=93.75,
+        beats=[0.0, 0.64, 1.28, 1.92],
+        downbeats=[0.0, 2.56],
+        beats_per_bar=4,
+        time_signature="4/4",
+    )
+    result = AccompanimentResult(
+        beats=grid,
+        key=KeySignature(tonic="B", mode="minor"),
+        sections=[Section(start=0.0, end=16.0, kind="intro", label="intro")],
+    )
+    sections = analysis_dicts(result)["sections"]
+    assert [item["kind"] for item in sections] == ["intro"]
+
+
+def test_intro_threshold_can_distinguish_dense_audio():
+    """反向断言：密集人声输出必须**高于**前奏阈值。
+
+    防止上面的判据退化成恒真——如果两类输入都能通过 `<5`，那它就失去意义。
+    """
+    busy = "".join(f"<P_{60 + index}> <NOTE_8> " for index in range(6))
+    events = V.parse_vocalparse_tokens(busy)
+    notes = V.vocal_events_to_notes(events, None)
+    assert len(notes) >= 5, "密集片段应当解出多个音"
+    assert not (len(notes) < 5), "密集片段不应被当作前奏"
+
+
 # ---------------------------------------------------------------- CoT / 噪声（回归保护）
 
 

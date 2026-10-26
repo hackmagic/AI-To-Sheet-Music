@@ -9,7 +9,9 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
@@ -27,14 +29,49 @@ SUPPORTED_AUDIO = {".wav", ".mp3", ".flac", ".m4a", ".ogg", ".aac", ".opus", ".w
 SUPPORTED_VIDEO = {".mp4", ".mov", ".m4v", ".webm", ".mkv", ".avi", ".flv"}
 SUPPORTED = SUPPORTED_AUDIO | SUPPORTED_VIDEO
 
-app = FastAPI(title="AI-To-Sheet-Music", version=__version__)
+
+def _enforce_deployment_limits() -> None:
+    """启动时检查部署形态；**多 worker + 大模型直接拒绝启动**。
+
+    为什么必须强制而不只是 ``cli doctor`` 打印建议：VocalParse 是 2B 参数、常驻
+    约 8.5 GB，``uvicorn --workers 4`` 会各自加载一份 ≈ 34 GB，机器会被打爆，
+    而且表现为「跑到一半 OOM」这种极难定位的故障。宁可在启动时失败。
+
+    开关：``AITSM_ALLOW_MULTI_WORKER=1`` 可显式绕过（自担风险）。
+    """
+    from .deployment import check_deployment
+
+    result = check_deployment()
+    if result["ok"]:
+        return
+    if os.environ.get("AITSM_ALLOW_MULTI_WORKER", "").strip().lower() in {"1", "true", "yes"}:
+        import logging
+
+        logging.getLogger("aitsm").warning(
+            "多 worker 部署可能 OOM，但已按 AITSM_ALLOW_MULTI_WORKER 放行：%s",
+            result["message"],
+        )
+        return
+    raise RuntimeError(
+        "拒绝启动：" + str(result["message"]) +
+        "  （要强行启动请设 AITSM_ALLOW_MULTI_WORKER=1，但请自担 OOM 风险）"
+    )
+
+
+@asynccontextmanager
+async def _lifespan(_app: FastAPI):
+    """应用生命周期：启动时校验部署约束。"""
+    _enforce_deployment_limits()
+    yield
+
+
+app = FastAPI(title="AI-To-Sheet-Music", version=__version__, lifespan=_lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 SETTINGS.ensure_dirs()
 app.mount("/jobs", StaticFiles(directory=str(SETTINGS.work_root / "jobs")), name="jobs")
 # 示例谱面同时以静态路径暴露，方便前端在 /api 不可用时（纯静态托管）仍能加载

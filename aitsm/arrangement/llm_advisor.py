@@ -139,10 +139,14 @@ class AdvisorResult:
         return self.engine == "llm"
 
     def to_dict(self) -> dict[str, Any]:
+        # ``data`` 理论上总是 dict，但顾问层承诺「绝不抛异常」，
+        # 这里也必须兜住：非 Mapping 的资料一律降级成 {"raw": ...}，
+        # 否则 to_dict 会把异常抛到编配主流程。
+        payload = self.data if isinstance(self.data, Mapping) else {"raw": self.data}
         return {
             "engine": self.engine,
             "advisory": self.advisory,
-            "data": dict(self.data),
+            "data": dict(payload),
             "warnings": list(self.warnings),
             "error": self.error,
         }
@@ -233,13 +237,22 @@ def _parse_review(data: Mapping[str, Any]) -> dict[str, Any]:
         if isinstance(raw.get("suggestions", []), list)
         else []
     )
-    return {
+    result: dict[str, Any] = {
         "review": {
             "score": round(max(0.0, min(1.0, score)), 4),
             "issues": issues[:10],
             "suggestions": suggestions[:10],
         }
     }
+    # ``cost_adjustments`` 是「LLM → 调权重 → 重跑 DP」闭环的输入端
+    # （见 :mod:`aitsm.arrangement.replan`）。它不是常规评审字段，但**必须原样
+    # 透传**，否则闭环永远拿不到建议。合法性校验留给 replan.parse_adjustment。
+    adjustments = data.get("cost_adjustments")
+    if not isinstance(adjustments, Mapping):
+        adjustments = raw.get("cost_adjustments")
+    if isinstance(adjustments, Mapping):
+        result["cost_adjustments"] = dict(adjustments)
+    return result
 
 
 def _parse_sections(

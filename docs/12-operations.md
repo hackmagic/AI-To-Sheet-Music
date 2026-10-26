@@ -53,7 +53,7 @@ remap["lm_head.weight"] = remap["model.embed_tokens.weight"]  # tied
 | DuET | 0.6 GB |
 | 合计（含 2 GB 预留） | **约 16.9 GB** |
 
-### 硬约束：不要用多 worker
+### 硬约束：不要用多 worker（**启动时强制拦截**）
 
 ```bash
 # ✗ 会 OOM：4 个 worker × 16.9 GB ≈ 68 GB
@@ -63,15 +63,23 @@ uvicorn aitsm.api:app --workers 4
 python -m aitsm.cli serve --port 7863
 ```
 
-`aitsm/deployment.py` 把这条约束变成可执行检查：
+这条**不是建议，是运行时强制**。`aitsm/api.py` 的 lifespan 启动钩子会调
+`deployment.check_deployment()`，判定为不安全时**直接抛 `RuntimeError` 拒绝启动**：
 
 ```python
-from aitsm.deployment import check_deployment
-result = check_deployment()            # 读 WEB_CONCURRENCY 自动判断
-assert result["ok"], result["message"] # 多 worker + 大模型 → ok=False
+# aitsm/api.py
+@asynccontextmanager
+async def _lifespan(_app: FastAPI):
+    _enforce_deployment_limits()   # 多 worker + 大模型 → RuntimeError
+    yield
 ```
 
-`python -m aitsm.cli doctor` 会打印模型内存估算与部署建议。
+- 判定依据：`WEB_CONCURRENCY`（uvicorn `--workers` 会设它）+ 模型内存表；
+- 逃生开关：`AITSM_ALLOW_MULTI_WORKER=1` 可放行，但会记 warning，风险自担；
+- 验证：`tests/test_deployment_enforcement.py` 用真实 `WEB_CONCURRENCY=4` 断言启动钩子会抛。
+
+`python -m aitsm.cli doctor` 只是**再用人类可读的形式打印一遍**同样的结论
+（不强制，因为 doctor 不启动服务）。
 
 ### 需要横向扩展时
 

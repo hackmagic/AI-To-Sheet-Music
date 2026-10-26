@@ -199,11 +199,70 @@ max_candidates=8, weights=None, tuning=STANDARD_TUNING) -> ArrangementPlan`
 
 - 指法：DP 在候选把位 DAG 上求最短路，成本
   `position_shift 1.2 / hand_span 0.5 / open_string 0.15(奖励) / switch 0.8 / melody_cover 2.0(奖励)`，
-  不可演奏 `+25`；TART 适配器作为候选 rerank（本机为 `tart-heuristic`）。
+  不可演奏 `+25`。
 - 节奏型：按段落能量 + 拍号选模板；拍号不符的模板被拒绝并写
   `arrangement.strum_meter_mismatch`（12/8 不能被 4 拍模板覆盖）。
 - LLM：只返回结构化 JSON（`{"section","suggested_strumming","chord_substitutions":[{"original","suggested","reason"}]}`），
-  当候选池参与评分，不直接写谱；异常一律吞掉并回落 `rules`。
+  作为**候选池**参与评分，不直接写谱；异常一律吞掉并回落 `rules`。
+
+### 6.1 增强组件的实现边界（重要，勿误读）
+
+以下三件事**各自独立**，代码里没有任何继承或替代关系。写清楚是为了避免
+把「名字相似」误当成「用了那篇论文的实现」。
+
+| 组件 | 实际实现 | **不是**什么 |
+| --- | --- | --- |
+| `tart_rerank`（本机 `engine="tart-heuristic"`） | 确定性的启发式弦品重排：按手跨、空弦利用、把位连续性给候选打分 | **与 TART 论文的 AudioFret（audio-conditioned T5 编解码器）没有任何实现继承关系**。它不接收音频、不含 T5、不含任何学到的权重 |
+| TART 官方代码 | **截至检索（2026-10）未发布**：论文 arXiv 2609.11904、HF 无模型仓库、GitHub 搜不到对应仓库 | 不是「已存在但我们没接」。要接需等作者放出代码，接口已预留（`is_available()` / `rerank()`） |
+| `arrangement/playability.py` | **纯 numpy 移植 Noise2Fret 的五项损失公式**（音级距离 / 把位距离 / 五度圈距离 / 弦相似性 / 手跨可行性），来源 `RiccardoVib/Noise2Fret` 的 `AuxiliaryLoss.py` | **不依赖其扩散模型权重**。实测该仓库只有代码、没有 `.pt/.ckpt/.safetensors`，也没有外部权重链接。我们只取其数学公式，不加载任何模型 |
+
+因此：
+
+- `provenance.engine` 写 `tart-heuristic` 是**如实标注**，不是「已经用上了 TART」；
+- `playability.py` 可在**无任何模型权重**的机器上工作（这也是它能进 DP 成本的前提）；
+- 三者都不需要 GPU、不联网。
+
+### 6.2 LLM 顾问：已形成「评审 → 调权重 → 重解」闭环
+
+回路实现在 `arrangement/replan.py`，由 `decisions.build_plan` 在顾问调用之后接续：
+
+```text
+DP / TART 生成候选
+      ↓
+advisor.review_plan → 结构化 JSON（含 cost_adjustments）
+      ↓
+replan.apply_adjustment：new = base × (1 + clamp(adj) × 0.5)
+      ↓
+用新权重重跑 optimize_progression
+      ↓
+对比成本：更优才采纳，否则保留原方案
+```
+
+四条硬约束（都为了不让 LLM 变成不可控黑盒）：
+
+1. **只许调权重，不许指定弦品**——`cost_adjustments` 的键限定在
+   `position_shift / hand_span / open_string / switch / melody_cover`；
+   输出里带 `frets` / `voicing_id` 一律丢弃（有测试钉住）。
+2. **调整幅度封顶**：相对调整 `[-1, 1]` 映射到权重的 `[0.5×, 1.5×]`
+   （`MAX_WEIGHT_DELTA = 0.5`），且权重永远为正。
+3. **两条路径都跑、取成本更低者**：LLM 的建议只是候选。调权重后重解更差就
+   保留 DP 原结果，并在 `advisor_replan.warnings` 写明「建议未被采纳」。
+4. **离线完全不介入**：未配置 `AITSM_LLM_URL` 时 `advisor=None`，
+   `advisor_replan` 为 `null`，行为与之前逐字节一致。
+
+`ArrangementPlan.advisor_replan` 记录全过程，便于审计：
+
+```json
+{"applied": true, "source": "llm", "cost": 0.3912, "baseline_cost": 0.4333,
+ "weights": {"open_string": 0.225, ...}, "baseline_weights": {...},
+ "requested": {"open_string": 0.5}, "delta": {"open_string": 0.075}, "warnings": []}
+```
+
+采纳时 `plan.engines["fingering"]` 会变成 `dp+llm-weights`，从 provenance 就能看出
+「这次谱面的指法被大模型建议影响过」。
+
+> **`llm_advisor` 自己的 parser 也要配合**：`_parse_review` 现在会**原样透传**
+> `cost_adjustments`（它本来只保留 score/issues/suggestions，会把闭环的输入丢掉）。
 
 接入点（`score/arrange.py`）：`options.arrangement = "auto" | "off"`、`options.llm_advisor`；
 plan 命中不了的 `(start_sec, symbol)` 自动回退 v1 的 `_choose_voicing`，因此
@@ -222,6 +281,28 @@ chord_diagrams = {tuning, capo, voicings, bars[{index, chords[{beat,symbol,voici
 
 前端主渲染 VexFlow（Stave + TabStave + 歌词 + VexChords）；`web/js/abcjs-fallback.js`
 在 VexFlow 失败或只有 ABC 时兜底（懒加载 vendor 再 CDN，本地 3s / CDN 3.5s 超时）。
+
+### 7.1 直接导入 MusicXML（`web/js/musicxml.js`）
+
+用户可以把 MuseScore / Guitar Pro 导出的 `.musicxml` / `.xml` 拖进页面，
+**本地解析、不上传、不联网**，然后走与后端任务完全相同的渲染链路。
+
+为什么自己写而不是用 vexml / vexflow-musicxml：本仓库前端是**无构建步骤**的
+（原生 ES Module + 本地 vendor），离线环境也拉不到 npm 包；而浏览器自带
+`DOMParser`，目标格式（payload/score）又很窄，自己实现更稳且零新依赖。
+
+支持的子集（**不认识就跳过并记 warning，绝不猜**）：
+
+- `score-partwise`、`<attributes>`（divisions / key fifths / time / clef）；
+- `<measure>`、`<note>`（pitch / rest / chord / duration / voice / tie）；
+- `<lyric>`（text + syllabic）、`<harmony>`（含斜杠低音）、
+  `<direction><sound tempo>`、`<rehearsal>`（段落名）。
+
+明确不支持并会如实告警：`score-timewise` 布局、多 part（只取第一个）、
+装饰音（按 0 时值处理）、关系大小调歧义（调号只能推出同名大调）。
+
+解析结果落到 `score.source_format = "musicxml"`，`meta.warnings` 里带全部告警。
+测试：`node tests/web-musicxml.test.mjs`（17 条，含真实 `artifacts/score.musicxml` 回归）。
 
 同一份时间轴另存为独立的 `timing.json`（内容与 `payload.timing` 完全一致），
 播放器/第三方不必解析整个 payload：

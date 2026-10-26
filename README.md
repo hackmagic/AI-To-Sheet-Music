@@ -205,6 +205,8 @@ TART/Noise2Fret 的实测可用性见 [docs/12-operations.md](docs/12-operations
 ## 网页端能做什么
 
 - 五线谱主旋律 + 逐字歌词 + 和弦符号 + 行首和弦指法图 + 可选 TAB 谱表
+- **可直接拖入 MusicXML**（MuseScore / Guitar Pro 导出）：本地解析，不上传、不联网；
+  不支持的布局/多 part/装饰音会如实列在告警里
 - **手工修正**：点任何和弦就能改（调内 I–IV–V/vi/ii 快选 + 拍位 + 指法库校验），点歌词直接改字，点小节号可插入/删除小节、改拍号；60 步撤销重做；修正处打标记，导出时可选「干净版」去掉编辑痕迹
 - 播放：内置合成器（旋律 + 扫弦 + 节拍器），光标跟随、小节点击跳转、循环当前段落、0.5×–1.2× 变速
 - 有原曲音频时切换「原曲」模式，乐谱光标跟着原曲走
@@ -336,9 +338,10 @@ skill 会把整条管线跑在**独立子进程**里（避免 torch/whisper 影�
 ## 测试
 
 ```bash
-.venv/Scripts/python -m pytest tests/ -q   # 921 条（1 skipped）：管线、v2 四层适配器、metrics、编配、导出、service、基准
+.venv/Scripts/python -m pytest tests/ -q   # 958 条（1 skipped）：管线、v2 四层适配器、编配闭环、导出、service、基准
 node tests/web-editor.test.mjs             # 34 条：编辑器纯数据层（独立历史、撤销/重做、段落重编号）
 node tests/web-payload.test.mjs            # 12 条：payload 归一化、时间轴覆盖、ABC 优先级、指法图索引
+node tests/web-musicxml.test.mjs           # 17 条：MusicXML 本地解析、拒绝不支持格式、真实谱回归
 ```
 
 覆盖：和弦符号解析与等音、指法生成合法性、调性/移调矩阵、小节量化与延音、
