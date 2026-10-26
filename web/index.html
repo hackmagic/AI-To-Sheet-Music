@@ -198,7 +198,16 @@
             <option value="advanced">高阶</option>
           </select>
         </label>
+        <label class="ctl ctl--select" title="推理设备：GPU 快很多，但需要 CUDA 版 torch">
+          <span class="ctl__label">设备</span>
+          <select id="opt-device" aria-label="推理设备">
+            <option value="auto" selected>自动</option>
+            <option value="cpu">CPU</option>
+            <option value="cuda">GPU</option>
+          </select>
+        </label>
       </div>
+      <p class="upload-device-note" id="device-note" hidden></p>
 
       <div class="upload-progress" id="upload-progress" hidden>
         <ol class="stages" id="stages">

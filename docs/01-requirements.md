@@ -1,5 +1,11 @@
 # 需求分解（v1 · 自弹自唱吉他谱）
 
+> **v2 已把「转录」与「编配」拆成两层**：转录层换用四个专用模型
+> （htdemucs_ft / VocalParse / SheetSage2 / DuET），编配层只吃符号、不碰音频。
+> 本文的需求范围（要做成什么样的谱、质量红线）**没有变**，变的是实现路径。
+> 分层细节见 [`11-v2-pipeline.md`](11-v2-pipeline.md)，实测质量见
+> [`13-demo-quality.md`](13-demo-quality.md)。
+
 ## 0. 产品一句话
 
 输入一个音乐文件（mp3/wav/flac/m4a，或 mp4 等视频），AI 自动扒谱，在浏览器里产出**可直接照着自弹自唱的中文弹唱谱**：人声主旋律 + 逐字歌词 + 和弦符号 + 吉他指法图 + 节奏型/伴奏，并支持移调、变调夹、跟原曲同步播放、导出 MusicXML/MIDI/PDF。
@@ -18,7 +24,7 @@
 | Web 工作台形态（上传→分析→展示） | AI-ChordCraft `app.py`, `frontend/` | 参考交互与接口形态，重写 UI 为乐谱优先 |
 | 紧凑谱面事件模型 + 确定性记谱编译 | To-Sheet-Music-Skill `references/score-events.md`, `scripts/score_events.py` | 借鉴“只维护 JSON、渲染器确定性生成”的架构；本项目的渲染目标是浏览器而非 MuseScore |
 | 分轨缓存与 manifest 证据纪律 | `scripts/separate_audio.py`, `references/separation.md` | 移植 manifest + 输入哈希缓存 |
-| 可演奏性/TAB 弦品规划 | `scripts/score_events.py`（DP 弦品选择） | 简化版：吉他单音段弦品 DP，和弦用指法库 |
+| 可演奏性/TAB 弦品规划 | To-Sheet-Music-Skill `scripts/score_events.py`（DP 弦品选择） | v2 已落实为 `aitsm/arrangement/fingering_dp.py`（全局最优 DP，五项成本）+ `tart_rerank.py`（重排）；可演奏性度量见 `arrangement/playability.py`（Noise2Fret 五项损失移植） |
 | 质量网关与证据记录 | `references/notation-and-qa.md`, `scripts/*_audit.py` | 转成 `aitsm/score/validate.py` 报告 + 前端告警展示 |
 
 不照搬的部分：MOSS-Music / SongFormer / essentia / plkd-acr 等需要额外大模型或私有运行时；参考项目的五件乐队总谱与 MuseScore 导出链（本项目第一版不依赖 MuseScore 安装，直接浏览器渲染 + 可选 MusicXML）。

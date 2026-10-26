@@ -131,6 +131,20 @@ export class ApiClient {
     return res.json();
   }
 
+  /**
+   * 渲染 payload（aitsm.payload/v1：MusicXML + ABC + timing + 指法图）。
+   * 老后端/未生成时返回 null，前端退回 score.json 自带字段。
+   */
+  async getPayload(id, { signal = null } = {}) {
+    try {
+      const res = await this._request(`/jobs/${encodeURIComponent(id)}/payload`, { signal, timeout: 30000 });
+      return res.json();
+    } catch (err) {
+      if (err instanceof ApiError && (err.status === 404 || err.status === 409)) return null;
+      throw err;
+    }
+  }
+
   async cancelJob(id) {
     try {
       await this._request(`/jobs/${encodeURIComponent(id)}`, { method: 'DELETE', timeout: 8000 });

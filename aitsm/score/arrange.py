@@ -53,6 +53,10 @@ DEFAULT_OPTIONS: dict[str, Any] = {
     "transpose": 0,
     "include_tab": True,
     "instrument": "guitar",
+    # v2 编配层：auto=可用即参与，off=回退旧的选指法路径
+    "arrangement": "auto",
+    # 大模型只做审查/建议，默认关闭；也可用 AITSM_LLM_ADVISOR=1 开启
+    "llm_advisor": False,
 }
 
 #: 吉他友好的大调主音（按常用程度排序）：C G D A E F Bb
@@ -498,11 +502,15 @@ def _map_chords(
     prefer_flats: bool,
     difficulty: str,
     warnings: list[dict],
+    arrangement_choices: dict[tuple[float, str], dict] | None = None,
 ) -> tuple[dict[int, list[dict]], dict[str, dict], float]:
     """和弦事件 -> 每小节 ``chords[]``（键为 1 起的小节号）。
 
     跨小节的长和弦会在经过的每个小节各生成一条记录（``beat=0`` 表示延续），
     这样前端按小节渲染时不会出现"和弦消失"的空档。
+
+    ``arrangement_choices`` 为 v2 编配层选出的指法（键 ``(起点秒, 演奏调符号)``）；
+    命中时优先使用 DP 结果，否则回退到本文件按难度/平滑度选指法。
     """
     events = [dict(item) for item in (analysis.get("chords") or []) if item.get("symbol")]
     events = _sec_sort(events)
@@ -525,7 +533,13 @@ def _map_chords(
         end_beat = grid.sec_to_beat(end_sec)
         start_bar_index = _bar_at(bars, start_sec, grid)
 
-        voicing = _choose_voicing(symbol, difficulty, previous_voicing)
+        voicing = None
+        if arrangement_choices:
+            chosen = arrangement_choices.get((round(start_sec, 4), symbol))
+            if chosen is not None:
+                voicing = _voicing_from_choice(chosen, symbol, difficulty)
+        if voicing is None:
+            voicing = _choose_voicing(symbol, difficulty, previous_voicing)
         if voicing is not None:
             previous_voicing = voicing
             voicings[voicing["id"]] = _public_voicing(voicing)
@@ -1342,6 +1356,279 @@ def _section_for_bar(sections: Sequence[dict], bar_number: int) -> dict | None:
 
 
 # --------------------------------------------------------------------------
+# 5) v2 编配层（纯符号决策）：DP 指法 / TART 重排 / 节奏型规则 / 大模型顾问
+#
+# 这一层只吃「演奏调」的和弦符号与旋律 MIDI（都不含音频），输出决策；
+# 本文件负责把决策落进 score.json。任何环节不可用都只降级，旧路径照常出谱。
+# --------------------------------------------------------------------------
+
+#: ``options["arrangement"]`` 取这些值时关闭 v2 编配层
+_ARRANGEMENT_OFF = frozenset({"off", "none", "false", "0", "no", "disabled"})
+
+#: 大模型顾问默认关闭；显式 ``options["llm_advisor"]=True`` 或环境变量开启
+_LLM_ADVISOR_ENV = "AITSM_LLM_ADVISOR"
+
+
+def _arrangement_enabled(options: dict) -> bool:
+    return str(options.get("arrangement") or "auto").strip().lower() not in _ARRANGEMENT_OFF
+
+
+def _llm_advisor_enabled(options: dict) -> bool:
+    flag = options.get("llm_advisor")
+    if isinstance(flag, bool):
+        return flag
+    value = str(os.environ.get(_LLM_ADVISOR_ENV, "")).strip().lower()
+    return value in {"1", "true", "yes", "on"}
+
+
+def _play_chord_summary(analysis: dict, *, delta: int, prefer_flats: bool) -> list[dict]:
+    """analysis 和弦事件 -> 演奏调（play key）的纯数据摘要，喂给编配层。"""
+    result: list[dict] = []
+    events = _sec_sort([dict(item) for item in (analysis.get("chords") or []) if item.get("symbol")])
+    for event in events:
+        start = _number(event.get("start"))
+        end = max(_number(event.get("end"), start + 1.0), start + 0.05)
+        result.append(
+            {
+                "start": round(start, 4),
+                "end": round(end, 4),
+                "symbol": _transpose_symbol(str(event["symbol"]), delta, prefer_flats=prefer_flats),
+                "confidence": _number(event.get("confidence"), 0.5),
+            }
+        )
+    return result
+
+
+def _play_melody_summary(analysis: dict, *, midi_delta: int) -> list[dict]:
+    """analysis 旋律 -> 演奏调 MIDI（纯移调，不做时值量化）。"""
+    notes: list[dict] = []
+    for note in (analysis.get("melody") or {}).get("notes") or []:
+        midi = note.get("midi")
+        if midi is None:
+            continue
+        start = _number(note.get("start"))
+        notes.append(
+            {
+                "start": round(start, 4),
+                "end": round(max(_number(note.get("end"), start + 0.1), start + 0.01), 4),
+                "midi": int(midi) + midi_delta,
+                "confidence": _number(note.get("confidence"), 0.5),
+                "lyric": note.get("lyric"),
+            }
+        )
+    return notes
+
+
+def _arrangement_summary(
+    analysis: dict,
+    options: dict,
+    *,
+    delta: int,
+    prefer_flats: bool,
+    midi_delta: int,
+) -> dict:
+    """构造 ``ArrangementPlan`` 的输入摘要（不含 audio/stems 路径）。"""
+    beats_info = analysis.get("beats") or {}
+    key_info = analysis.get("key") or {}
+    return {
+        "chords": _play_chord_summary(analysis, delta=delta, prefer_flats=prefer_flats),
+        "melody": _play_melody_summary(analysis, midi_delta=midi_delta),
+        "sections": [dict(item) for item in (analysis.get("sections") or []) if item.get("kind")],
+        "key": {
+            "tonic": str(key_info.get("tonic") or "C"),
+            "mode": str(key_info.get("mode") or "major"),
+            "confidence": _number(key_info.get("confidence"), 0.5),
+        },
+        "meta": {
+            "bpm": _number(beats_info.get("bpm_display") or beats_info.get("bpm"), 90.0),
+            "time_signature": str(beats_info.get("time_signature") or "4/4"),
+            "style": str(options.get("style") or "pop"),
+            "difficulty": str(options.get("difficulty") or "intermediate"),
+        },
+    }
+
+
+def _build_arrangement_plan(
+    analysis: dict,
+    options: dict,
+    *,
+    delta: int,
+    prefer_flats: bool,
+    midi_delta: int,
+    warnings: list[dict],
+) -> Any:
+    """运行 v2 编配层；不可用/出错都退化为「不参与」，旧路径保持可用。"""
+    if not _arrangement_enabled(options):
+        warnings.append(
+            {
+                "level": "info",
+                "code": "arrangement.disabled",
+                "message": "按配置关闭 v2 编配决策层（arrangement=off），使用旧选指法路径",
+                "stage": "arrangement",
+            }
+        )
+        return None
+    try:
+        from ..arrangement.decisions import build_plan
+    except Exception as exc:  # noqa: BLE001 - 新层缺失不能拖垮出谱
+        warnings.append(
+            {
+                "level": "info",
+                "code": "arrangement.unavailable",
+                "message": f"v2 编配层不可用（{type(exc).__name__}: {exc}），使用旧选指法路径",
+                "stage": "arrangement",
+            }
+        )
+        return None
+
+    advisor = None
+    if _llm_advisor_enabled(options):
+        try:
+            from ..arrangement.llm_advisor import LLMAdvisor
+
+            advisor = LLMAdvisor()
+        except Exception as exc:  # noqa: BLE001
+            warnings.append(
+                {
+                    "level": "info",
+                    "code": "arrangement.advisor_unavailable",
+                    "message": f"大模型顾问不可用（{type(exc).__name__}: {exc}），仅用规则建议",
+                    "stage": "arrangement",
+                }
+            )
+    try:
+        plan = build_plan(
+            _arrangement_summary(
+                analysis, options, delta=delta, prefer_flats=prefer_flats, midi_delta=midi_delta
+            ),
+            options=options,
+            advisor=advisor,
+        )
+    except Exception as exc:  # noqa: BLE001
+        warnings.append(
+            {
+                "level": "warn",
+                "code": "arrangement.failed",
+                "message": f"v2 编配决策失败（{type(exc).__name__}: {exc}），已回退旧选指法",
+                "stage": "arrangement",
+            }
+        )
+        return None
+    for message in list(getattr(plan, "warnings", []) or []):
+        warnings.append(
+            {
+                "level": "info",
+                "code": "arrangement.decision",
+                "message": str(message),
+                "stage": "arrangement",
+            }
+        )
+    return plan
+
+
+def _choices_by_position(plan: Any) -> dict[tuple[float, str], dict]:
+    """按 (起点秒, 演奏调符号) 索引 DP 选出的指法，供 _map_chords 覆盖。"""
+    choices: dict[tuple[float, str], dict] = {}
+    if plan is None:
+        return choices
+    for choice in getattr(plan, "choices", []) or []:
+        data = choice.to_dict() if hasattr(choice, "to_dict") else dict(choice)
+        try:
+            key = (round(float(data["start"]), 4), str(data["symbol"]))
+        except (KeyError, TypeError, ValueError):
+            continue
+        choices[key] = data
+    return choices
+
+
+def _voicing_from_choice(data: dict, symbol: str, difficulty: str) -> dict | None:
+    """把编配层的决策转成 voicing 字典；数据不合法时返回 None（保留旧选法）。"""
+    frets = [int(item) for item in (data.get("frets") or [])]
+    if len(frets) != 6 or any(fret < -1 or fret > 24 for fret in frets):
+        return None
+    fallback_id = f"{symbol}_{''.join('x' if fret < 0 else str(fret) for fret in frets)}"
+    return {
+        "id": str(data.get("voicing_id") or fallback_id),
+        "symbol": symbol,
+        "frets": frets,
+        "base_fret": max(0, int(data.get("base_fret") or 0)),
+        "barres": list(data.get("barres") or []),
+        "difficulty": max(
+            1,
+            min(5, int(data.get("difficulty") or _VOICING_DIFFICULTY.get(difficulty, 3))),
+        ),
+        "label": f"{symbol} · 编配 DP",
+        "source": "arrangement",
+    }
+
+
+def _apply_plan_strumming(
+    plan: Any,
+    sections: Sequence[dict],
+    warnings: list[dict],
+    *,
+    beats_per_bar: int | None = None,
+) -> int:
+    """把节奏型建议落到 score.sections；只接受库内且拍号匹配的 pattern_id。"""
+    applied = 0
+    for decision in getattr(plan, "strumming", []) or []:
+        data = decision.to_dict() if hasattr(decision, "to_dict") else dict(decision)
+        pattern_id = str(data.get("pattern_id") or "")
+        if not pattern_id:
+            continue
+        pattern = strum_lib.get_pattern(pattern_id)
+        if pattern is None:
+            warnings.append(
+                {
+                    "level": "info",
+                    "code": "arrangement.strum_unknown",
+                    "message": f"编配层建议的节奏型 {pattern_id!r} 不在节奏型库中，已忽略",
+                    "stage": "arrangement",
+                }
+            )
+            continue
+        expected = int(beats_per_bar) if beats_per_bar else None
+        if expected is not None and pattern.get("beats_per_bar") not in (None, expected):
+            # 复合拍（12/8 等）必须用同拍号的节奏型，否则打不出正确时值
+            warnings.append(
+                {
+                    "level": "info",
+                    "code": "arrangement.strum_meter_mismatch",
+                    "message": (
+                        f"编配层建议的节奏型 {pattern_id!r} 是 "
+                        f"{pattern.get('beats_per_bar')} 拍，与本曲 {expected} 拍不符，已保留原节奏型"
+                    ),
+                    "stage": "arrangement",
+                }
+            )
+            continue
+        target = _nearest_section(sections, data.get("section") or {})
+        if target is None or target.get("pattern_id") == pattern_id:
+            continue
+        target["pattern_id"] = pattern_id
+        target["pattern_source"] = "arrangement"
+        applied += 1
+    return applied
+
+
+def _nearest_section(sections: Sequence[dict], section: dict) -> dict | None:
+    """按 kind 优先、起点最近匹配 score 的段落。"""
+    if not sections:
+        return None
+    kind = str((section or {}).get("kind") or "").lower()
+    start = _number((section or {}).get("start"))
+    candidates = [item for item in sections if str(item.get("kind") or "") == kind] or list(sections)
+    return min(candidates, key=lambda item: abs(_number(item.get("start_sec")) - start))
+
+
+def _arrangement_payload(plan: Any, *, voicings_applied: int, strumming_applied: int) -> dict:
+    """score["arrangement"]：决策全量透明化，便于审查与回归。"""
+    payload = plan.to_dict() if hasattr(plan, "to_dict") else dict(plan)
+    payload["applied"] = {"voicings": int(voicings_applied), "strumming": int(strumming_applied)}
+    return payload
+
+
+# --------------------------------------------------------------------------
 # 主入口
 # --------------------------------------------------------------------------
 
@@ -1432,6 +1719,16 @@ def arrange(analysis: dict, options: dict | None = None) -> dict:
     difficulty = str(options.get("difficulty") or "intermediate").lower()
     if difficulty not in _DIFFICULTY_PREFER:
         difficulty = "intermediate"
+    # v2 编配层：先决策（纯符号），再把 DP 指法落进 _map_chords
+    arrangement_plan = _build_arrangement_plan(
+        analysis,
+        options,
+        delta=delta,
+        prefer_flats=prefer_flats,
+        midi_delta=midi_delta,
+        warnings=warnings,
+    )
+    arrangement_choices = _choices_by_position(arrangement_plan)
     bar_chords, voicings, chord_conf = _map_chords(
         analysis,
         bars,
@@ -1441,6 +1738,7 @@ def arrange(analysis: dict, options: dict | None = None) -> dict:
         prefer_flats=prefer_flats,
         difficulty=difficulty,
         warnings=warnings,
+        arrangement_choices=arrangement_choices,
     )
     bar_vocals, melody_stats = _map_melody(
         analysis, bars, grid, midi_delta=midi_delta, warnings=warnings
@@ -1455,6 +1753,11 @@ def arrange(analysis: dict, options: dict | None = None) -> dict:
         "beats_per_bar": bpb,
     }
     sections = _map_sections(analysis, bars, grid, meta_for_pattern, warnings)
+    strumming_applied = 0
+    if arrangement_plan is not None:
+        strumming_applied = _apply_plan_strumming(
+            arrangement_plan, sections, warnings, beats_per_bar=bpb
+        )
 
     # ---- 组装小节 ----
     include_tab = bool(options.get("include_tab", True))
@@ -1619,6 +1922,21 @@ def arrange(analysis: dict, options: dict | None = None) -> dict:
             "warnings": warnings,
         },
     }
+    # v2 编配层：决策全量透明化（技术审查 / 回归对比 / 前端可展示）
+    if arrangement_plan is not None:
+        voicings_applied = sum(
+            1 for item in voicings.values() if str(item.get("label") or "").endswith("编配 DP")
+        )
+        score["arrangement"] = _arrangement_payload(
+            arrangement_plan,
+            voicings_applied=voicings_applied,
+            strumming_applied=strumming_applied,
+        )
+        engines = score["meta"]["generator"]["engines"]
+        for key, value in dict(score["arrangement"].get("engines") or {}).items():
+            engines[key] = str(value)
+        advisor = score["arrangement"].get("advisor") or {}
+        engines["advisor"] = str(advisor.get("engine") or "off")
     # meta.warnings 保留 error 级（schema 允许两处都写）
     score["meta"]["warnings"] = [item for item in warnings if item.get("level") == "error"]
     return _json_safe(score)

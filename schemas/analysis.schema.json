@@ -35,7 +35,7 @@
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "engine": { "enum": ["demucs", "demucs-6s", "fallback", "none"] },
+        "engine": { "enum": ["demucs", "demucs-6s", "demucs-onnx", "demucs-fallback", "fallback", "none"] },
         "device": { "type": "string" },
         "vocals": { "type": ["string", "null"] },
         "drums": { "type": ["string", "null"] },

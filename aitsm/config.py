@@ -45,6 +45,66 @@ def _env_bool(name: str, default: bool) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _temp_dir_is_writable() -> bool:
+    """当前 ``tempfile`` 选中的临时目录是否真的可写。
+
+    只探测、不创建残留文件。沙箱环境里 Python 会逐个试
+    ``%TEMP%`` / ``%WINDOWS%\\Temp`` / ``c:\\temp``，全部不可写时**回退到当前工作目录**
+    —— 那正是项目根目录被堆满 ``pip-build-tracker-*`` / ``pip-install-*`` 的原因。
+    """
+    import tempfile
+
+    try:
+        directory = Path(tempfile.gettempdir())
+    except Exception:  # pragma: no cover
+        return False
+    probe = directory / ".aitsm-write-probe"
+    try:
+        directory.mkdir(parents=True, exist_ok=True)
+        probe.write_text("", encoding="utf-8")
+    except OSError:
+        return False
+    finally:
+        try:
+            probe.unlink(missing_ok=True)
+        except OSError:
+            pass
+    try:
+        # 回退到 cwd 时 gettempdir() 就是工作目录本身，判为不可用
+        return directory.resolve() != Path.cwd().resolve()
+    except OSError:  # pragma: no cover
+        return True
+
+
+def _redirect_temp_dir(root: Path) -> Path | None:
+    """把 ``TEMP`` / ``TMP`` / ``TMPDIR`` 重定向到工作区缓存目录。
+
+    为什么要做：Python 的 ``tempfile`` 在所有候选系统临时目录都不可写时，
+    **会静默回退到当前工作目录**。pip 于是把 ``pip-build-tracker-*`` /
+    ``pip-install-*`` / ``pip-ephem-wheel-cache-*`` 直接建在项目根，
+    一次装依赖能留下上百个目录（本机实测 306 个 / 165 MB）。
+
+    只在该回退**真的发生**时才重定向，避免覆盖用户正常的系统临时目录。
+    """
+    if _temp_dir_is_writable():
+        return None
+    target = root / "tmp"
+    try:
+        target.mkdir(parents=True, exist_ok=True)
+    except OSError:  # pragma: no cover - 只读工作区
+        return None
+    for env_name in ("TEMP", "TMP", "TMPDIR"):
+        os.environ[env_name] = str(target)
+    # tempfile 会缓存首次解析结果，必须清掉才会用新环境变量
+    try:
+        import tempfile
+
+        tempfile.tempdir = None
+    except Exception:  # pragma: no cover
+        pass
+    return target
+
+
 def prepare_cache_dirs(work_root: Path | None = None) -> Path:
     """把第三方库的缓存目录重定向到工作区。
 
@@ -77,6 +137,9 @@ def prepare_cache_dirs(work_root: Path | None = None) -> Path:
     os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
     # Xet 存储后端在本机会返回 401（CAS 重建鉴权失败），必须回退到普通 HTTP 下载
     os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
+    # 系统临时目录不可写时（沙箱常见），Python 会回退到工作目录 →
+    # pip 的 pip-build-tracker-* / pip-install-* 会堆在项目根
+    _redirect_temp_dir(root)
     return root
 
 

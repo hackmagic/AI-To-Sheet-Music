@@ -1,7 +1,13 @@
-# 端到端验收记录
+# 端到端验收记录（v1 内核）
 
 本文件记录本项目的实际验收数据，用于确认「音频 → 弹唱谱」全链路可用性与已知限制。
 所有数字均来自本机实测（Windows 11 / Python 3.12.8 / RTX 4060 Laptop 8GB 但 **全程未使用 GPU**）。
+
+> **本文是 v1 内核（whisper + pyin + chroma）的验收记录。**
+> v2 换用四个专用模型后的整曲实测（拍号/段落修复、76 分钟 CPU 耗时）见
+> [`13-demo-quality.md`](13-demo-quality.md)；分层架构与降级矩阵见 [`11-v2-pipeline.md`](11-v2-pipeline.md)。
+>
+> 两个口径不冲突：**v1 内核现在是 v2 的降级路径**——专用模型不可用时仍按本文表现运行。
 
 最后一次完整运行：`work/accept-v2`（交付用的 `artifacts/` 由它复制而来），
 配置为默认配置（`--whisper-model medium`、分轨 + 歌词 + 旋律），**冷启动**。
@@ -262,6 +268,21 @@ BPM 判定 67.0（`beats.tempo_octave` 把 136 → 68 的半拍修正），调�
 | 打印（A4） | ✅ 逐页 PDF，中文无 tofu |
 
 截图：`work/shots/medium-score.png`、`work/shots/medium-lyrics.png`
+
+### v2 payload 链路（真实任务 + playwright 实测）
+
+14 s 真实片段（`work/e2e-clip.wav`，取自 229 s 的《第一站 Beyond This Station》20–34 s）
+走 `serve` → `POST /api/jobs` → 页面 `?job=<id>`：
+
+| 检查项 | 结果 |
+| --- | --- |
+| payload 到达前端 | ✅ `window.__aitsm.payload` 非空，时间轴 6 小节 |
+| 视图时间轴被覆盖 | ✅ `bars[0].start_sec`、`bars[1].start_sec` 与 `payload.timing` 一致 |
+| 渲染 | ✅ 2 个 system / 6 个可点小节 / **0 console error** |
+| 播放时长 | ✅ 14 s，与音频一致 |
+| 新端点 | ✅ `/payload` 200、`/timing` 200、`/export/timing` 200 |
+
+截图：`work/e2e-payload-page.png`（当前演示模型不支持看图，文件留给人工复核）。
 
 ## 已知问题（诚实记录）
 

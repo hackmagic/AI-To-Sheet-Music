@@ -3,16 +3,34 @@
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
+
+# pip 的临时目录。正常情况它们在系统 %TEMP%，但**当系统临时目录不可写时**
+# Python 的 tempfile 会静默回退到当前工作目录，pip 就把这些建在项目根
+# （本机实测一次装依赖留下 306 个 / 165MB）。根因已在 aitsm/config.py 的
+# _redirect_temp_dir() 修掉，这里只是兜底。
 pip-*/
 pip-build-*/
+pip-build-tracker-*/
+pip-build-env-*/
 pip-install-*/
 pip-unpack-*/
-*.egg-info/
+pip-download-*/
+pip-metadata-*/
+pip-ephem-wheel-cache-*/
+pip-venv-*/
+
+# mkdtemp 生成的通用临时目录（8 位随机后缀）
+tmp????????/
 
 # Runtime artifacts
 work/
 .cache/
 web/voicings.json.tmp
+
+# 模型权重与第三方源码（体积大，用 scripts/fetch_models.py 获取）
+models/
+vendor/
 
 # 测试/探针遗留（应在源头用 tmp_path 清理，这里兜底）
 aitsm-probe-*/
@@ -30,3 +48,6 @@ Thumbs.db
 
 # CodeGraph 本地索引
 .codegraph/
+
+# 整曲 demo 运行产物（体积大，用 work/demo_full_song.py 本地生成）
+artifacts/demo-full/

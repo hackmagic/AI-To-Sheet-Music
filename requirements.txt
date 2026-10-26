@@ -19,3 +19,24 @@ zhconv>=1.4
 #   .venv/Scripts/python -m pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
 demucs
 openai-whisper
+
+# ---- v2 专用模型依赖 ----
+# SheetSage2 的权重按 transformers 4.45.2 导出，5.x 因 BartDecoder 签名变化加载失败；
+# VocalParse 的 checkpoint 是 Qwen3-ASR Thinker 结构，在 4.57.6 上实测可用。
+# 因此这里**必须**锁 4.57.6。
+transformers==4.57.6
+
+# VocalParse 的建模代码不在 transformers 里，由 qwen-asr 分发。
+# 仍是 0.0.x（API 会变），**必须精确 pin**；路径变化由
+# aitsm/transcribe/qwen_backend.py 的探测兜住。
+# 注意：该包 __init__ 会连带要 nagisa/gradio，本仓库按文件路径只加载三个建模
+# 子模块，因此**不需要**装那两个推理封装依赖。
+qwen-asr==0.0.6
+
+# MIDI / 乐谱处理
+mido>=1.3,<2
+pretty_midi>=0.2.10
+safetensors>=0.4
+
+# 可选：SheetSage2 和弦表示需要（缺失时适配器给出明确告警而不是崩）
+mir_eval>=0.8

@@ -137,6 +137,108 @@ def _normalize_options(options: dict[str, Any]) -> dict[str, Any]:
     return opts
 
 
+def _symbolic_payload(analysis: dict[str, Any], out_dir: Path) -> dict[str, Any] | None:
+    """取 v2 符号契约（symbolic.json）；文件缺失时从 analysis 现场重建。
+
+    渲染层（``aitsm.render.payload``）只吃符号数据，因此这里是转录层与渲染层
+    之间的唯一衔接点：先找 pipeline 落盘的 symbolic.json（含 provenance /
+    量化后的时值），找不到再退回 ``SymbolicScore.from_analysis``。
+    """
+    symbolic_info = analysis.get("symbolic") or {}
+    candidates: list[Path] = []
+    paths = symbolic_info.get("paths") if isinstance(symbolic_info, dict) else None
+    if isinstance(paths, dict) and paths.get("json"):
+        candidates.append(Path(paths["json"]))
+    candidates.append(out_dir / "symbolic.json")
+    for candidate in candidates:
+        if candidate.is_file():
+            try:
+                return _read_json(candidate)
+            except (OSError, json.JSONDecodeError):
+                continue
+    try:
+        from .contracts import SymbolicScore
+
+        return SymbolicScore.from_analysis(analysis).to_dict()
+    except Exception:  # noqa: BLE001 - 符号契约不可用不应阻断交付
+        return None
+
+
+def _abc_fallback(
+    symbolic: dict[str, Any] | None, score: dict[str, Any]
+) -> str | None:
+    """ABC 兜底文本：优先用符号契约（SheetSage2 原生风格），退而用成品 score。"""
+    try:
+        from .render.abc import write_abc
+    except Exception:  # noqa: BLE001 - 渲染层缺失时只是没有兜底
+        return None
+    for source in (symbolic, score):
+        if not source:
+            continue
+        try:
+            abc = write_abc(source)
+        except Exception:  # noqa: BLE001
+            continue
+        if abc:
+            return abc
+    return None
+
+
+def _score_with_musicxml(
+    score: dict[str, Any], out_dir: Path
+) -> dict[str, Any]:
+    """渲染层要 MusicXML 文本：优先复用已导出文件，缺失时现场渲染一次。
+
+    导出阶段（第 4 步）已经把 ``score.musicxml`` 写进任务目录，正常路径下
+    这里只是读盘；单测/局部调用时没有文件，才退回 ``export_musicxml``。
+    """
+    if score.get("musicxml"):
+        return score
+    for candidate in (out_dir / "score.musicxml", out_dir / "symbolic.musicxml"):
+        if candidate.is_file():
+            try:
+                text = candidate.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            if text.strip():
+                data = dict(score)
+                data["musicxml"] = text
+                return data
+    try:
+        import tempfile
+
+        from .score.export.musicxml import export_musicxml
+
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "score.musicxml"
+            export_musicxml(score, target)
+            text = target.read_text(encoding="utf-8")
+        data = dict(score)
+        data["musicxml"] = text
+        return data
+    except Exception:  # noqa: BLE001
+        return score
+
+
+def build_render_payload(
+    analysis: dict[str, Any],
+    score: dict[str, Any],
+    out_dir: Path | str,
+) -> dict[str, Any]:
+    """组装前端渲染 payload（MusicXML + ABC + timing + 指法图）。"""
+    from .render.payload import build_payload
+
+    out_dir = Path(out_dir)
+    symbolic = _symbolic_payload(analysis, out_dir)
+    audio_url = ((score.get("meta") or {}).get("source") or {}).get("audio_url")
+    return build_payload(
+        _score_with_musicxml(score, out_dir),
+        symbolic=symbolic,
+        audio_url=audio_url if isinstance(audio_url, str) and audio_url else None,
+        abc=_abc_fallback(symbolic, score),
+    )
+
+
 def run_job(
     *,
     source_path: Path,
@@ -151,7 +253,7 @@ def run_job(
 
         {
           "analysis_path": str, "score_path": str, "manifest_path": str,
-          "exports": {"musicxml": str, "midi": str, "json": str},
+          "exports": {"musicxml": str, "midi": str, "json": str, "payload": str},
           "warnings": [...], "stats": {...}
         }
     """
@@ -297,6 +399,26 @@ def run_job(
         )
     manifest["stages"]["export"] = {"outputs": exports, "errors": export_errors}
 
+    # ---- 4.5) 渲染 payload（VexFlow 主渲染 / abcjs 兜底共用一份数据） ----
+    emit("validating", 70.0, "生成渲染 payload")
+    try:
+        payload = build_render_payload(analysis, score, out_dir)
+        exports["payload"] = _write_json(out_dir / "payload.json", payload)
+        # 单独落一份 timing.json：文档约定「同步播放消费 timing.json」，
+        # 播放器/第三方不解析整个 payload 也能拿到绝对时间轴。
+        timing = payload.get("timing") if isinstance(payload, dict) else None
+        if isinstance(timing, dict) and timing:
+            exports["timing"] = _write_json(out_dir / "timing.json", timing)
+    except Exception as exc:  # noqa: BLE001 - payload 失败不影响 MusicXML/MIDI 主交付
+        note(
+            {
+                "level": "warn",
+                "code": "payload.failed",
+                "message": f"渲染 payload 生成失败：{type(exc).__name__}: {exc}",
+                "stage": "validating",
+            }
+        )
+
     # ---- 5) 收尾 ----
     manifest["duration_sec"] = round(time.time() - started, 2)
     manifest["warnings"] = warnings
@@ -379,4 +501,10 @@ def load_artifact(job: Job, name: str) -> Any:
     return _read_json(path)
 
 
-__all__ = ["run_job", "run_job_for_job_record", "load_artifact", "SETTINGS"]
+__all__ = [
+    "run_job",
+    "run_job_for_job_record",
+    "build_render_payload",
+    "load_artifact",
+    "SETTINGS",
+]
