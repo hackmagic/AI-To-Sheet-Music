@@ -5,7 +5,7 @@
 - **进程隔离**：分析会加载 torch / demucs / whisper，绝不能跑在 agent 主进程里，
   因此这里用 subprocess 调 ``python -m aitsm.cli generate``。
 - **路径无关**：项目根由 ``_locate.py`` 解析（环境变量 -> 配置 -> 开发布局 -> vendor -> pip），
-  脚本被复制到 ``~/.config/opencode/skills/`` 后仍能找到 aitsm。
+  脚本被复制到 DSH 的用户级技能目录（``~/.agents/skills/``）后仍能找到 aitsm。
 - **结构化返回**：stdout 只输出一个 JSON 对象（UTF-8），agent 直接读；
   人类可读的摘要在 ``report.md``，进度日志走 stderr。
 - **不吞错**：任何阶段失败都返回 ``{"ok": false, "error": ..., "hint": ...}``，退出码非 0。

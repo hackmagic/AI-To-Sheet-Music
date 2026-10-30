@@ -1153,8 +1153,14 @@ button.warning:hover { background: #f3eee2; }
   .workspace { grid-template-columns: minmax(0, 1fr); }
   .rail { position: static; flex-direction: row; flex-wrap: wrap; }
   .rail > * { flex: 1 1 260px; }
-  .toolbar__controls { overflow-x: auto; scrollbar-width: none; }
-  .toolbar__controls::-webkit-scrollbar { display: none; }
+  /* 显示选项组：原来这里是 overflow-x:auto 的单行横条，而 .ctl--toggles 自身
+     scrollWidth 249 > clientWidth 84，于是「TAB / 歌词 / 节拍器 / 编辑」被裁到框外
+     （实测 375px 下 5 个 toggle 只有「指法图」可见）。
+     改成允许换行，让控件组能占满整行，5 个开关一次全露出。
+     注意不能只给 .ctl--toggles 加 flex-wrap：它的父容器高度是固定 30px，
+     一旦竖排就会溢出到工具栏外（实测 top 从 50 一路排到 211）。 */
+  .toolbar__controls { flex-wrap: wrap; overflow-x: visible; row-gap: 8px; }
+  .ctl--toggles { flex-wrap: wrap; min-width: 0; }
 }
 
 @media (max-width: 860px) {
@@ -1162,6 +1168,8 @@ button.warning:hover { background: #f3eee2; }
   .doc-chip { display: none; }
   .toolbar__controls { order: 3; width: 100%; flex: 1 1 100%; }
   .toolbar__actions { margin-left: auto; }
+  /* 换行后给这一组整行宽度，避免又被挤成 84px 再裁一次 */
+  .ctl--toggles { flex: 1 1 100%; width: 100%; }
   .paper { padding: 20px 16px 16px; }
   .paper__title { font-size: 21px; }
   .playbar__speed, .playbar__source { display: none; }
@@ -1175,6 +1183,8 @@ button.warning:hover { background: #f3eee2; }
   .factline { font-size: 10.5px; }
   .factline li { padding: 0 8px; }
   .empty__title { font-size: 19px; }
+  /* 手机上 30px 高的开关容易误触 */
+  .ctl--toggles .toggle { min-height: 38px; }
 }
 
 /* ───────────────────────────────── print preview doc (on screen it stays hidden) ───────────────────────────────── */

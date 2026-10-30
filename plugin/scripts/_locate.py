@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """定位 aitsm 项目本体与可用的 Python 解释器。
 
-DSH skill 会被复制到 ``~/.config/opencode/skills/audio-to-chord-sheet/``，
-此时 ``Path(__file__).resolve().parents[2]`` 指向 ``~/.config/opencode/``，
+DSH skill 会被复制到 ``~/.agents/skills/audio-to-chord-sheet/``
+（DSH 0.2.x 的用户级扫描根之一），
+此时 ``Path(__file__).resolve().parents[2]`` 指向 ``~/.agents/``，
 里面没有 ``aitsm`` 包 —— 所以不能靠脚本自身位置推断仓库。
 
 解析顺序（第一个通过的胜出）：
@@ -286,7 +287,7 @@ def writable_candidates(root: Path, script_file: str | Path) -> list[tuple[Path,
     关键：**仓库内的 plugin/ 不能成为产物目录**。开发布局下 skill 目录是
     ``<repo>/plugin``，若把 work/ 放在那里，跑一次生成就在仓库里留下运行产物。
     因此 dev 布局把输出指向 ``<repo>/work/skill-out``（已被 .gitignore 覆盖）；
-    只有 skill 被装到仓库外（如 ~/.config/opencode/skills/）时才用自带的 work/。
+    只有 skill 被装到仓库外（如 ~/.agents/skills/）时才用自带的 work/。
     """
     base = script_root(script_file)
     out: list[tuple[Path, str]] = []

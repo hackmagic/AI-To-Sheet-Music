@@ -22,13 +22,15 @@ dsh-skill-audio-to-sheet/
 ├── scripts/
 │   ├── generate.py             # 主入口：调 aitsm CLI，产出并摘要报告
 │   ├── serve.py                # 启动本地 Web 查看器（可选）
-│   └── doctor.py               # 环境自检（依赖、模型、ffmpeg）
-├── references/
-│   ├── outputs.md              # 产物说明与字段含义
-│   ├── quality.md              # 置信度与告警的解读、什么情况要人工复核
-│   └── troubleshooting.md      # 常见失败与降级路径
-└── vendor/aitsm/               # 项目本体（或 pip 安装 + 版本锁定）
+│   ├── doctor.py               # 环境自检（依赖、模型、ffmpeg）
+│   └── _locate.py              # 公用路径解析：仓库根 / 解释器 / 可写输出目录
+└── references/
+    └── quality.md              # 置信度与告警的解读、什么情况要人工复核
 ```
+
+> 早期草稿里还画过 `references/outputs.md` 与 `references/troubleshooting.md`，**这两个文件没有落地**：
+> 产物字段含义在 `SKILL.md` 的「产物」小节里，常见失败与降级路径在 [docs/04-known-issues.md](04-known-issues.md)。
+> 不要把未实现的文件画进树里 —— 读者会照着路径去找。
 
 ## `SKILL.md` 草稿
 
@@ -180,10 +182,61 @@ def main() -> int:
 **引擎表写法要求**：任何列出「TART rerank」的地方，必须同时标注 `heuristic`，
 例如 `TART rerank (heuristic)`，绝不能只写 `TART rerank` 让人误以为跑了论文模型。
 
+## DSH 0.2.x 技能发现契约与版本
+
+### 只扫这四个根
+
+DSH 0.2.x 的技能来自模块 `@deepseek-ai/dsh-skill-filesystem` 的 provider，
+它只认这四个目录（按 `customSkillDirs` 与 `DSH_BUNDLED_SKILL_DIR` 另有补充，但默认就是这四个）：
+
+| 级别 | 路径 | 用在哪 |
+| --- | --- | --- |
+| 项目级 | `<projectRoot>/.dsh/skills` | 只对该项目生效，适合随仓库分发 |
+| 项目级 | `<projectRoot>/.agents/skills` | 同上，跨 agent 约定的命名 |
+| 用户级 | `~/.dsh/skills` | 本机全局 |
+| 用户级 | `~/.agents/skills` | **本项目用户级安装的默认目标** |
+
+**已核实依据**：本机 `D:\WorkSoftware\dsh\resources\app.asar` 内
+`node_modules/@deepseek-ai/dsh-skill-filesystem/lib/index.js` 的构造逻辑里是
+`join(projectRoot, ".dsh/skills")`、`join(projectRoot, ".agents/skills")`、
+`join(this.dshHome, "skills")`、`join(this.agentsHome, "skills")`；配套的
+`@deepseek-ai/dsh-home-paths` 里 `resolveDshHome() = ~/.dsh`、`resolveAgentsHome() = ~/.agents`。
+
+**跨版本成立性**：这条不是 0.2.1-rc.5 的偶然差异。单独从 npm 拉
+`@deepseek-ai/dsh-skill-filesystem@0.0.1-rc.3`（当前 npm 上该模块最新版）解包，
+`lib/index.js` 的四个 `join(...)` 与 app.asar 内**完全一致**。
+即「读哪几个目录」是该模块的**稳定契约**，升级小版本不会改变它。
+
+**没有 `~/.config/opencode/skills`。** 0.2.x 源码里已经不存在这个路径（早期手册写的那个位置
+是 opencode 时代的产物）。把技能装错到那里，表现是「文件都在、会话里就是不出现」，
+且重装、重启 DSH 都不会好 —— 因为根本不在扫描列表里。
+
+> 自查方法：会话里的可用技能清单就是扫描结果。本项目技能装对之后，
+> 清单里应当出现 `audio-to-chord-sheet`；没出现就是路径错了，不要怀疑「没重启」。
+
+### 升级判断（省得反复查）
+
+| 通道 | 版本 | 说明 |
+| --- | --- | --- |
+| 本机当前安装 | `0.2.1-rc.5` | 桌面版外壳 `@deepseek-ai/dsh-desktop` + `@deepseek-ai/dsh-desktop-runtime` |
+| 桌面更新源 | `0.2.1-rc.5`（releaseDate `2026-10-29T14:04:01Z`） | 见下 |
+| npm `@deepseek-ai/dsh` | `latest=0.2.1-rc.5`、`next=0.2.1-rc.5` | 稳定 rc 线 |
+| npm `@deepseek-ai/dsh` | `alpha=0.2.2-alpha.2`（2026-10-27） | 预发布 |
+
+桌面更新源 `https://download.deepseek.com/dsh-desk/feeds/win-x64/nightly.yml`
+返回 200，内容是 `version: 0.2.1-rc.5`、`releaseDate: 2026-10-29T14:04:01Z`
+—— 与本机一致，**已是最新，无需升级**。该源下只有 `nightly.yml`，
+`latest.yml` / `beta.yml` 均 404，说明桌面版只走 **nightly 通道**（对应 `app-update.yml`）。
+
+`0.2.2-alpha.2` 属于 alpha 预发布，新增的是 subagent 编排、独立 git worktree、PR 视图等
+与技能装载无关的能力；**不建议**为了它切到 alpha 通道。
+
+**结论：技能装不上不是版本旧，是路径旧。** 换版本不解决问题，改 `install.py` 的目标目录才解决。
+
 ## 打包与分发
 
-技能目录是 DSH 扫描的 `%USERPROFILE%\.config\opencode\skills\`（本机即 `C:\Users\angel\.config\opencode\skills\`）。
-`plugin/install.py` 负责复制 + 写 `aitsm-root.json` + 自检：
+技能装到 DSH 0.2.x 的用户级扫描根 `%USERPROFILE%\.agents\skills\`（本机即 `C:\Users\angel\.agents\skills\`）。
+`plugin/install.py` 负责复制 + 校验副本 + 写 `aitsm-root.json` + 自检：
 
 ```bash
 # 1. 依赖安装（用户机器，首次）
@@ -196,7 +249,16 @@ D:/WorkSoftware/anaconda3/python.exe plugin/install.py
 
 # 3. 验证
 .venv/Scripts/python plugin/scripts/doctor.py --json     # ready: true
-diff -q plugin/SKILL.md "$USERPROFILE/.config/opencode/skills/audio-to-chord-sheet/SKILL.md"
+diff -q plugin/SKILL.md "$USERPROFILE/.agents/skills/audio-to-chord-sheet/SKILL.md"
+```
+
+`install.py` 会自己校验副本 `SKILL.md` 与仓库**逐字节一致**（失败直接退出，不留下半新半旧的副本），
+并在发现 `%USERPROFILE%\.config\opencode\skills\audio-to-chord-sheet` 时打印迁移提示。
+旧副本**默认不删**（里面可能有用户跑出来的 `work/` 产物）；要清理就用：
+
+```bash
+python plugin/install.py --remove-legacy
+# 把旧副本改名成 audio-to-chord-sheet.bak-<时间戳>，可回滚，不直接 rmtree
 ```
 
 **DSH 会自动重扫技能目录，重装后无需重启进程。**

@@ -19,6 +19,57 @@ TORCH_HOME, HF_HOME, HUGGINGFACE_HUB_CACHE, XDG_CACHE_HOME, MPLCONFIGDIR, NUMBA_
 **要求**：任何会加载 torch / librosa / huggingface_hub 的代码，必须保证 `aitsm` 包先被 import。
 不要用 `python aitsm/pipeline/xxx.py` 直接跑脚本，用 `python -m aitsm.pipeline.run`。
 
+## 1b. 技能装不上不是权限配置问题，是 `Low` 完整性标签的**继承**问题
+
+**症状**：`plugin/install.py` 从 `.venv` 的 python 启动时，报
+`PermissionError: [WinError 5] 拒绝访问: 'C:\Users\<user>\.agents\skills\...'`；
+更迷惑的是它还会把**每一个**候选解释器都报成「写不了」，
+连平时在命令行里明明能用的 `D:\WorkSoftware\anaconda3\python.exe` 也一样。
+
+**原因**：`icacls .venv/Scripts/python.exe` 显示它带
+`Mandatory Label\Low Mandatory Level:(I)(NW)` —— 这是个**打在 exe 上的完整性标签**，
+不是目录权限。带这个标签的解释器启动后整个进程跑在 **Low** 下，于是写不了 `%USERPROFILE%`。
+
+关键在于 **Windows 子进程继承父进程的完整性级别**，不会因为换了个 exe 就升回来：
+
+| 验证 | 结果 |
+| --- | --- |
+| bash（Medium）直接跑 anaconda python 写 `~/.agents/skills` | ✅ 成功 |
+| anaconda python **由 venv(Low) python 派生**再写同一目录 | ❌ WinError 5 |
+| venv python 由 **anaconda(Medium)** 派生再写 | ❌ WinError 5 |
+
+也就是说「自动挑一个能写的解释器再重跑自己」这条路在 Low 父进程下是**结构性无效**的，
+不是脚本 bug、更不是机器上没一个能写的解释器。
+
+**解法**：在**普通终端**（Medium）里用系统 python 跑安装，别从 `.venv` 里跑：
+
+```bash
+D:/WorkSoftware/anaconda3/python.exe plugin/install.py
+```
+
+`install.py` 已按这个事实重写探测逻辑：先用「本进程自己写一个探针文件」判断
+（不派生、无继承问题），判据失败且当前是 Low 时**不再尝试换解释器重试**，
+而是直接列出可用的 Medium 解释器与可复制的命令；只有当前**不是** Low 时才走原来的自动切换。
+装到项目盘（`--dest K:/.../.agents/skills`）不受这个限制。
+
+> 顺带一提：`runs on Low` 也解释了为什么 `%USERPROFILE%` 下一些目录 bash 能写、python 不能 ——
+> bash 是 Medium，从它启动的 python 才是 Low。判断「能不能写」一律要**实测本进程**，
+> 不能看「这个目录的 ACL 看起来允许」。
+
+**连带影响：装完的技能目录里 `work/` 用不了（但有兜底）。**
+`~/.agents/skills/audio-to-chord-sheet/work/out` 在 Low 解释器下 `mkdir` 就被拒
+（在 `%USERPROFILE%` 下建目录本身要 Medium 权限，给目录打 Low 标签也救不回来）。
+`_locate.writable_candidates()` 会按顺序实测，落到 `K:/.../work/skill-out`（项目盘可写）：
+
+```text
+out_candidates[0] skill 目录 work/out        writable=False  (WinError 5)
+out_candidates[1] 项目 work/skill-out        writable=True   ← 实际生效
+```
+
+所以 **`doctor.py` 的 `paths.default_out_dir` 会显示仓库里的 `work/skill-out`，
+不是技能目录下的 `work/out`** —— 这是预期行为，不是配错了。生成时也可以显式
+`--out <可写目录>` 或设 `AITSM_OUT_DIR`。
+
 ## 2. HuggingFace Xet 后端返回 401
 
 **症状**：`RuntimeError: File reconstruction error: CAS Client Error: HTTP status 401`（`cas-server.xethub.hf.co`）
@@ -183,11 +234,39 @@ whisper 对这种微小差异足够敏感，于是断句与转写结果不同。
 
 **症状**：修好 `plugin/scripts/generate.py` 后重跑仍报同样的错。
 
-**原因**：DSH 加载的是 `%USERPROFILE%\.config\opencode\skills\audio-to-chord-sheet\scripts\generate.py`
+**原因**：DSH 加载的是 `%USERPROFILE%\.agents\skills\audio-to-chord-sheet\scripts\generate.py`
 （`plugin/install.py` 复制过去的副本），不是仓库里的那份。
 
 **解法**：改 `plugin/` 之后**必须**重跑 `python plugin/install.py`，再用
 `diff` 确认副本一致。DSH 会自动重扫 skill 目录，不需要重启进程。
+`install.py` 现在会自己校验副本 `SKILL.md` 与仓库逐字节一致，不一致直接非 0 退出。
+
+## 17b. 技能装在 `~/.config/opencode/skills` 里 —— DSH 根本不扫这个目录
+
+**症状**：`%USERPROFILE%\.config\opencode\skills\audio-to-chord-sheet\` 里文件齐全、
+内容也对，但会话的技能清单里没有 `audio-to-chord-sheet`，怎么重装、重启都不出现。
+
+**原因**：DSH 0.2.x 的 `@deepseek-ai/dsh-skill-filesystem` 只扫四个根：
+`<projectRoot>/.dsh/skills`、`<projectRoot>/.agents/skills`、`~/.dsh/skills`、`~/.agents/skills`。
+`~/.config/opencode/skills` 是 opencode 时代的位置，0.2.x 源码里已经没有这个路径。
+**装错目录不会报错，只会静默不加载。**
+
+**解法**：用当前 `plugin/install.py` 重装（默认目标已改为 `~/.agents/skills`），
+确认 `doctor.py --json` 的 `ready: true`，再回到会话看技能清单里是否出现
+`audio-to-chord-sheet`。
+
+旧副本**不会自动消失**，留着有真实风险：别的 agent 工具（opencode / claude code 等）
+仍会扫 `~/.config/opencode/skills`，于是出现两个同名、内容不同版本的技能，
+谁生效取决于工具。清理用：
+
+```bash
+python plugin/install.py --remove-legacy
+```
+
+它把旧目录**改名**为 `audio-to-chord-sheet.bak-<时间戳>`（可回滚、`work/` 产物不丢），
+而不是 `rmtree`。默认不清理 —— 用户数据不能无声消失。
+
+契约细节与依据见 [docs/03-dsh-plugin.md](03-dsh-plugin.md) 的「DSH 0.2.x 技能发现契约与版本」。
 
 ## 18. 早期 manifest 没记录 whisper 型号
 
@@ -318,6 +397,33 @@ XML 自身合法、XSD 也过，但宿主软件按 `<type>` 重排小节就装�
 每小节时值求和）。
 
 **教训**：`-f` 成功不能当作验证通过；XSD 过了也不代表宿主软件能打开。
+
+## 23b. 「两处副本不同步」这一类坑（三种形态，同一个病根）
+
+这三条症状看起来毫不相干，病根是同一个：**同一份数据存在两个位置，写的一方不知道另一方存在**。
+
+| 形态 | 症状 | 病根 |
+| --- | --- | --- |
+| ① 技能目录是复制品 | 改了 `plugin/` 却不生效 | 运行的是 `~/.agents/skills/` 的副本，不是仓库文件 |
+| ② 单测写真实仓库文件 | 跑完 `pytest` 工作区就多出脏 diff | 测试直接写了被 git 跟踪的 `web/voicings.json` |
+| ③ 查看器写回 `samples/` | 打开一次预览，`samples/preview.json` 就变了 | `serve.py` 兜底分支把预览文件复制进了仓库 |
+
+**② 实测案例**：`tests/test_voicings.py` 的 fixture docstring 写着「写到临时文件，避免单测污染
+`web/voicings.json`」，但实际传的是 `REPO_ROOT/"web"/"voicings.json"`；而 `build_voicing_db()`
+末尾真的会 `target.write_text(...)` 落盘。后果是**每跑一次 `pytest`，被 git 跟踪的
+`web/voicings.json` 就被改写一次**（只有 `generated_at` 变）。历史上已经因此产生过一个专门的还原提交
+`f7d7c9d`「还原 web/voicings.json 的 generated_at 时间戳噪声（内容未变）」——不是理论问题，是反复发生。
+已修为 `tmp_path_factory` / `tmp_path`，验证 226 passed 且 `git status web/voicings.json` 为空。
+
+**③ 实测案例**：`plugin/scripts/serve.py` 在「score 同目录写不了」时兜底复制到
+`<repo>/samples/preview.json`，而 `samples/preview.json` **是被 git 跟踪的**（`git ls-files` 可见），
+于是打开一次预览就在仓库里留下脏 diff。已修为落到 `tempfile.mkdtemp()`。
+
+**通用规则**：
+- 会写盘的 `build_*` / `export_*` 函数，在单测里**必须**传 `tmp_path`，绝不能用 `REPO_ROOT`。
+- 脚本的兜底写入**不能**落到仓库内被跟踪的路径；要么 temp，要么 `.gitignore` 覆盖的 `work/`。
+- 复制型部署（技能目录）必须校验副本，`install.py` 现在会逐字节比对 `SKILL.md`。
+- 自查命令：改完跑一遍 `git status --porcelain`，出现意料之外的文件就是这一类。
 
 ## 24. 环境自检
 

@@ -36,10 +36,14 @@ python plugin/install.py
 
 它会做四件事：
 
-1. 把 `plugin/` 复制到 `~/.config/opencode/skills/audio-to-chord-sheet/`
+1. 把 `plugin/` 复制到 `~/.agents/skills/audio-to-chord-sheet/`
 2. 写入 `aitsm-root.json`，记住仓库位置和该用哪个 Python
 3. 检查 skill 的 `work/` 目录能不能写，不能写就自动修正权限
 4. 跑一次自检，打印结果
+
+> 为什么是 `~/.agents/skills`：这是 DSH 0.2.x 用户级扫描根之一。
+> 旧版教程写的 `~/.config/opencode/skills/` **DSH 0.2.x 根本不扫**，装到那里会静默不加载。
+> 四个扫描根与依据见 [docs/03-dsh-plugin.md](03-dsh-plugin.md) 的「DSH 0.2.x 技能发现契约与版本」。
 
 成功时最后几行看起来像：
 
@@ -57,7 +61,7 @@ python plugin/install.py
 
 ### 装完要不要重启 DSH
 
-**不用。** 实测：文件复制进 `~/.config/opencode/skills/` 后，当前 DSH 会话的技能列表里就出现了
+**不用。** 实测：文件复制进 `~/.agents/skills/` 后，当前 DSH 会话的技能列表里就出现了
 `audio-to-chord-sheet`。它是在每次列技能时读取目录的。
 
 但如果对话里已经打开很久都没生效，去 **设置 → 技能** 点一下刷新，或者重开一个会话。
@@ -69,12 +73,28 @@ python plugin/install.py
 连 `mkdir` 都不行。安装要用系统 Python：
 
 ```bash
-# Windows：任选其一
+# Windows：任选其一（只要不是项目 .venv 里的那个）
 python plugin/install.py
-D:/WorkSoftware/anaconda3/python.exe plugin/install.py
+"C:/Program Files/Python312/python.exe" plugin/install.py
 ```
 
+**换解释器不一定有用：关键是「从哪个终端启动」。**
+Windows 的子进程会**继承父进程的完整性级别**。所以从带 Low 标签的 `.venv` 里
+派生出去的任何解释器（哪怕 anaconda 本身是 Medium）都会降级成 Low，照样写不了 `%USERPROFILE%`。
+正确做法是**在一个正常的（Medium）终端里直接调用系统 Python**，而不是先激活 `.venv` 再跑脚本。
+
+自检命令：
+
+```bash
+icacls .venv/Scripts/python.exe | findstr Mandatory   # 出现 Low Mandatory Level 就是带标签
+```
+
+根因与三方对照实测见 [已知坑 1b](04-known-issues.md)。`install.py` 现在会先用
+本进程实测写入（不派生子进程），确认是 Low 就直接给出可复制命令，不再做无效的换解释器重试。
+
 安装脚本会自动把 skill 的 `work/` 目录做成低完整性可写，这样**生成**时用 venv python 就没问题。
+注意 `work/` 若不可写，`generate.py` 会**自动回落到仓库的 `work/skill-out`**（已被 `.gitignore` 覆盖），
+实际输出位置以 `doctor.py --json` 的 `paths.default_out_dir` 为准。
 
 ---
 
@@ -220,10 +240,26 @@ python scripts/serve.py --score <路径>/score.json --port 7875
 
 ### 想彻底卸载
 
+技能可能出现在**两个**位置，都清掉才算彻底（旧位置 DSH 0.2.x 已不扫描，但别的 agent 工具可能还在用）：
+
 ```bash
-# Windows
+# 新位置（DSH 0.2.x 扫描的）
+rmdir /s /q %USERPROFILE%\.agents\skills\audio-to-chord-sheet
+
+# 旧位置（opencode 时代的遗留；存在才需要删）
 rmdir /s /q %USERPROFILE%\.config\opencode\skills\audio-to-chord-sheet
 ```
+
+不确定哪个还在，先看一眼：
+
+```bash
+dir %USERPROFILE%\.agents\skills\audio-to-chord-sheet
+dir %USERPROFILE%\.config\opencode\skills\audio-to-chord-sheet
+```
+
+**不想手动删旧副本**：`python plugin/install.py --remove-legacy` 会把它**改名**成
+`audio-to-chord-sheet.bak-<时间戳>` 而不是直接删除 —— 改名可回滚，`work/` 里的产物都还在。
+脚本默认**不删**（用户数据不能无声消失），只打印提示。
 
 不动项目本体，也不改任何 DSH 配置。
 
@@ -232,7 +268,7 @@ rmdir /s /q %USERPROFILE%\.config\opencode\skills\audio-to-chord-sheet
 ## 文件都放哪
 
 ```text
-~/.config/opencode/skills/audio-to-chord-sheet/
+~/.agents/skills/audio-to-chord-sheet/
 ├── SKILL.md                 # 技能说明（agent 读的是这个）
 ├── aitsm-root.json          # 安装时写的定位配置：仓库路径 + 解释器
 ├── scripts/

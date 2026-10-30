@@ -135,7 +135,10 @@
         </div>
 
         <div class="playbar__progress" title="点击跳转到小节">
-          <div class="playbar__progress-track" id="progress-track">
+          <div class="playbar__progress-track" id="progress-track"
+               role="slider" tabindex="0"
+               aria-label="播放进度（按小节跳转）"
+               aria-valuemin="1" aria-valuenow="1" aria-valuetext="第 1 小节">
             <div class="playbar__progress-fill" id="progress-fill"></div>
             <div class="playbar__progress-marks" id="progress-marks"></div>
           </div>

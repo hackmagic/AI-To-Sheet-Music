@@ -461,21 +461,95 @@ export function setProgress(fraction, { barIndex, elapsed, duration, totalBars }
   if (bar && barIndex != null) bar.textContent = `第 ${barIndex} 小节`;
   const time = document.getElementById('pos-time');
   if (time && duration != null) time.textContent = `${formatTime(elapsed || 0)} / ${formatTime(duration)}`;
+  // role="slider" 的 aria 值必须跟着走，否则读屏播报停在「第 1 小节」永远不变
+  const track = document.getElementById('progress-track');
+  if (track && barIndex != null) {
+    track.setAttribute('aria-valuemin', '1');
+    if (totalBars != null) track.setAttribute('aria-valuemax', String(totalBars));
+    track.setAttribute('aria-valuenow', String(barIndex));
+    track.setAttribute('aria-valuetext', `第 ${barIndex} 小节`);
+  }
   void totalBars;
 }
 
 /* ───────────────────────── Modal ───────────────────────── */
 
+/**
+ * 打开前把焦点来源记下来，关闭时还回去。
+ *
+ * 实测问题：点「上传」打开弹窗、按 Escape 关闭后，焦点落在 `<body>`（不是触发按钮），
+ * 键盘用户的 Tab 位置被清空，得从头再走一遍。
+ */
+let modalReturnFocus = null;
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]),' +
+  ' textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function focusableWithin(node) {
+  return [...node.querySelectorAll(FOCUSABLE_SELECTOR)].filter(
+    (el) => el.offsetParent !== null || el === document.activeElement
+  );
+}
+
 export function openModal(node) {
   if (!node) return;
+  const trigger = document.activeElement;
+  if (trigger instanceof HTMLElement && !node.contains(trigger)) modalReturnFocus = trigger;
   node.hidden = false;
   document.body.classList.add('has-modal');
-  const focusable = node.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-  focusable?.focus?.();
+  const focusable = node.querySelector(FOCUSABLE_SELECTOR);
+  focusable?.focus?.({ preventScroll: true });
 }
 
 export function closeModal(node) {
   if (!node) return;
   node.hidden = true;
   document.body.classList.remove('has-modal');
+  const back = modalReturnFocus;
+  modalReturnFocus = null;
+  // 触发按钮可能已被移除/隐藏，focus() 失败就安静放弃，不要抛错打断关闭流程
+  if (back instanceof HTMLElement && back.isConnected) {
+    back.focus?.({ preventScroll: true });
+  }
+}
+
+/**
+ * 模态框内的 Tab 循环 + Escape 关闭。
+ *
+ * 只做一件事：把 Tab 关在弹窗里。原来 Tab 会跑到工具栏上，
+ * 视觉上弹窗还盖着页面，键盘却已经在操作背后的按钮。
+ *
+ * @returns 是否消费了这次按键（调用方据此决定要不要继续处理）
+ */
+export function trapModalKey(event, node) {
+  if (!node || node.hidden) return false;
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    closeModal(node);
+    return true;
+  }
+  if (event.key !== 'Tab') return false;
+  const items = focusableWithin(node);
+  if (items.length === 0) return false;
+  const first = items[0];
+  const last = items[items.length - 1];
+  const active = document.activeElement;
+  // 焦点在弹窗之外（例如刚打开还没落位）时，先收回到第一个
+  if (!node.contains(active)) {
+    event.preventDefault();
+    first.focus?.();
+    return true;
+  }
+  if (event.shiftKey && active === first) {
+    event.preventDefault();
+    last.focus?.();
+    return true;
+  }
+  if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus?.();
+    return true;
+  }
+  return false;
 }

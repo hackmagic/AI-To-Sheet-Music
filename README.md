@@ -329,9 +329,14 @@ symbolic.json + symbolic.musicxml   （符号契约 aitsm.symbolic/v1，每层�
 `plugin/` 是一个标准的 DSH skill（`audio-to-chord-sheet`），装好后在会话里说「帮我把这首歌扒成弹唱谱」即可触发：
 
 ```bash
-python plugin/install.py            # 复制到 %USERPROFILE%\.config\opencode\skills\
+python plugin/install.py            # 复制到 %USERPROFILE%\.agents\skills\
 python plugin/install.py --dry-run  # 只看会做什么
 ```
+
+> DSH 0.2.x 的用户级技能扫描根是 `~/.agents/skills` 与 `~/.dsh/skills`
+> （另有项目内的 `.agents/skills`、`.dsh/skills`）。旧教程里的
+> `~/.config/opencode/skills` 在 0.2.x 已不被扫描 —— 装到那里会静默不加载。
+> 依据与升级判断见 [docs/03-dsh-plugin.md](docs/03-dsh-plugin.md)。
 
 skill 会把整条管线跑在**独立子进程**里（避免 torch/whisper 影响 agent 进程），stdout 只回一个 JSON：`ok` / `out_dir` / `summary` / `usable`（质量是否够交付）/ `verdict`（good｜fair｜poor）/ `needs_review`（按 high/medium/low 分组、带小节号与秒数）/ `files` / `report_path` / `view_command`。安装细节与质量红线见 [docs/03-dsh-plugin.md](docs/03-dsh-plugin.md) 与 [plugin/SKILL.md](plugin/SKILL.md)。
 

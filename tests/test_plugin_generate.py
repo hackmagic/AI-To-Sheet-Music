@@ -1,7 +1,7 @@
 """plugin/scripts/generate.py 的回归测试。
 
 **为什么有这个文件**：这个脚本在仓库外被复制走（安装到
-``~/.config/opencode/skills/audio-to-chord-sheet/scripts/``）后再运行，
+``~/.agents/skills/audio-to-chord-sheet/scripts/``，DSH 0.2.x 用户级扫描根）后再运行，
 ``aitsm/`` 的单元测试完全覆盖不到它。曾经真实踩过一次：
 
 ``aitsm/service.py`` 把 ``manifest["stages"]["analysis"]`` 从「service 写的摘要 dict」

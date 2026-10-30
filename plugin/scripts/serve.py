@@ -13,6 +13,7 @@ import argparse
 import json
 import shutil
 import sys
+import tempfile
 import threading
 import webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -65,9 +66,11 @@ def main() -> int:
             shutil.copyfile(source_score, target)
             preview_file = target
         except OSError:
+            # 兜底**绝不**写进仓库的 samples/：那里有被 git 跟踪的 preview.json，
+            # 覆盖它会让工作区出现莫名其妙的脏 diff（和单测直接写 web/ 是同一类坑）。
             try:
-                samples_dir.mkdir(parents=True, exist_ok=True)
-                target = samples_dir / "preview.json"
+                fallback_dir = Path(tempfile.mkdtemp(prefix="aitsm-preview-"))
+                target = fallback_dir / "preview.json"
                 shutil.copyfile(source_score, target)
                 preview_file = target
             except OSError as exc:

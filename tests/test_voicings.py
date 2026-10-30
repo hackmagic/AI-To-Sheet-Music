@@ -18,10 +18,16 @@ ROOT_PCS = list(range(12))
 
 
 @pytest.fixture(scope="module")
-def db() -> dict:
-    """生成一次指法库（写到临时文件，避免单测污染 web/voicings.json）。"""
+def db(tmp_path_factory: pytest.TempPathFactory) -> dict:
+    """生成一次指法库，写到临时文件。
+
+    ``build_voicing_db`` 会**真的写盘**。传仓库路径会让每次 ``pytest`` 都改写被
+    git 跟踪的 ``web/voicings.json``（只有 ``generated_at`` 变），留下一份脏 diff，
+    历史上已经因此提交过一次「还原时间戳噪声」。这里必须用 tmp 路径。
+    """
     V.clear_cache()
-    return V.build_voicing_db(REPO_ROOT / "web" / "voicings.json")
+    target = tmp_path_factory.mktemp("voicings") / "voicings.json"
+    return V.build_voicing_db(target)
 
 
 def _frets(voicing: dict) -> list[int]:
@@ -256,8 +262,9 @@ def test_quality_coverage(pc: int, quality: str) -> None:
     assert V.validate_voicing(_frets(voicing), symbol) == []
 
 
-def test_drop_d_tuning() -> None:
-    db = V.build_voicing_db(REPO_ROOT / "web" / "voicings.json")
+def test_drop_d_tuning(tmp_path: Path) -> None:
+    # 同样不能写仓库路径：build_voicing_db 会落盘。
+    db = V.build_voicing_db(tmp_path / "voicings.json")
     tunings = db["tunings"]
     assert "drop_d" in tunings
     item = V.voicing_for("D", prefer={"tuning": "drop_d"})

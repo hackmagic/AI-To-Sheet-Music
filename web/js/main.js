@@ -564,6 +564,25 @@ function bindPlaybar() {
     const fraction = clamp((event.clientX - rect.left) / rect.width, 0, 1);
     player.seek(fraction * (player.duration || 0));
   });
+  // 键盘可达：进度条原本是纯 div + click，只能鼠标点。
+  // 左右方向键按小节步进，Home/End 跳首尾，和播放条「逐小节」的语义一致。
+  track?.addEventListener('keydown', (event) => {
+    const total = player.duration || 0;
+    if (!total) return;
+    // player.currentBar 是 0 起的下标属性（-1 = 还没播放过）
+    const bar = player.currentBar >= 0 ? player.currentBar + 1 : 1;
+    const totalBars = state.view?.bars?.length || state.raw?.bars?.length || 1;
+    let target = null;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowUp') target = Math.min(totalBars, bar + 1);
+    else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') target = Math.max(1, bar - 1);
+    else if (event.key === 'Home') target = 1;
+    else if (event.key === 'End') target = totalBars;
+    if (target == null) return;
+    event.preventDefault();
+    if (target === 1) player.seek(0);
+    else player.seekBar(target);
+    jumpToBar(target);
+  });
   dom['speed-range']?.addEventListener('input', (event) => {
     const value = Number(event.target.value) || 100;
     dom['speed-value'].textContent = `${value}%`;
@@ -573,6 +592,11 @@ function bindPlaybar() {
 
 function bindKeyboard() {
   document.addEventListener('keydown', (event) => {
+    // 模态框优先：Tab 必须被关在弹窗里，Escape 关闭并把焦点还给触发按钮。
+    // 放在最前面是因为下面那条 input/select 的提前 return 会让输入框里的
+    // Tab 逃出弹窗（弹窗内就有 select 和 file input）。
+    if (ui.trapModalKey(event, dom['upload-modal'])) return;
+
     const tag = event.target?.tagName?.toLowerCase();
     if (tag === 'input' || tag === 'select' || tag === 'textarea' || event.target?.isContentEditable) return;
     if (event.code === 'Space' && !event.metaKey && !event.ctrlKey && !event.altKey) {
@@ -582,7 +606,6 @@ function bindKeyboard() {
       return;
     }
     if (event.key === 'Escape') {
-      ui.closeModal(dom['upload-modal']);
       closeExportMenu();
     }
   });
@@ -597,7 +620,13 @@ function bindResize() {
       if (document.body.classList.contains('is-printing')) return;
       if (typeof window.matchMedia === 'function' && window.matchMedia('print').matches) return;
       const width = Math.floor(dom.score.clientWidth || 0);
-      if (Math.abs(width - state.lastWidth) > 40) render();
+      // 变窄必须立刻重排：原来的 40px 阈值让「拉小窗口」这一侧漏掉小幅变化
+      // （实测 375->414 时容器 327->366，只差 39px，达不到阈值，谱面停在旧宽度；
+      //  反过来容器比画布窄时，VexFlow 的 SVG overflow:visible 会直接画到容器外）。
+      // 变宽则可以放宽：多留白不影响可读性，还能少几次重排。
+      const shrink = width < state.lastWidth;
+      const threshold = shrink ? 4 : 40;
+      if (Math.abs(width - state.lastWidth) > threshold) render();
     }, 180);
   };
   if (typeof ResizeObserver === 'function') {
